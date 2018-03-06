@@ -13,7 +13,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Manual",
     "title": "Overview",
     "category": "section",
-    "text": "SDDP.jl - Stochastic Dual Dynamic Programming in Julia.SDDP.jl is a package for solving large multi-stage convex stocastic optimization problems. In this manual, we\'re going to assume a reasonable amount of background knowledge about stochastic optimization, the SDDP algorithm, Julia, and JuMP.note: Note\nIf you don\'t have that background, you may want to brush up on some reading material."
+    "text": "SDDP.jl - Stochastic Dual Dynamic Programming in Julia.SDDP.jl is a package for solving large multi-stage convex stocastic optimization problems. In this manual, we\'re going to assume a reasonable amount of background knowledge about stochastic optimization, the SDDP algorithm, Julia, and JuMP.note: Note\nIf you don\'t have that background, you may want to brush up on some Readings."
 },
 
 {
@@ -69,7 +69,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Manual",
     "title": "Keyword Metadata",
     "category": "section",
-    "text": "For a comprehensive list of options, checkout the SDDPModel API or type julia> ? SDDPModel into a Julia REPL. However, we\'ll briefly list the important ones here.Required Keyword argumentsstages::Int: the number of stages in the problem. A stage is defined as  each step in time at which a decion can be made. Defaults to 1.\nobjective_bound: a valid bound on the initial value/cost to go. i.e. for maximisation this may be some large positive number, for minimisation this may be some large negative number. You can ether pass a single value (used for all stages), a vector of values (one for each stage), or a vector of vectors of values (one vector for each stage, containing a vector with one element for each markov stage). Another option is to pass a function that takes two inputs so that f(t, i) returns the valid bound for stage t and markov state i.\nsolver::MathProgBase.AbstractMathProgSolver: any MathProgBase compliant solver that returns duals from a linear program. If this isn\'t specified then you must use JuMP.setsolver(sp, solver) in the stage definition.Optional Keyword argumentssense: must be either :Max or :Min. Defaults to :Min.\ncut_oracle: the cut oracle is responsible for collecting and storing the cuts that define a value function. The cut oracle may decide that only a subset of the total discovered cuts are relevant, which improves solution speed by reducing the size of the subproblems that need solving. Currently must be one of\nDefaultCutOracle() (see DefaultCutOracle for explanation)\nLevelOneCutOracle()(see LevelOneCutOracle for explanation)\nrisk_measure: if a single risk measure is given (i.e.  risk_measure = Expectation()), then this measure will be applied to every  stage in the problem. Another option is to provide a vector of risk  measures. There must be one element for every stage. For example:risk_measure = [ NestedAVaR(lambda=0.5, beta=0.25), Expectation() ]will apply the i\'th element of risk_measure to every Markov state in the    i\'th stage. The last option is to provide a vector (one element for each    stage) of vectors of risk measures (one for each Markov state in the stage).    For example:risk_measure = [\n# Stage 1 Markov 1 # Stage 1 Markov 2 #\n   [ Expectation(), Expectation() ],\n   # ------- Stage 2 Markov 1 ------- ## ------- Stage 2 Markov 2 ------- #\n   [ NestedAVaR(lambda=0.5, beta=0.25), NestedAVaR(lambda=0.25, beta=0.3) ]\n   ]Like the objective bound, another option is to pass a function that takes\nas arguments the stage and markov state and returns a risk measure:function stagedependentrisk(stage, markov_state)\n    if state == 1\n        return Expectation()\n    else\n        if markov_state == 1\n            return NestedAVaR(lambda=0.5, beta=0.25)\n        else\n            return NestedAVaR(lambda=0.25, beta=0.3)\n        end\n    end\nend\n\nrisk_measure = stagedependentriskNote that even though the last stage does not have a future cost function    associated with it (as it has no children), we still have to specify a risk    measure. This is necessary to simplify the implementation of the algorithm.For more help see NestedAVaR or Expectation.markov_transition: define the transition probabilties of the stage graph. If a single array is given, it is assumed that there is an equal number of Markov states in each stage and the transition probabilities are stage invariant. Row indices represent the Markov state in the previous stage. Column indices represent the Markov state in the current stage. Therefore:markov_transition = [0.1 0.9; 0.8 0.2]is the transition matrix when there is 10% chance of transitioning from Markov    state 1 to Markov state 1, a 90% chance of transitioning from Markov state 1    to Markov state 2, an 80% chance of transitioning from Markov state 2 to Markov    state 1, and a 20% chance of transitioning from Markov state 2 to Markov state 2."
+    "text": "For a comprehensive list of options, checkout SDDPModel or type julia> ? SDDPModel into a Julia REPL. However, we\'ll briefly list the important ones here.Required Keyword argumentsstages::Int: the number of stages in the problem. A stage is defined as  each step in time at which a decion can be made. Defaults to 1.\nobjective_bound: a valid bound on the initial value/cost to go. i.e. for maximisation this may be some large positive number, for minimisation this may be some large negative number. You can ether pass a single value (used for all stages), a vector of values (one for each stage), or a vector of vectors of values (one vector for each stage, containing a vector with one element for each markov stage). Another option is to pass a function that takes two inputs so that f(t, i) returns the valid bound for stage t and markov state i.\nsolver::MathProgBase.AbstractMathProgSolver: any MathProgBase compliant solver that returns duals from a linear program. If this isn\'t specified then you must use JuMP.setsolver(sp, solver) in the stage definition.Optional Keyword argumentssense: must be either :Max or :Min. Defaults to :Min.\ncut_oracle: the cut oracle is responsible for collecting and storing the cuts that define a value function. The cut oracle may decide that only a subset of the total discovered cuts are relevant, which improves solution speed by reducing the size of the subproblems that need solving. Currently must be one of\nDefaultCutOracle() (see DefaultCutOracle for explanation)\nLevelOneCutOracle()(see LevelOneCutOracle for explanation)\nrisk_measure: if a single risk measure is given (i.e.  risk_measure = Expectation()), then this measure will be applied to every  stage in the problem. Another option is to provide a vector of risk  measures. There must be one element for every stage. For example:risk_measure = [ EAVaR(lambda=0.5, beta=0.25), Expectation() ]will apply the i\'th element of risk_measure to every Markov state in the    i\'th stage. The last option is to provide a vector (one element for each    stage) of vectors of risk measures (one for each Markov state in the stage).    For example:risk_measure = [\n# Stage 1 Markov 1 # Stage 1 Markov 2 #\n   [ Expectation(), Expectation() ],\n   # ------- Stage 2 Markov 1 ------- ## ------- Stage 2 Markov 2 ------- #\n   [ EAVaR(lambda=0.5, beta=0.25), EAVaR(lambda=0.25, beta=0.3) ]\n   ]Like the objective bound, another option is to pass a function that takes\nas arguments the stage and markov state and returns a risk measure:function stagedependentrisk(stage, markov_state)\n    if state == 1\n        return Expectation()\n    else\n        if markov_state == 1\n            return EAVaR(lambda=0.5, beta=0.25)\n        else\n            return EAVaR(lambda=0.25, beta=0.3)\n        end\n    end\nend\n\nrisk_measure = stagedependentriskNote that even though the last stage does not have a future cost function    associated with it (as it has no children), we still have to specify a risk    measure. This is necessary to simplify the implementation of the algorithm.For more help see EAVaR or Expectation.markov_transition: define the transition probabilties of the stage graph. If a single array is given, it is assumed that there is an equal number of Markov states in each stage and the transition probabilities are stage invariant. Row indices represent the Markov state in the previous stage. Column indices represent the Markov state in the current stage. Therefore:markov_transition = [0.1 0.9; 0.8 0.2]is the transition matrix when there is 10% chance of transitioning from Markov    state 1 to Markov state 1, a 90% chance of transitioning from Markov state 1    to Markov state 2, an 80% chance of transitioning from Markov state 2 to Markov    state 1, and a 20% chance of transitioning from Markov state 2 to Markov state 2."
 },
 
 {
@@ -125,7 +125,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Manual",
     "title": "Asset Management Example",
     "category": "section",
-    "text": "We now have all the information necessary to define the Asset Management example in SDDP.jl:using SDDP, JuMP, Clp\n\nm = SDDPModel(\n               # we are minimizing\n                sense = :Min,\n               # there are 4 stages\n               stages = 4,\n               # a large negative value\n      objective_bound = -1000.0,\n               # a MathOptBase compatible solver\n               solver = ClpSolver(),\n               # transition probabilities of the lattice\n    markov_transition = Array{Float64, 2}[\n                        [1.0]\',\n                        [0.5 0.5],\n                        [0.5 0.5; 0.5 0.5],\n                        [0.5 0.5; 0.5 0.5]\n                    ],\n               # risk measures for each stage\n         risk_measure = [\n                        Expectation(),\n                        Expectation(),\n                        NestedAVaR(lambda = 0.5, beta=0.5),\n                        Expectation()\n                    ]\n                            ) do sp, t, i\n    # Data used in the problem\n    ωs = [1.25, 1.06]\n    ωb = [1.14, 1.12]\n    Φ  = [-1, 5]\n    Ψ  = [0.02, 0.0]\n\n    # state variables\n    @states(sp, begin\n        xs >= 0, xsbar==0\n        xb >= 0, xbbar==0\n    end)\n\n    if t == 1 # we can switch based on the stage\n        # a constraint without noise\n        @constraint(sp, xs + xb == 55 + xsbar + xbbar)\n        # an objective without noise\n        @stageobjective(sp, 0)\n    elseif t == 2 || t == 3\n        # a constraint with noisein the RHS\n        @rhsnoise(sp, φ=Φ, ωs[i] * xsbar + ωb[i] * xbbar + φ == xs + xb)\n        # an objective with noise\n        @stageobjective(sp, ψ = Ψ, -ψ * xs)\n        # noise will be sampled as (Φ[1], Ψ[1]) w.p. 0.6, (Φ[2], Ψ[2]) w.p. 0.4\n        setnoiseprobability!(sp, [0.6, 0.4])\n    else # when t == 4\n        # some control variables\n        @variable(sp, u >= 0)\n        @variable(sp, v >= 0)\n        # dynamics constraint\n        @constraint(sp, ωs[i] * xsbar + ωb[i] * xbbar + u - v == 80)\n        # an objective without noise\n        @stageobjective(sp, 4u - v)\n    end\nend"
+    "text": "We now have all the information necessary to define the Asset Management example in SDDP.jl:using SDDP, JuMP, Clp\n\nm = SDDPModel(\n               # we are minimizing\n                sense = :Min,\n               # there are 4 stages\n               stages = 4,\n               # a large negative value\n      objective_bound = -1000.0,\n               # a MathOptBase compatible solver\n               solver = ClpSolver(),\n               # transition probabilities of the lattice\n    markov_transition = Array{Float64, 2}[\n                        [1.0]\',\n                        [0.5 0.5],\n                        [0.5 0.5; 0.5 0.5],\n                        [0.5 0.5; 0.5 0.5]\n                    ],\n               # risk measures for each stage\n         risk_measure = [\n                        Expectation(),\n                        Expectation(),\n                        EAVaR(lambda = 0.5, beta=0.5),\n                        Expectation()\n                    ]\n                            ) do sp, t, i\n    # Data used in the problem\n    ωs = [1.25, 1.06]\n    ωb = [1.14, 1.12]\n    Φ  = [-1, 5]\n    Ψ  = [0.02, 0.0]\n\n    # state variables\n    @states(sp, begin\n        xs >= 0, xsbar==0\n        xb >= 0, xbbar==0\n    end)\n\n    if t == 1 # we can switch based on the stage\n        # a constraint without noise\n        @constraint(sp, xs + xb == 55 + xsbar + xbbar)\n        # an objective without noise\n        @stageobjective(sp, 0)\n    elseif t == 2 || t == 3\n        # a constraint with noisein the RHS\n        @rhsnoise(sp, φ=Φ, ωs[i] * xsbar + ωb[i] * xbbar + φ == xs + xb)\n        # an objective with noise\n        @stageobjective(sp, ψ = Ψ, -ψ * xs)\n        # noise will be sampled as (Φ[1], Ψ[1]) w.p. 0.6, (Φ[2], Ψ[2]) w.p. 0.4\n        setnoiseprobability!(sp, [0.6, 0.4])\n    else # when t == 4\n        # some control variables\n        @variable(sp, u >= 0)\n        @variable(sp, v >= 0)\n        # dynamics constraint\n        @constraint(sp, ωs[i] * xsbar + ωb[i] * xbbar + u - v == 80)\n        # an objective without noise\n        @stageobjective(sp, 4u - v)\n    end\nend"
 },
 
 {
@@ -205,7 +205,15 @@ var documenterSearchIndex = {"docs": [
     "page": "Readings",
     "title": "Readings",
     "category": "page",
-    "text": "CurrentModule = SDDPOn this page, we\'ve collated a variety of papers and books we think are helpful readings that cover knowledge needed to use SDDP.jl."
+    "text": ""
+},
+
+{
+    "location": "readings.html#Readings-1",
+    "page": "Readings",
+    "title": "Readings",
+    "category": "section",
+    "text": "On this page, we\'ve collated a variety of papers and books we think are helpful readings that cover knowledge needed to use SDDP.jl."
 },
 
 {
@@ -245,7 +253,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Readings",
     "title": "JuMP",
     "category": "section",
-    "text": "Source code on Github[www.github.com/JuliaOpt/JuMP.jl]((https://www.github.com/JuliaOpt/JuMP.jl)The paper describing JuMPDunning, I., Huchette, J., Lubin, M., 2017. JuMP: A Modeling Language for  Mathematical Optimization. SIAM Review 59, 295–320. doi:10.1137/15M1020575"
+    "text": "Source code on Github[https://www.github.com/JuliaOpt/JuMP.jl]((https://www.github.com/JuliaOpt/JuMP.jl)The paper describing JuMPDunning, I., Huchette, J., Lubin, M., 2017. JuMP: A Modeling Language for  Mathematical Optimization. SIAM Review 59, 295–320. doi:10.1137/15M1020575"
 },
 
 {
@@ -270,38 +278,6 @@ var documenterSearchIndex = {"docs": [
     "title": "SDDP.SDDPModel",
     "category": "type",
     "text": "SDDPModel(;kwargs...) do ...\n\nend\n\nDescription\n\nThis function constructs an SDDPModel. SDDPModel takes the following keyword arguments. Some are required, and some are optional.\n\nRequired Keyword arguments\n\nstages::Int\n\nThe number of stages in the problem. A stage is defined as each step in time at  which a decion can be made. Defaults to 1.\n\nobjective_bound\n\nA valid bound on the initial value/cost to go. i.e. for maximisation this may  be some large positive number, for minimisation this may be some large negative  number. Users can pass either a single value (which bounds the cost-to-go in all  stages), or a vector of values (one for each stage), or a vector (one element  for each stage) of vectors of values (one value for each markov state in the stage).\n\nsolver::MathProgBase.AbstractMathProgSolver\n\nMathProgBase compliant solver that returns duals from a linear program. If this  isn\'t specified then you must use JuMP.setsolver(sp, solver) in the stage  definition.\n\nOptional Keyword arguments\n\nsense\n\nMust be either :Max or :Min. Defaults to :Min.\n\ncut_oracle::SDDP.AbstractCutOracle\n\nThe cut oracle is responsible for collecting and storing the cuts that define  a value function. The cut oracle may decide that only a subset of the total  discovered cuts are relevant, which improves solution speed by reducing the  size of the subproblems that need solving. Currently must be one of     * DefaultCutOracle() (see DefaultCutOracle for explanation)     * LevelOneCutOracle()(see LevelOneCutOracle for explanation)\n\nrisk_measure\n\nIf a single risk measure is given (i.e. risk_measure = Expectation()), then  this measure will be applied to every stage in the problem. Another option is  to provide a vector of risk measures. There must be one element for every  stage. For example:\n\nrisk_measure = [ NestedAVaR(lambda=0.5, beta=0.25), Expectation() ]\n\nwill apply the i\'th element of risk_measure to every Markov state in the i\'th stage. The last option is to provide a vector (one element for each stage) of vectors of risk measures (one for each Markov state in the stage). For example:\n\nrisk_measure = [\n# Stage 1 Markov 1 # Stage 1 Markov 2 #\n    [ Expectation(), Expectation() ],\n    # ------- Stage 2 Markov 1 ------- ## ------- Stage 2 Markov 2 ------- #\n    [ NestedAVaR(lambda=0.5, beta=0.25), NestedAVaR(lambda=0.25, beta=0.3) ]\n    ]\n\nNote that even though the last stage does not have a future cost function associated with it (as it has no children), we still have to specify a risk measure. This is necessary to simplify the implementation of the algorithm.\n\nFor more help see NestedAVaR or Expectation.\n\nmarkov_transition\n\nDefine the transition probabilties of the stage graph. If a single array is given, it is assumed that there is an equal number of Markov states in each stage and the transition probabilities are stage invariant. Row indices represent the Markov state in the previous stage. Column indices represent the Markov state in the current stage. Therefore:\n\nmarkov_transition = [0.1 0.9; 0.8 0.2]\n\nis the transition matrix when there is 10% chance of transitioning from Markov state 1 to Markov state 1, a 90% chance of transitioning from Markov state 1 to Markov state 2, an 80% chance of transitioning from Markov state 2 to Markov state 1, and a 20% chance of transitioning from Markov state 2 to Markov state 2.\n\nReturns\n\nm: the SDDPModel\n\n\n\n"
-},
-
-{
-    "location": "apireference.html#SDDP.Expectation",
-    "page": "Reference",
-    "title": "SDDP.Expectation",
-    "category": "type",
-    "text": "Expectation()\n\nDescription\n\nThe expectation risk measure.\n\n\n\n"
-},
-
-{
-    "location": "apireference.html#SDDP.NestedAVaR",
-    "page": "Reference",
-    "title": "SDDP.NestedAVaR",
-    "category": "type",
-    "text": "NestedAVaR(;lambda=1.0, beta=1.0)\n\nDescription\n\nA risk measure that is a convex combination of Expectation and Average Value @ Risk (also called Conditional Value @ Risk).\n\nλ * E[x] + (1 - λ) * AV@R(1-β)[x]\n\nKeyword Arguments\n\nlambda\n\nConvex weight on the expectation ((1-lambda) weight is put on the AV@R component. Inreasing values of lambda are less risk averse (more weight on expecattion)\n\nbeta\n\nThe quantile at which to calculate the Average Value @ Risk. Increasing values  of beta are less risk averse. If beta=0, then the AV@R component is the  worst case risk measure.\n\nReturns\n\nm::NestedAVaR<:AbstractRiskMeasure\n\n\n\n"
-},
-
-{
-    "location": "apireference.html#SDDP.DefaultCutOracle",
-    "page": "Reference",
-    "title": "SDDP.DefaultCutOracle",
-    "category": "type",
-    "text": "DefaultCutOracle()\n\nDescription\n\nInitialize the default cut oracle.\n\nThis oracle keeps every cut discovered and does not perform cut selection.\n\n\n\n"
-},
-
-{
-    "location": "apireference.html#SDDP.LevelOneCutOracle",
-    "page": "Reference",
-    "title": "SDDP.LevelOneCutOracle",
-    "category": "function",
-    "text": "LevelOneCutOracle()\n\nDescription\n\nInitialize the cut oracle for Level One cut selection. See:\n\nV. de Matos,A. Philpott, E. Finardi, Improving the performance of Stochastic Dual Dynamic Programming, Journal of Computational and Applied Mathematics 290 (2015) 196–208.\n\n\n\n"
 },
 
 {
@@ -357,7 +333,127 @@ var documenterSearchIndex = {"docs": [
     "page": "Reference",
     "title": "Communicating the problem to the solver",
     "category": "section",
-    "text": "SDDPModel\nExpectation\nNestedAVaR\nDefaultCutOracle\nLevelOneCutOracle\n@state\n@states\n@rhsnoise\n@rhsnoises\nsetnoiseprobability!\n@stageobjective"
+    "text": "SDDPModel\n@state\n@states\n@rhsnoise\n@rhsnoises\nsetnoiseprobability!\n@stageobjective"
+},
+
+{
+    "location": "apireference.html#SDDP.AbstractRiskMeasure",
+    "page": "Reference",
+    "title": "SDDP.AbstractRiskMeasure",
+    "category": "type",
+    "text": "AbstractRiskMeasure\n\nDescription\n\nAbstract type for all risk measures.\n\n\n\n"
+},
+
+{
+    "location": "apireference.html#SDDP.modifyprobability!",
+    "page": "Reference",
+    "title": "SDDP.modifyprobability!",
+    "category": "function",
+    "text": "modifyprobability!(measure::AbstractRiskMeasure,\n        riskadjusted_distribution,\n        original_distribution::Vector{Float64},\n        observations::Vector{Float64},\n        m::SDDPModel,\n        sp::JuMP.Model\n)\n\nDescription\n\nCalculate the risk-adjusted probability of each scenario using the \'change-of-probabilities\' approach of Philpott, de Matos, and Finardi,(2013). On solving multistage stochastic programs with coherent risk measures. Operations Research 61(4), 957-970.\n\nArguments\n\nmeasure::AbstractRiskMeasure\n\nThe risk measure\n\nriskadjusted_distribution\n\nA new probability distribution\n\noriginal_distribution::Vector{Float64}\n\nThe original probability distribution.\n\nobservations::Vector{Float64}\n\nThe vector of objective values from the next stage  problems (one for each scenario).\n\nm::SDDPModel\n\nThe full SDDP model\n\nsp::JuMP.Model\n\nThe stage problem that the cut will be added to.\n\n\n\n"
+},
+
+{
+    "location": "apireference.html#SDDP.AVaR",
+    "page": "Reference",
+    "title": "SDDP.AVaR",
+    "category": "type",
+    "text": "AVaR(beta::Float64)\n\nThe Average Value @ Risk measure. When beta=0, the measure is the is worst-case, when beta=1 the measure is equivalent to expectation.\n\n\n\n"
+},
+
+{
+    "location": "apireference.html#SDDP.ConvexCombination",
+    "page": "Reference",
+    "title": "SDDP.ConvexCombination",
+    "category": "type",
+    "text": "ConvexCombination( (weight::Float64, measure::AbstractRiskMeasure) ... )\n\nCreate a weighted combination of risk measures.\n\nExamples\n\nConvexCombination(\n    (0.5, Expectation()),\n    (0.5, AVaR(0.25))\n)\n\nConvex combinations can also be constructed by adding weighted risk measures together as follows:\n\n0.5 * Expectation() + 0.5 * AVaR(0.5)\n\n\n\n"
+},
+
+{
+    "location": "apireference.html#SDDP.EAVaR",
+    "page": "Reference",
+    "title": "SDDP.EAVaR",
+    "category": "function",
+    "text": "EAVaR(;lambda=1.0, beta=1.0)\n\nDescription\n\nA risk measure that is a convex combination of Expectation and Average Value @ Risk (also called Conditional Value @ Risk).\n\nλ * E[x] + (1 - λ) * AV@R(1-β)[x]\n\nKeyword Arguments\n\nlambda\n\nConvex weight on the expectation ((1-lambda) weight is put on the AV@R component. Inreasing values of lambda are less risk averse (more weight on expecattion)\n\nbeta\n\nThe quantile at which to calculate the Average Value @ Risk. Increasing values  of beta are less risk averse. If beta=0, then the AV@R component is the  worst case risk measure.\n\n\n\n"
+},
+
+{
+    "location": "apireference.html#SDDP.Expectation",
+    "page": "Reference",
+    "title": "SDDP.Expectation",
+    "category": "type",
+    "text": "Expectation()\n\nThe expectation risk measure.\n\n\n\n"
+},
+
+{
+    "location": "apireference.html#SDDP.DRO",
+    "page": "Reference",
+    "title": "SDDP.DRO",
+    "category": "type",
+    "text": "DRO(radius::Float64)\n\nThe distributionally robust SDDP risk measure. Constructs a DRO risk measure object that allows probabilities to deviate by radius away from the uniform distribution.\n\n\n\n"
+},
+
+{
+    "location": "apireference.html#SDDP.WorstCase",
+    "page": "Reference",
+    "title": "SDDP.WorstCase",
+    "category": "type",
+    "text": "WorstCase()\n\nThe worst-case risk measure.\n\n\n\n"
+},
+
+{
+    "location": "apireference.html#Risk-Measures-1",
+    "page": "Reference",
+    "title": "Risk Measures",
+    "category": "section",
+    "text": "AbstractRiskMeasure\nmodifyprobability!\nAVaR\nConvexCombination\nEAVaR\nExpectation\nDRO\nWorstCase"
+},
+
+{
+    "location": "apireference.html#SDDP.AbstractCutOracle",
+    "page": "Reference",
+    "title": "SDDP.AbstractCutOracle",
+    "category": "type",
+    "text": "AbstractCutOracle\n\nDescription\n\nAbstract type for all cut oracles.\n\n\n\n"
+},
+
+{
+    "location": "apireference.html#SDDP.storecut!",
+    "page": "Reference",
+    "title": "SDDP.storecut!",
+    "category": "function",
+    "text": "storecut!(oracle::AbstactCutOracle, m::SDDPModel, sp::JuMP.Model, cut::Cut)\n\nDescription\n\nStore the cut cut in the Cut Oracle oracle. oracle will belong to the subproblem sp in the SDDPModel m.\n\n\n\n"
+},
+
+{
+    "location": "apireference.html#SDDP.validcuts",
+    "page": "Reference",
+    "title": "SDDP.validcuts",
+    "category": "function",
+    "text": "validcuts(oracle::AbstactCutOracle)\n\nDescription\n\nReturn an iterable list of all the valid cuts contained within oracle.\n\n\n\n"
+},
+
+{
+    "location": "apireference.html#SDDP.DefaultCutOracle",
+    "page": "Reference",
+    "title": "SDDP.DefaultCutOracle",
+    "category": "type",
+    "text": "DefaultCutOracle()\n\nDescription\n\nInitialize the default cut oracle.\n\nThis oracle keeps every cut discovered and does not perform cut selection.\n\n\n\n"
+},
+
+{
+    "location": "apireference.html#SDDP.LevelOneCutOracle",
+    "page": "Reference",
+    "title": "SDDP.LevelOneCutOracle",
+    "category": "function",
+    "text": "LevelOneCutOracle()\n\nDescription\n\nInitialize the cut oracle for Level One cut selection. See:\n\nV. de Matos,A. Philpott, E. Finardi, Improving the performance of Stochastic Dual Dynamic Programming, Journal of Computational and Applied Mathematics 290 (2015) 196–208.\n\n\n\n"
+},
+
+{
+    "location": "apireference.html#Cut-Oracles-1",
+    "page": "Reference",
+    "title": "Cut Oracles",
+    "category": "section",
+    "text": "AbstractCutOracle\nstorecut!\nvalidcuts\nDefaultCutOracle\nLevelOneCutOracle"
 },
 
 {
@@ -478,54 +574,6 @@ var documenterSearchIndex = {"docs": [
     "title": "Read and write the model to disk",
     "category": "section",
     "text": "loadcuts!\nsavemodel!\nloadmodel"
-},
-
-{
-    "location": "apireference.html#SDDP.AbstractCutOracle",
-    "page": "Reference",
-    "title": "SDDP.AbstractCutOracle",
-    "category": "type",
-    "text": "AbstractCutOracle\n\nDescription\n\nAbstract type for all cut oracles.\n\n\n\n"
-},
-
-{
-    "location": "apireference.html#SDDP.storecut!",
-    "page": "Reference",
-    "title": "SDDP.storecut!",
-    "category": "function",
-    "text": "storecut!(oracle::AbstactCutOracle, m::SDDPModel, sp::JuMP.Model, cut::Cut)\n\nDescription\n\nStore the cut cut in the Cut Oracle oracle. oracle will belong to the subproblem sp in the SDDPModel m.\n\n\n\n"
-},
-
-{
-    "location": "apireference.html#SDDP.validcuts",
-    "page": "Reference",
-    "title": "SDDP.validcuts",
-    "category": "function",
-    "text": "validcuts(oracle::AbstactCutOracle)\n\nDescription\n\nReturn an iterable list of all the valid cuts contained within oracle.\n\n\n\n"
-},
-
-{
-    "location": "apireference.html#SDDP.AbstractRiskMeasure",
-    "page": "Reference",
-    "title": "SDDP.AbstractRiskMeasure",
-    "category": "type",
-    "text": "AbstractRiskMeasure\n\nDescription\n\nAbstract type for all risk measures.\n\n\n\n"
-},
-
-{
-    "location": "apireference.html#SDDP.modifyprobability!",
-    "page": "Reference",
-    "title": "SDDP.modifyprobability!",
-    "category": "function",
-    "text": "modifyprobability!(measure::AbstractRiskMeasure,\n        riskadjusted_distribution,\n        original_distribution::Vector{Float64},\n        observations::Vector{Float64},\n        m::SDDPModel,\n        sp::JuMP.Model\n)\n\nDescription\n\nCalculate the risk-adjusted probability of each scenario using the \'change-of-probabilities\' approach of Philpott, de Matos, and Finardi,(2013). On solving multistage stochastic programs with coherent risk measures. Operations Research 61(4), 957-970.\n\nArguments\n\nmeasure::AbstractRiskMeasure\n\nThe risk measure\n\nriskadjusted_distribution\n\nA new probability distribution\n\noriginal_distribution::Vector{Float64}\n\nThe original probability distribution.\n\nobservations::Vector{Float64}\n\nThe vector of objective values from the next stage  problems (one for each scenario).\n\nm::SDDPModel\n\nThe full SDDP model\n\nsp::JuMP.Model\n\nThe stage problem that the cut will be added to.\n\n\n\n"
-},
-
-{
-    "location": "apireference.html#Extras-for-Experts-1",
-    "page": "Reference",
-    "title": "Extras for Experts",
-    "category": "section",
-    "text": "AbstractCutOracle\nstorecut!\nvalidcutsAbstractRiskMeasure\nmodifyprobability!"
 },
 
 ]}
