@@ -201,6 +201,126 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
+    "location": "examples.html#",
+    "page": "Examples",
+    "title": "Examples",
+    "category": "page",
+    "text": ""
+},
+
+{
+    "location": "examples.html#Examples-1",
+    "page": "Examples",
+    "title": "Examples",
+    "category": "section",
+    "text": "SDDP.jl includes many examples. In the source code, they are organized by application. Here we categorize the examples by functionality."
+},
+
+{
+    "location": "examples.html#Markovian-Policy-Graphs-1",
+    "page": "Examples",
+    "title": "Markovian Policy Graphs",
+    "category": "section",
+    "text": "McCardle Farm\nAsset Management Stagewise\nAsset Management\nHydro Valley\nNewsvendor"
+},
+
+{
+    "location": "examples.html#Risk-Aversion-1",
+    "page": "Examples",
+    "title": "Risk Aversion",
+    "category": "section",
+    "text": ""
+},
+
+{
+    "location": "examples.html#Convex-Combinations-1",
+    "page": "Examples",
+    "title": "Convex Combinations",
+    "category": "section",
+    "text": "Newsvendor"
+},
+
+{
+    "location": "examples.html#EAVaR-1",
+    "page": "Examples",
+    "title": "EAVaR",
+    "category": "section",
+    "text": "Asset Management Stagewise"
+},
+
+{
+    "location": "examples.html#DRO-1",
+    "page": "Examples",
+    "title": "DRO",
+    "category": "section",
+    "text": "Simple Conic"
+},
+
+{
+    "location": "examples.html#Right-Hand-Side-Uncertainty-1",
+    "page": "Examples",
+    "title": "Right-Hand Side Uncertainty",
+    "category": "section",
+    "text": "Asset Management Stagewise\nAir Conditioning\nHydro Thermal\nProduction Management\nFAST Quickstart\nHydro Valley\nNewsvendor"
+},
+
+{
+    "location": "examples.html#Objective-Uncertainty-1",
+    "page": "Examples",
+    "title": "Objective Uncertainty",
+    "category": "section",
+    "text": "Asset Management Stagewise\nVehicle Location\nSimple Conic"
+},
+
+{
+    "location": "examples.html#Conic-1",
+    "page": "Examples",
+    "title": "Conic",
+    "category": "section",
+    "text": "Simple Conic"
+},
+
+{
+    "location": "examples.html#Termination-Criteria-1",
+    "page": "Examples",
+    "title": "Termination Criteria",
+    "category": "section",
+    "text": ""
+},
+
+{
+    "location": "examples.html#Bound-Convergence-1",
+    "page": "Examples",
+    "title": "Bound Convergence",
+    "category": "section",
+    "text": "Asset Management Stagewise"
+},
+
+{
+    "location": "examples.html#Policy-Simulation-1",
+    "page": "Examples",
+    "title": "Policy Simulation",
+    "category": "section",
+    "text": "Asset Management Stagewise\nNewsvendor"
+},
+
+{
+    "location": "examples.html#Asyncronous-1",
+    "page": "Examples",
+    "title": "Asyncronous",
+    "category": "section",
+    "text": "Newsvendor"
+},
+
+{
+    "location": "examples.html#Saving-and-Loading-Cuts-1",
+    "page": "Examples",
+    "title": "Saving and Loading Cuts",
+    "category": "section",
+    "text": "Newsvendor"
+},
+
+{
     "location": "readings.html#",
     "page": "Readings",
     "title": "Readings",
