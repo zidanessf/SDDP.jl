@@ -373,7 +373,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Readings",
     "title": "JuMP",
     "category": "section",
-    "text": "Source code on Github[https://www.github.com/JuliaOpt/JuMP.jl]((https://www.github.com/JuliaOpt/JuMP.jl)The paper describing JuMPDunning, I., Huchette, J., Lubin, M., 2017. JuMP: A Modeling Language for  Mathematical Optimization. SIAM Review 59, 295–320. doi:10.1137/15M1020575"
+    "text": "Source code on Githubhttps://www.github.com/JuliaOpt/JuMP.jlThe paper describing JuMPDunning, I., Huchette, J., Lubin, M., 2017. JuMP: A Modeling Language for  Mathematical Optimization. SIAM Review 59, 295–320. doi:10.1137/15M1020575"
 },
 
 {
