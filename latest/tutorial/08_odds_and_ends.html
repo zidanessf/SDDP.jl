@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/><title>Tutorial Eight: odds and ends · SDDP.jl</title><link href="https://cdnjs.cloudflare.com/ajax/libs/normalize/4.2.0/normalize.min.css" rel="stylesheet" type="text/css"/><link href="https://fonts.googleapis.com/css?family=Lato|Roboto+Mono" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/default.min.css" rel="stylesheet" type="text/css"/><script>documenterBaseURL=".."</script><script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.2.0/require.min.js" data-main="../assets/documenter.js"></script><script src="../siteinfo.js"></script><script src="../../versions.js"></script><link href="../assets/documenter.css" rel="stylesheet" type="text/css"/></head><body><nav class="toc"><h1>SDDP.jl</h1><select id="version-selector" onChange="window.location.href=this.value" style="visibility: hidden"></select><form class="search" id="search-form" action="../search.html"><input id="search-query" name="q" type="text" placeholder="Search docs"/></form><ul><li><a class="toctext" href="../index.html">Home</a></li><li><span class="toctext">Tutorials</span><ul><li><a class="toctext" href="01_first_steps.html">Tutorial One: first steps</a></li><li><a class="toctext" href="02_rhs_noise.html">Tutorial Two: RHS noise</a></li><li><a class="toctext" href="03_objective_noise.html">Tutorial Three: objective noise</a></li><li><a class="toctext" href="04_markovian_policygraphs.html">Tutorial Four: Markovian policy graphs</a></li><li><a class="toctext" href="05_risk.html">Tutorial Five: risk</a></li><li><a class="toctext" href="06_cut_selection.html">Tutorial Six: cut selection</a></li><li><a class="toctext" href="07_plotting.html">Tutorial Seven: plotting</a></li><li class="current"><a class="toctext" href="08_odds_and_ends.html">Tutorial Eight: odds and ends</a><ul class="internal"><li><a class="toctext" href="#The-@state-macro-1">The <code>@state</code> macro</a></li><li><a class="toctext" href="#if-statements-in-more-detail-1"><code>if</code> statements in more detail</a></li><li><a class="toctext" href="#Stage-dependent-risk-measures-1">Stage-dependent risk measures</a></li><li><a class="toctext" href="#Reading-and-writing-cuts-to-file-1">Reading and writing cuts to file</a></li></ul></li></ul></li><li><a class="toctext" href="../readings.html">Readings</a></li><li><a class="toctext" href="../oldindex.html">Old Manual</a></li><li><a class="toctext" href="../apireference.html">Reference</a></li></ul></nav><article id="docs"><header><nav><ul><li>Tutorials</li><li><a href="08_odds_and_ends.html">Tutorial Eight: odds and ends</a></li></ul><a class="edit-page" href="https://github.com/odow/SDDP.jl/blob/master/docs/src/tutorial/08_odds_and_ends.md"><span class="fa"></span> Edit on GitHub</a></nav><hr/><div id="topbar"><span>Tutorial Eight: odds and ends</span><a class="fa fa-bars" href="#"></a></div></header><h1><a class="nav-anchor" id="Tutorial-Eight:-odds-and-ends-1" href="#Tutorial-Eight:-odds-and-ends-1">Tutorial Eight: odds and ends</a></h1><p>In our previous tutorials, we have discussed the formulation, solution, and visualization of a multistage stochastic optimization problem. By now you should have all the tools necessary to solve your own problems using SDDP.jl. However, there are a few odds and ends that we need to address.</p><h2><a class="nav-anchor" id="The-@state-macro-1" href="#The-@state-macro-1">The <code>@state</code> macro</a></h2><p>In <a href="01_first_steps.html#Tutorial-One:-first-steps-1">Tutorial One: first steps</a>, we introduced a single state variable. However, much more complex syntax is supported. This syntax hijacks JuMP&#39;s <code>@variable</code> macro syntax, so it will be familiar to users of JuMP, but may look unusual at first glance.</p><pre><code class="language-julia">RESERVOIRS = [ :upper, :middle, :lower ]
+V0 = Dict(
+    :upper  = 10.0,
+    :middle =  5.0,
+    :lower  =  2.5
+)
+@state(m, volume[reservoir=RESERVOIRS], initial_volume == V0[reservoir])</code></pre><p>This will create JuMP variables that can be accessed as <code>volume[:upper]</code> and <code>initial_volume[:lower]</code>. There is also <a href="../apireference.html#SDDP.@states"><code>@states</code></a>, an analogue to JuMP&#39;s <code>@variables</code> macro. It can be used as follows:</p><pre><code class="language-julia">@states(sp, begin
+    x &gt;= 0,   x0==1
+    y[i=1:2], y0==i
+end)</code></pre><h2><a class="nav-anchor" id="if-statements-in-more-detail-1" href="#if-statements-in-more-detail-1"><code>if</code> statements in more detail</a></h2><p>In <a href="04_markovian_policygraphs.html#Tutorial-Four:-Markovian-policy-graphs-1">Tutorial Four: Markovian policy graphs</a>, we used an <code>if</code> statement to control the call to <code>setnoiseprobability!</code> depending on the Markov state. This can be used much more generally. For example:</p><pre><code class="language-julia">m = SDDPModel(
+    #...arguments omitted ...
+        ) do sp, t, i
+    @state(m, x&gt;=0, x0==0)
+    if t == 1
+        @stageobjective(m, x)
+    else
+        if i == 1
+            @variable(m, u &gt;= 1)
+            @constraint(m, x0 + u == x)
+        else
+            @rhsnoise(m, w=[1,2], x0 + w == x)
+        end
+        @stageobjective(m, x0 + x)
+    end
+end</code></pre><p>You could, of course, do the following as well:</p><pre><code class="language-julia">function first_stage(sp::JuMP.Model, x0, x)
+    @stageobjective(m, x)
+end
+function second_stage(sp::JuMP.Model, x0, x)
+    if i == 1
+        @variable(m, u &gt;= 1)
+        @constraint(m, x0 + u == x)
+    else
+        @rhsnoise(m, w=[1,2], x0 + w == x)
+    end
+    @stageobjective(m, x0 + x)
+end
+m = SDDPModel(
+    #...arguments omitted ...
+        ) do sp, t, i
+    @state(m, x&gt;=0, x0==0)
+    if t == 1
+        first_stage(m, x0, x)
+    else
+        second_stage(m, x0, x)
+    end
+end</code></pre><h2><a class="nav-anchor" id="Stage-dependent-risk-measures-1" href="#Stage-dependent-risk-measures-1">Stage-dependent risk measures</a></h2><p>In <a href="05_risk.html#Tutorial-Five:-risk-1">Tutorial Five: risk</a>, we discussed adding risk measures to our model. We used the same risk measure for every stage. However, often you may want to have time-varying risk measures. This can be accomplished very easily: instead of passing a risk measure to the <code>risk_measure</code> keyword argument, we pass a function that takes two inputs: <code>t::Int</code>, the index of the stage; and <code>i::Int</code>, the index of the Markov state. For example:</p><pre><code class="language-julia">function build_my_risk_measure(t::Int, i::Int)
+    if t == 1
+        return Expectation()
+    elseif i == 1
+        return AVaR(0.5)
+    else
+        return 0.5 * Expectation() + 0.5 * WorstCase()
+    end
+end
+
+m = SDDPModel(
+    # ... arguments omitted ...
+    risk_measure = build_my_risk_measure
+                                ) do sp, t, i
+    # ... formulation omitted ...
+end</code></pre><h2><a class="nav-anchor" id="Reading-and-writing-cuts-to-file-1" href="#Reading-and-writing-cuts-to-file-1">Reading and writing cuts to file</a></h2><p>It&#39;s possible to save the cuts that are discovered during a solve to a file so that they can be read back in or used for other analysis. This can be done using the <code>cut_output_file</code> to <a href="../apireference.html#JuMP.solve"><code>solve</code></a>:</p><pre><code class="language-julia">m = build_model()
+SDDP.solve(m
+    max_iterations  = 10,
+    cut_output_file = &quot;cuts.csv&quot;
+)</code></pre><p><code>cuts.csv</code> is a csv file with <code>N+3</code> columns, where <code>N</code> is the number of state variables in the model. The columns are: (1) the index of the stage; (2) the index of the Markov state; (3) the intercept; and (4+), the coefficients of the cuts for each of the state variables.</p><p>This cut file can be read back into a model using <a href="../apireference.html#SDDP.loadcuts!"><code>loadcuts!</code></a>:</p><pre><code class="language-julia">m2 = build_model()
+loadcuts!(m2, &quot;cuts.csv&quot;)</code></pre><footer><hr/><a class="previous" href="07_plotting.html"><span class="direction">Previous</span><span class="title">Tutorial Seven: plotting</span></a><a class="next" href="../readings.html"><span class="direction">Next</span><span class="title">Readings</span></a></footer></article></body></html>
