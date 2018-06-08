@@ -692,8 +692,8 @@ var documenterSearchIndex = {"docs": [
     "location": "apireference.html#SDDP.LevelOneCutOracle",
     "page": "Reference",
     "title": "SDDP.LevelOneCutOracle",
-    "category": "function",
-    "text": "LevelOneCutOracle()\n\nDescription\n\nInitialize the cut oracle for Level One cut selection. See:\n\nV. de Matos,A. Philpott, E. Finardi, Improving the performance of Stochastic Dual Dynamic Programming, Journal of Computational and Applied Mathematics 290 (2015) 196–208.\n\n\n\n"
+    "category": "type",
+    "text": "LevelOneCutOracle()\n\nDescription\n\nInitialize the cut oracle for Level One cut selection. See:\n\nV. de Matos, A. Philpott, E. Finardi, Improving the performance of Stochastic Dual Dynamic Programming, Journal of Computational and Applied Mathematics 290 (2015) 196–208.\n\n\n\n"
 },
 
 {
