@@ -46,13 +46,13 @@ end</code></pre><h2><a class="nav-anchor" id="Formulating-the-problem-1" href="#
     @stageobjective(sp, mupliplier = [1.2, 1.0, 0.8],
         mupliplier * fuel_cost[t] * thermal_generation
     )
-end</code></pre><h2><a class="nav-anchor" id="Solving-the-problem-1" href="#Solving-the-problem-1">Solving the problem</a></h2><p>Now we need to solve the problem. As in the previous two tutorials, we use the <a href="../apireference.html#JuMP.solve"><code>solve</code></a> function. However, this time we use the bound stalling stopping rule. This can be controlled via the <code>bound_convergence</code> keyword to <a href="../apireference.html#JuMP.solve"><code>solve</code></a>. The syntax has a lot going on so we&#39;re going to give an example of how it is used, and then walk through the different components.</p><pre><code class="language-julia">status = solve(m,
-    bound_convergence = BoundConvergence(
+end</code></pre><h2><a class="nav-anchor" id="Solving-the-problem-1" href="#Solving-the-problem-1">Solving the problem</a></h2><p>Now we need to solve the problem. As in the previous two tutorials, we use the <a href="../apireference.html#JuMP.solve"><code>solve</code></a> function. However, this time we use the bound stalling stopping rule. This can be controlled via the <code>bound_stalling</code> keyword to <a href="../apireference.html#JuMP.solve"><code>solve</code></a>. The syntax has a lot going on so we&#39;re going to give an example of how it is used, and then walk through the different components.</p><pre><code class="language-julia">status = solve(m,
+    bound_stalling = BoundStalling(
         iterations = 5,
         rtol       = 0.0,
         atol       = 1e-6
     )
-)</code></pre><p>First, the <code>iterations</code> argument specifies how many iterations that the bound must change by less than <code>atol</code> or <code>rtol</code> before terminating. For this example, we choose to terminate the SDDP algorithm after the bound has failed to improve for <code>5</code> iterations. Second, the <code>rtol</code> and <code>atol</code> keywords determine the absolute and relative tolerances by which we compare the equality of the bound in consecutive iterations. In this case, since the model is simple we choose an absolute convergence tolerance of <code>1e-6</code>.</p><p>The termination status is <code>:bound_convergence</code>, and the output from the log is now:</p><pre><code class="language-none">-------------------------------------------------------------------------------
+)</code></pre><p>First, the <code>iterations</code> argument specifies how many iterations that the bound must change by less than <code>atol</code> or <code>rtol</code> before terminating. For this example, we choose to terminate the SDDP algorithm after the bound has failed to improve for <code>5</code> iterations. Second, the <code>rtol</code> and <code>atol</code> keywords determine the absolute and relative tolerances by which we compare the equality of the bound in consecutive iterations. In this case, since the model is simple we choose an absolute convergence tolerance of <code>1e-6</code>.</p><p>The termination status is <code>:bound_stalling</code>, and the output from the log is now:</p><pre><code class="language-none">-------------------------------------------------------------------------------
                           SDDP.jl © Oscar Dowson, 2017-2018
 -------------------------------------------------------------------------------
     Solver:
@@ -76,7 +76,7 @@ end</code></pre><h2><a class="nav-anchor" id="Solving-the-problem-1" href="#Solv
 -------------------------------------------------------------------------------
     Other Statistics:
         Iterations:         7
-        Termination Status: bound_convergence
+        Termination Status: bound_stalling
 ===============================================================================</code></pre><h2><a class="nav-anchor" id="Understanding-the-solution-1" href="#Understanding-the-solution-1">Understanding the solution</a></h2><p>Instead of performing a Monte Carlo simulation, you may want to simulate one particular sequence of noise realizations. This <em>historical</em> simulation can also be conducted using the <a href="../apireference.html#SDDP.simulate"><code>simulate</code></a> function.</p><pre><code class="language-julia">simulation_result = simulate(m,
     [:outgoing_volume, :thermal_generation, :hydro_generation, :hydro_spill],
     noises = [1, 1, 3]
