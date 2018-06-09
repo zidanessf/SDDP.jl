@@ -13,7 +13,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Home",
     "title": "SDDP.jl Documentation",
     "category": "section",
-    "text": "SDDP.jl is a package for solving large multistage convex stochastic optimization problems using _stochastic dual dynamic programming_. In this manual, we\'re going to assume a reasonable amount of background knowledge about stochastic optimization, the SDDP algorithm, Julia, and JuMP.note: Note\nIf you don\'t have that background, you may want to brush up on some Readings.note: Note\nYou can find the old, terribly incomplete documentation at Old Manual."
+    "text": "SDDP.jl is a package for solving large multistage convex stochastic optimization problems using _stochastic dual dynamic programming_. In this manual, we\'re going to assume a reasonable amount of background knowledge about stochastic optimization, the SDDP algorithm, Julia, and JuMP.note: Note\nIf you don\'t have that background, you may want to brush up on some Readings."
 },
 
 {
@@ -21,7 +21,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Home",
     "title": "Getting started",
     "category": "section",
-    "text": "This package is unregistered so you will need to Pkg.clone it as follows:Pkg.clone(\"https://github.com/odow/SDDP.jl.git\")If you want to use the parallel features of SDDP.jl, you should start Julia with some worker processes (julia -p N), or add by running julia> addprocs(N) in a running Julia session.Once you\'ve got SDDP.jl installed, you should read some tutorials, beginnng with Tutorial One: first steps."
+    "text": "This package is unregistered so you will need to Pkg.clone it as follows:Pkg.clone(\"https://github.com/odow/SDDP.jl.git\")If you want to use the parallel features of SDDP.jl, you should start Julia with some worker processes (julia -p N), or add by running julia> addprocs(N) in a running Julia session.Once you\'ve got SDDP.jl installed, you should read some tutorials, beginning with Tutorial One: first steps."
 },
 
 {
@@ -30,6 +30,14 @@ var documenterSearchIndex = {"docs": [
     "title": "Citing SDDP.jl",
     "category": "section",
     "text": "If you use SDDP.jl, we ask that you please cite the following paper:@article{dowson_sddp.jl,\n	title = {{SDDP}.jl: a {Julia} package for stochastic dual dynamic programming},\n	url = {http://www.optimization-online.org/DB_HTML/2017/12/6388.html},\n	journal = {Optimization Online},\n	author = {Dowson, Oscar and Kapelevich, Lea},\n	year = {2017}\n}"
+},
+
+{
+    "location": "index.html#FAQ-1",
+    "page": "Home",
+    "title": "FAQ",
+    "category": "section",
+    "text": "Q. How do I make the constraint coefficients random?A. Due to the design of JuMP, it\'s difficult to efficiently modify constraint coefficients. Therefore, you can only vary the right hand-side of a constraint using the @rhsnoise macro.As a work around, we suggest you either reformulate the model so the uncertainty appears in the RHS, or model the uncertainty as a Markov process. Tutorial Four: Markovian policy graphs explains how to implement this. You might also want to take a look at the asset management example to see an example of this. Make sure you keep in mind that a new value function is built at each Markov state which increases the computation time and memory requirements."
 },
 
 {
@@ -61,7 +69,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Tutorial One: first steps",
     "title": "State variables",
     "category": "section",
-    "text": "There is one state variable in our model: the quantity of water in the reservoir at the end of stage t. Two add this state variable to the model, SDDP.jl defines the @state macro.  This macro takes three arguments:sp - the JuMP model;\nan expression for the outgoing state variable; and\nan expression for the incoming state variable.The 2ⁿᵈ argument can be any valid JuMP @variable syntax and can include, for example, upper and lower bounds. The 3ʳᵈ argument must be the name of the incoming state variable, followed by ==, and then the value of the state variable at the root node of the policy graph. For our hydrothermal example, the state variable can be constructed as:@state(sp, 0 <= outgoing_volume <= 200, incoming_volume == 200)"
+    "text": "There is one state variable in our model: the quantity of water in the reservoir at the end of stage t. Two add this state variable to the model, SDDP.jl defines the @state macro.  This macro takes three arguments:sp - the JuMP model;\nan expression for the outgoing state variable; and\nan expression for the incoming state variable.The 2nd argument can be any valid JuMP @variable syntax and can include, for example, upper and lower bounds. The 3rd argument must be the name of the incoming state variable, followed by ==, and then the value of the state variable at the root node of the policy graph. For our hydrothermal example, the state variable can be constructed as:@state(sp, 0 <= outgoing_volume <= 200, incoming_volume == 200)"
 },
 
 {
@@ -125,7 +133,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Tutorial Two: RHS noise",
     "title": "Formulating the problem",
     "category": "section",
-    "text": "In this tutorial, we are going to model inflows that are stagewise-independent. Specifically, we assume that in each stage, there is an even probability of sampling an inflow of 0.0, 50.0, or 100.0. To add this noise term to the model, we need to use the @rhsnoise macro provided by SDDP.jl.@rhsnoise is similar to the JuMP @constraint macro. It takes three arguments. The first is the subproblem sp. The second argument is of the form name=[realizations], where name is a descriptive name, and realizations is a vector of elements in the sample space. The third argument is any valid JuMP constraint that utilizes name in the right-hand side. For our example, we have:@rhsnoise(sp, inflow = [0.0, 50.0, 100.0],\n    outgoing_volume - (incoming_volume - hydro_generation - hydro_spill) == inflow\n)However, the realizations do not have to be the full right-hand side term. The following is also valid:inflows = [0.0, 50.0, 100.0]\n@rhsnoise(sp, i = [1,2,3],\n    outgoing_volume - (incoming_volume - hydro_generation - hydro_spill) == inflows[i]\n)We can set the probabilitiy of sampling each element in the sample space using the setnoiseprobability! function. If setnoiseprobability! isn\'t called, the distribution is assumed to be uniform. Despite this, for the sake of completeness, we set the probability for our example as:setnoiseprobability!(sp, [1/3, 1/3, 1/3])Our model is now:m = SDDPModel(\n                  sense = :Min,\n                 stages = 3,\n                 solver = ClpSolver(),\n        objective_bound = 0.0\n                                        ) do sp, t\n    @state(sp, 0 <= outgoing_volume <= 200, incoming_volume == 200)\n    @variables(sp, begin\n        thermal_generation >= 0\n        hydro_generation   >= 0\n        hydro_spill        >= 0\n    end)\n    @rhsnoise(sp, inflow = [0.0, 50.0, 100.0],\n        outgoing_volume - (incoming_volume - hydro_generation - hydro_spill) == inflow\n    )\n    setnoiseprobability!(sp, [1/3, 1/3, 1/3])\n    @constraints(sp, begin\n        thermal_generation + hydro_generation == 150\n    end)\n    fuel_cost = [50.0, 100.0, 150.0]\n    @stageobjective(sp, fuel_cost[t] * thermal_generation )\nend"
+    "text": "In this tutorial, we are going to model inflows that are stagewise-independent. Specifically, we assume that in each stage, there is an even probability of sampling an inflow of 0.0, 50.0, or 100.0. To add this noise term to the model, we need to use the @rhsnoise macro provided by SDDP.jl.@rhsnoise is similar to the JuMP @constraint macro. It takes three arguments. The first is the subproblem sp. The second argument is of the form name=[realizations], where name is a descriptive name, and realizations is a vector of elements in the sample space. The third argument is any valid JuMP constraint that utilizes name in the right-hand side. For our example, we have:@rhsnoise(sp, inflow = [0.0, 50.0, 100.0],\n    outgoing_volume - (incoming_volume - hydro_generation - hydro_spill) == inflow\n)However, the realizations do not have to be the full right-hand side term. The following is also valid:inflows = [0.0, 50.0, 100.0]\n@rhsnoise(sp, i = [1,2,3],\n    outgoing_volume - (incoming_volume - hydro_generation - hydro_spill) == inflows[i]\n)We can set the probability of sampling each element in the sample space using the setnoiseprobability! function. If setnoiseprobability! isn\'t called, the distribution is assumed to be uniform. Despite this, for the sake of completeness, we set the probability for our example as:setnoiseprobability!(sp, [1/3, 1/3, 1/3])Our model is now:m = SDDPModel(\n                  sense = :Min,\n                 stages = 3,\n                 solver = ClpSolver(),\n        objective_bound = 0.0\n                                        ) do sp, t\n    @state(sp, 0 <= outgoing_volume <= 200, incoming_volume == 200)\n    @variables(sp, begin\n        thermal_generation >= 0\n        hydro_generation   >= 0\n        hydro_spill        >= 0\n    end)\n    @rhsnoise(sp, inflow = [0.0, 50.0, 100.0],\n        outgoing_volume - (incoming_volume - hydro_generation - hydro_spill) == inflow\n    )\n    setnoiseprobability!(sp, [1/3, 1/3, 1/3])\n    @constraints(sp, begin\n        thermal_generation + hydro_generation == 150\n    end)\n    fuel_cost = [50.0, 100.0, 150.0]\n    @stageobjective(sp, fuel_cost[t] * thermal_generation )\nend"
 },
 
 {
@@ -361,6 +369,14 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
+    "location": "tutorial/08_odds_and_ends.html#Multiple-RHS-noise-constraints-1",
+    "page": "Tutorial Eight: odds and ends",
+    "title": "Multiple RHS noise constraints",
+    "category": "section",
+    "text": "In Tutorial Two: RHS noise, we added a single constraint with noise in the RHS term; however, you probably want to add many of these constraints. There are two ways to do this. First, you can just add multiple calls like:@rhsnoise(sp, w=[1,2,3], x <= w)\n@rhsnoise(sp, w=[4,5,6], y >= w)If you have multiple calls to @rhsnoise, they must have the same number of elements in their sample space. For example, the following will not work:@rhsnoise(sp, w=[1,2,3], x <= w)    # 3 elements\n@rhsnoise(sp, w=[4,5,6,7], y >= w)  # 4 elementsAnother option is to use the @rhsnoises macro. It is very similar to @states and JuMP\'s @consraints macro:@rhsnoises(sp, w=[1,2,3], begin\n    x <= w\n    y >= w + 3\nend)"
+},
+
+{
     "location": "tutorial/08_odds_and_ends.html#if-statements-in-more-detail-1",
     "page": "Tutorial Eight: odds and ends",
     "title": "if statements in more detail",
@@ -382,6 +398,46 @@ var documenterSearchIndex = {"docs": [
     "title": "Reading and writing cuts to file",
     "category": "section",
     "text": "It\'s possible to save the cuts that are discovered during a solve to a file so that they can be read back in or used for other analysis. This can be done using the cut_output_file to solve:m = build_model()\nSDDP.solve(m\n    max_iterations  = 10,\n    cut_output_file = \"cuts.csv\"\n)cuts.csv is a csv file with N+3 columns, where N is the number of state variables in the model. The columns are: (1) the index of the stage; (2) the index of the Markov state; (3) the intercept; and (4+), the coefficients of the cuts for each of the state variables.This cut file can be read back into a model using loadcuts!:m2 = build_model()\nloadcuts!(m2, \"cuts.csv\")"
+},
+
+{
+    "location": "tutorial/08_odds_and_ends.html#Timer-outputs-1",
+    "page": "Tutorial Eight: odds and ends",
+    "title": "Timer outputs",
+    "category": "section",
+    "text": "SDDP.jl embeds the great TimerOutputs.jl package to help profile where time is spent during the solution process. You can print the timing statistics by setting print_level=2 in a solve call. This produces a log like:-------------------------------------------------------------------------------\n                          SDDP.jl © Oscar Dowson, 2017-2018\n-------------------------------------------------------------------------------\n    Solver:\n        Serial solver\n    Model:\n        Stages:         3\n        States:         1\n        Subproblems:    5\n        Value Function: Default\n-------------------------------------------------------------------------------\n              Objective              |  Cut  Passes    Simulations   Total\n     Simulation       Bound   % Gap  |   #     Time     #    Time    Time\n-------------------------------------------------------------------------------\n       27.000K         5.818K        |     1    0.0      0    0.0    0.0\n        2.000K         6.952K        |     2    0.0      0    0.0    0.0\n        2.000K         6.952K        |     3    0.0      0    0.0    0.0\n       11.000K         7.135K        |     4    0.0      0    0.0    0.0\n        2.000K         7.135K        |     5    0.0      0    0.0    0.0\n        2.000K         7.135K        |     6    0.0      0    0.0    0.0\n        5.000K         7.135K        |     7    0.0      0    0.0    0.0\n        2.000K         7.135K        |     8    0.0      0    0.0    0.0\n        5.000K         7.135K        |     9    0.0      0    0.0    0.0\n       12.500K         7.135K        |    10    0.0      0    0.0    0.0\n-------------------------------------------------------------------------------\n ─────────────────────────────────────────────────────────────────────────────────\n         Timing statistics                Time                   Allocations\n                                  ──────────────────────   ───────────────────────\n         Tot / % measured:            40.8ms / 98.0%           0.97MiB / 100%\n\n Section                  ncalls     time   %tot     avg     alloc   %tot      avg\n ─────────────────────────────────────────────────────────────────────────────────\n Solve                         1   40.0ms   100%  40.0ms   0.96MiB  100%   0.96MiB\n   Iteration Phase            10   38.3ms  95.6%  3.83ms    950KiB  96.3%  95.0KiB\n     Backward Pass            10   30.5ms  76.3%  3.05ms    784KiB  79.4%  78.4KiB\n       JuMP.solve            150   23.8ms  59.4%   159μs    423KiB  42.9%  2.82KiB\n         optimize!           150   19.7ms  49.2%   131μs         -  0.00%        -\n         prep JuMP model     150   2.69ms  6.72%  17.9μs    193KiB  19.6%  1.29KiB\n         getsolution         150   1.09ms  2.71%  7.23μs    209KiB  21.1%  1.39KiB\n       Cut addition           30   1.12ms  2.81%  37.4μs   69.1KiB  7.01%  2.30KiB\n         risk measure         30   27.5μs  0.07%   917ns   8.91KiB  0.90%        -\n     Forward Pass             10   7.68ms  19.2%   768μs    163KiB  16.5%  16.3KiB\n       JuMP.solve             30   5.89ms  14.7%   196μs   93.4KiB  9.47%  3.11KiB\n         optimize!            30   4.59ms  11.5%   153μs         -  0.00%        -\n         prep JuMP model      30    909μs  2.27%  30.3μs   45.6KiB  4.62%  1.52KiB\n         getsolution          30    303μs  0.76%  10.1μs   41.6KiB  4.21%  1.39KiB\n ─────────────────────────────────────────────────────────────────────────────────\n    Other Statistics:\n        Iterations:         10\n        Termination Status: max_iterations\n===============================================================================That concludes our eighth tutorial for SDDP.jl. In our next tutorial, Tutorial Nine: nonlinear models, we discuss how SDDP.jl can be used to solve problems that have nonlinear transition functions."
+},
+
+{
+    "location": "tutorial/09_nonlinear.html#",
+    "page": "Tutorial Nine: nonlinear models",
+    "title": "Tutorial Nine: nonlinear models",
+    "category": "page",
+    "text": ""
+},
+
+{
+    "location": "tutorial/09_nonlinear.html#Tutorial-Nine:-nonlinear-models-1",
+    "page": "Tutorial Nine: nonlinear models",
+    "title": "Tutorial Nine: nonlinear models",
+    "category": "section",
+    "text": "In our previous tutorials, we formulated a linear version of the hydrothermal scheduling problem. To do so, we had to make a large assumption, namely, that the inflows were stagewise-independent. In Tutorial Four: Markovian policy graphs, we improved upon this slightly using a Markov chain with persistent climate states. However, another commonly used model is to assume that the inflows follow a log auto-regressive process. In this tutorial, we explain how to implement this in SDDP.jl.As a starting point, we use a model that is very similar to the hydrothermal scheduling problem we formulated in Tutorial Two: RHS noise. In that model, we assumed that there the a constraint:@rhsnoise(sp, inflow = [0.0, 50.0, 100.0],\n    outgoing_volume - (incoming_volume - hydro_generation - hydro_spill) == inflow\n)We assumed that the inflow term was stagewise-independent. In this tutorial, we assume that the inflow term can be modelled like:log(inflow[t]) = log(inflow[t-1]) + log(noise),where noise is drawn from [0.9, 1.0, 1.1] with uniform probability. Since we value of the inflow in the previous stage affects the value in the current stage, it needs to be added as a state variable:@state(sp, current_inflow >= 1, previous_inflow == 50)Note that we place a small, positive lower bound on the current_inflow to prevent the solver calling the undefined log(0.0).Now we want to add the log transition constraint. We can do this using JuMP\'s @NLconstraint macro to add this constraint. However, SDDP.jl only supports noise terms in the right hand-side of a linear constraint. We can overcome this limitation by introducing a dummy variable (note that it also has a small, positive lower bound to avoid log(0.0)):@variable(sp, noise >= 0.1)\n@rhsnoise(sp, ω = [0.9, 1.0, 1.1], noise == ω)\n@NLconstraint(sp, log(current_inflow) == log(previous_inflow) + log(noise))Finally, we\'re using JuMP\'s nonlinear functionality, we need to choose an appropriate solver. We choose to use the COIN solver Ipopt. Therefore, our final model is:using JuMP, SDDP, Ipopt\nm = SDDPModel(\n    stages          = 3,\n    sense           = :Min,\n    solver          = IpoptSolver(print_level=0),\n    objective_bound = 0.0\n                ) do sp, t\n    @states(sp, begin\n        200 >= outgoing_volume >= 0, incoming_volume == 200\n               current_inflow  >= 1, previous_inflow ==  50\n    end)\n    @variables(sp, begin\n        thermal_generation >= 0\n        hydro_generation   >= 0\n        hydro_spill        >= 0\n        inflow_noise_term  >= 0.1\n    end)\n    @constraints(sp, begin\n        outgoing_volume - (incoming_volume - hydro_generation - hydro_spill) == current_inflow\n        hydro_generation + thermal_generation >= 150.0\n    end)\n\n    @rhsnoise(sp, ω = [0.9, 1.0, 1.1], inflow_noise_term == ω)\n    @NLconstraint(sp, log(current_inflow) == log(previous_inflow) + log(inflow_noise_term))\n\n    fuel_cost = [50.0, 100.0, 150.0]\n    @stageobjective(sp, fuel_cost[t] * thermal_generation )\nendThis problem can be solved just like any other SDDP model:status = solve(m, max_iterations = 10)\nsimulation_result = simulate(m, 1, [:inflow′])Then, we can check that the inflows do indeed follow a log auto-regressive process.julia> simulaton_result[1][:inflow′]\n 55.0\n 60.5\n 54.45That concludes our ninth tutorial for SDDP.jl. In our next tutorial, Tutorial Ten: parallelism, we explain how to solve SDDP models in parallel."
+},
+
+{
+    "location": "tutorial/10_parallel.html#",
+    "page": "Tutorial Ten: parallelism",
+    "title": "Tutorial Ten: parallelism",
+    "category": "page",
+    "text": ""
+},
+
+{
+    "location": "tutorial/10_parallel.html#Tutorial-Ten:-parallelism-1",
+    "page": "Tutorial Ten: parallelism",
+    "title": "Tutorial Ten: parallelism",
+    "category": "section",
+    "text": "The SDDP algorithm is highly parallelizable. In SDDP.jl, we chose to implement an approach that minimizes inter-process communication. We call this asynchronous SDDP.In our implementation, one process is designated the master process and the remainder are designated as slaves. Each slave receives a full copy of the SDDP model and is set to work, performing iterations. At the end of each iteration, the slave passes the master the cuts it discovered during the iteration and receives any new cuts discovered by other slaves. The slave also queries the master as to whether it should terminate, perform another iteration, or perform a simulation. If the master requests a simulation (for example, to calculate a confidence interval in order to test for convergence), the slave returns the objective value of the simulation rather than a new set of cuts.In this tutorial, we explain how to use the asynchronous solve feature of SDDP.jl.First, we need to add some extra processes to Julia. This can be done two ways. We can start Julia using julia -p N, where N is the number of worker processes to add, or we can use the addprocs(N) function while Julia is running. The main process that co-ordinates everything is called the master process, and the remote  processes are called workers. For example, to add two workers, we run:julia> addprocs(2)\n2-element Array{Int64, 1}:\n 2\n 3One way of running a command on all of the processes is to use the @everywhere macro. We can also use the myid() function to query the index of the process. For example:julia> @everywhere println(\"Called from: $(myid())\")\nCalled from: 1\n        From worker 3:  Called from: 3\n        From worker 2:  Called from: 2Note that the order we receive things from the worker processes is not deterministic.Now what we need to do is to initialize the random number generator on each process. However, we need to be careful not to use the same seed on each process or each process will perform identical SDDP iterations!julia> @everywhere srand(123 * myid())This will set srand(123) on process 1, srand(246) on process 2, and so on.!!!note     If you are using any data or function in the subproblem definition, these     need to be copied to every process. The easiest way to do this is to place     everything in a file and then run @everywhere include(\"path/to/my/file\").Recall from Tutorial Four: Markovian policy graphs that our model is:m = SDDPModel(\n                  sense = :Min,\n                 stages = 3,\n                 solver = ClpSolver(),\n        objective_bound = 0.0,\n      markov_transition = Array{Float64, 2}[\n          [ 1.0 ]\',\n          [ 0.75 0.25 ],\n          [ 0.75 0.25 ; 0.25 0.75 ]\n      ]\n                                        ) do sp, t, i\n    @state(sp, 0 <= outgoing_volume <= 200, incoming_volume == 200)\n    @variables(sp, begin\n        thermal_generation >= 0\n        hydro_generation   >= 0\n        hydro_spill        >= 0\n    end)\n    @rhsnoise(sp, inflow = [0.0, 50.0, 100.0],\n        outgoing_volume - (incoming_volume - hydro_generation - hydro_spill) == inflow\n    )\n    @constraints(sp, begin\n        thermal_generation + hydro_generation == 150\n    end)\n    fuel_cost = [50.0, 100.0, 150.0]\n    @stageobjective(sp, mupliplier = [1.2, 1.0, 0.8],\n        mupliplier * fuel_cost[t] * thermal_generation\n    )\n    if i == 1  # wet climate state\n        setnoiseprobability!(sp, [1/6, 1/3, 0.5])\n    else       # dry climate state\n        setnoiseprobability!(sp, [0.5, 1/3, 1/6])\n    end\nendWe can solve this using SDDP.jl\'s asynchronous feature by passing an instance of Asynchronous to the solve_type keyword in solve:status = solve(m,\n    max_iterations = 10,\n    solve_type     = Asynchronous()\n)If you have multiple processes, SDDP.jl will detect this and choose asynchronous by default. You can force the serial solution by passing an instance of Serial to solve_type.The log is:-------------------------------------------------------------------------------\n                          SDDP.jl © Oscar Dowson, 2017-2018\n-------------------------------------------------------------------------------\n    Solver:\n        Asynchronous solver with 2 slave processors\n    Model:\n        Stages:         3\n        States:         1\n        Subproblems:    5\n        Value Function: Default\n-------------------------------------------------------------------------------\n              Objective              |  Cut  Passes    Simulations   Total\n     Simulation       Bound   % Gap  |   #     Time     #    Time    Time\n-------------------------------------------------------------------------------\n       27.000K         5.818K        |     2    0.0      0    0.0    0.0\n        0.000          6.198K        |     1    0.0      0    0.0    0.0\n        9.000K         6.952K        |     3    0.0      0    0.0    0.0\n        2.000K         7.135K        |     4    0.0      0    0.0    0.0\n        2.000K         7.135K        |     5    0.0      0    0.0    0.0\n        5.000K         7.135K        |     6    0.0      0    0.0    0.0\n        5.000K         7.135K        |     7    0.0      0    0.0    0.0\n        2.000K         7.135K        |     8    0.0      0    0.0    0.1\n       24.000K         7.135K        |     9    0.0      0    0.0    0.1\n       20.000K         7.135K        |    10    0.1      0    0.0    0.1\n-------------------------------------------------------------------------------\n    Other Statistics:\n        Iterations:         10\n        Termination Status: max_iterations\n===============================================================================Note that the order of the Cut # column is not sequential because they are numbered in order of when they were created.That concludes our tenth tutorial for SDDP.jl."
 },
 
 {
@@ -438,198 +494,6 @@ var documenterSearchIndex = {"docs": [
     "title": "JuMP",
     "category": "section",
     "text": "Source code on Githubhttps://www.github.com/JuliaOpt/JuMP.jlThe paper describing JuMPDunning, I., Huchette, J., Lubin, M., 2017. JuMP: A Modeling Language for  Mathematical Optimization. SIAM Review 59, 295–320. doi:10.1137/15M1020575"
-},
-
-{
-    "location": "oldindex.html#",
-    "page": "Old Manual",
-    "title": "Old Manual",
-    "category": "page",
-    "text": ""
-},
-
-{
-    "location": "oldindex.html#Old-Manual-1",
-    "page": "Old Manual",
-    "title": "Old Manual",
-    "category": "section",
-    "text": ""
-},
-
-{
-    "location": "oldindex.html#Types-of-problems-SDDP.jl-can-solve-1",
-    "page": "Old Manual",
-    "title": "Types of problems SDDP.jl can solve",
-    "category": "section",
-    "text": "To start, lets discuss the types of problems SDDP.jl can solve, since it has a few features that are non-standard, and it is missing some features that are standard.SDDP.jl can solve multi-stage convex stochastic optimizations problems witha finite discrete number of states;\ncontinuous state and control variables;\nHazard-Decision (Wait-and-See) uncertainty realization;\nstagewise independent uncertainty in the RHS of the constraints that is  drawn from a finite discrete distribution;\nstagewise independent uncertainty in the objective function that is  drawn from a finite discrete distribution;\na markov chain for temporal dependence. The markov chain forms a directed,  acyclic, feed-forward graph with a finite (and at least one) number of  markov states in each stage.note: Note\nStagewise independent uncertainty in the constraint coefficients is not supported. You should reformulate the problem, or model the uncertainty as a markov chain."
-},
-
-{
-    "location": "oldindex.html#Formulating-the-problem-1",
-    "page": "Old Manual",
-    "title": "Formulating the problem",
-    "category": "section",
-    "text": "... still to do ...For now, go look at the examples."
-},
-
-{
-    "location": "oldindex.html#The-Asset-Management-Problem-1",
-    "page": "Old Manual",
-    "title": "The Asset Management Problem",
-    "category": "section",
-    "text": "The goal of the asset management problem is to choose an investment portfolio that is composed of stocks and bonds in order to meet a target wealth goal at the end of the time horizon. After five, and ten years, the agent observes the portfolio and is able to re-balance their wealth between the two asset classes. As an extension to the original problem, we introduce two new random variables. The first that represents a source of additional wealth in years 5 and 10. The second is an immediate reward that the agent incurs for holding stocks at the end of years 5 and 10. This can be though of as a dividend that cannot be reinvested."
-},
-
-{
-    "location": "oldindex.html#Communicating-the-problem-to-the-solver-1",
-    "page": "Old Manual",
-    "title": "Communicating the problem to the solver",
-    "category": "section",
-    "text": "The second step in the optimization process is communicating the problem to the solver. To do this, we are going to build each subproblem as a JuMP model, and provide some metadata that describes how the JuMP subproblems inter-relate."
-},
-
-{
-    "location": "oldindex.html#The-Model-Constructor-1",
-    "page": "Old Manual",
-    "title": "The Model Constructor",
-    "category": "section",
-    "text": "The core type of SDDP.jl is the SDDPModel object. It can be constructed withm = SDDPModel( ... metadata as keyword arguments ... ) do sp, t, i\n    ... JuMP subproblem definition ...\nendWe draw the readers attention to three sections in the SDDPModel constructor."
-},
-
-{
-    "location": "oldindex.html#Keyword-Metadata-1",
-    "page": "Old Manual",
-    "title": "Keyword Metadata",
-    "category": "section",
-    "text": "For a comprehensive list of options, checkout SDDPModel or type julia> ? SDDPModel into a Julia REPL. However, we\'ll briefly list the important ones here.Required Keyword argumentsstages::Int: the number of stages in the problem. A stage is defined as  each step in time at which a decion can be made. Defaults to 1.\nobjective_bound: a valid bound on the initial value/cost to go. i.e. for maximisation this may be some large positive number, for minimisation this may be some large negative number. You can ether pass a single value (used for all stages), a vector of values (one for each stage), or a vector of vectors of values (one vector for each stage, containing a vector with one element for each markov stage). Another option is to pass a function that takes two inputs so that f(t, i) returns the valid bound for stage t and markov state i.\nsolver::MathProgBase.AbstractMathProgSolver: any MathProgBase compliant solver that returns duals from a linear program. If this isn\'t specified then you must use JuMP.setsolver(sp, solver) in the stage definition.Optional Keyword argumentssense: must be either :Max or :Min. Defaults to :Min.\ncut_oracle: the cut oracle is responsible for collecting and storing the cuts that define a value function. The cut oracle may decide that only a subset of the total discovered cuts are relevant, which improves solution speed by reducing the size of the subproblems that need solving. Currently must be one of\nDefaultCutOracle() (see DefaultCutOracle for explanation)\nLevelOneCutOracle()(see LevelOneCutOracle for explanation)\nrisk_measure: if a single risk measure is given (i.e.  risk_measure = Expectation()), then this measure will be applied to every  stage in the problem. Another option is to provide a vector of risk  measures. There must be one element for every stage. For example:risk_measure = [ EAVaR(lambda=0.5, beta=0.25), Expectation() ]will apply the i\'th element of risk_measure to every Markov state in the    i\'th stage. The last option is to provide a vector (one element for each    stage) of vectors of risk measures (one for each Markov state in the stage).    For example:risk_measure = [\n# Stage 1 Markov 1 # Stage 1 Markov 2 #\n   [ Expectation(), Expectation() ],\n   # ------- Stage 2 Markov 1 ------- ## ------- Stage 2 Markov 2 ------- #\n   [ EAVaR(lambda=0.5, beta=0.25), EAVaR(lambda=0.25, beta=0.3) ]\n   ]Like the objective bound, another option is to pass a function that takes\nas arguments the stage and markov state and returns a risk measure:function stagedependentrisk(stage, markov_state)\n    if state == 1\n        return Expectation()\n    else\n        if markov_state == 1\n            return EAVaR(lambda=0.5, beta=0.25)\n        else\n            return EAVaR(lambda=0.25, beta=0.3)\n        end\n    end\nend\n\nrisk_measure = stagedependentriskNote that even though the last stage does not have a future cost function    associated with it (as it has no children), we still have to specify a risk    measure. This is necessary to simplify the implementation of the algorithm.For more help see EAVaR or Expectation.markov_transition: define the transition probabilties of the stage graph. If a single array is given, it is assumed that there is an equal number of Markov states in each stage and the transition probabilities are stage invariant. Row indices represent the Markov state in the previous stage. Column indices represent the Markov state in the current stage. Therefore:markov_transition = [0.1 0.9; 0.8 0.2]is the transition matrix when there is 10% chance of transitioning from Markov    state 1 to Markov state 1, a 90% chance of transitioning from Markov state 1    to Markov state 2, an 80% chance of transitioning from Markov state 2 to Markov    state 1, and a 20% chance of transitioning from Markov state 2 to Markov state 2."
-},
-
-{
-    "location": "oldindex.html#do-sp,-t,-i-...-end-1",
-    "page": "Old Manual",
-    "title": "do sp, t, i ... end",
-    "category": "section",
-    "text": "This constructor is just syntactic sugar to make the process of defining a model a little tidier. It\'s nothing special to SDDP.jl and many users will be familiar with it (for example, the open(file, \"w\") do io ... end syntax for file IO).An anonymous function with three arguments (sp, t and i, although these can be named arbitrarily) is constructed. The body of the function should build the subproblem as the JuMP model sp for stage t and markov state i. t is an integer that ranges from 1 to the number of stages. i is also an integer that ranges from 1 to the number of markov states in stage t.Users are also free to explicitly construct a function that takes three arguments, and pass that as the first argument to SDDPModel, along with the keyword arguments. For example:function buildsubproblem!(sp::JuMP.Model, t::Int, i::Int)\n    ... define states etc. ...\nend\nm = SDDPModel(buildsubproblem!; ... metadata as keyword arguments ...)note: Note\nIf you don\'t have any markov states in the model, you don\'t have to include the third argument in the constructor. SDDPModel() do sp, t ... end is also valid syntax."
-},
-
-{
-    "location": "oldindex.html#JuMP-Subproblem-1",
-    "page": "Old Manual",
-    "title": "JuMP Subproblem",
-    "category": "section",
-    "text": "In the next sections, we explain in detail how for model state variables, constraints, the stage objective, and any uncertainties in the model. However, you should keep a few things in mind:the body of the do sp, t, i ... end block is just a normal Julia function body. As such, standard scoping rules apply.\nyou can use t and i whenever, and however, you like. For example:m = SDDPModel() do sp, t, i\n    if t == 1\n        # do something in the first stage only\n    else\n        # do something in the other stages\n    end\nendsp is just a normal JuMP model. You could (if so desired), set the solve hook, or add quadratic constraints (provided you have a quadratic solver)."
-},
-
-{
-    "location": "oldindex.html#State-Variables-1",
-    "page": "Old Manual",
-    "title": "State Variables",
-    "category": "section",
-    "text": "We can define a new state variable in the stage problem sp using the @state macro:@state(sp, x >= 0.5, x0==1)The second argument (x) refers to the outgoing state variable (i.e. the value at the end of the stage). The third argument (x0) refers to the incoming state variable (i.e. the value at the beginning of the stage). For users familiar with SDDP, SDDP.jl handles all the calculation of the dual variables needed to evaluate the cuts automatically behind the scenes.The @state macro is just short-hand for writing:@variable(sp, x >= 0.5)\n@variable(sp, x0, start=1)\nSDDP.statevariable!(sp, x0, x)note: Note\nThe start=1 is only every used behind the scenes by the first stage problem. It\'s really just a nice syntatic trick we use to make specifying the model a bit more compact.This illustrates how we can use indexing just as we would in a JuMP @variable macro:X0 = [3.0, 2.0]\n@state(sp, x[i=1:2], x0==X0[i])In this case, both x and x0 are JuMP dicts that can be indexed with the keys 1 and 2. All the indices must be specified in the second argument, but they can be referred to in the third argument. The indexing of x0 will be identical to that of x.There is also a plural version of the @state macro:@states(sp, begin\n    x >= 0.0, x0==1\n    y >= 0.0, y0==1\nend)"
-},
-
-{
-    "location": "oldindex.html#Standard-JuMP-machinery-1",
-    "page": "Old Manual",
-    "title": "Standard JuMP machinery",
-    "category": "section",
-    "text": "Remember that sp is just a normal JuMP model, and so (almost) anything you can do in JuMP, you can do in SDDP.jl. The one exception is the objective, which we detail in the next section.However, control variables are just normal JuMP variables and can be created using @variable or @variables. Dynamical constraints, and feasiblity sets can be specified using @constraint or @constraints."
-},
-
-{
-    "location": "oldindex.html#The-stage-objective-1",
-    "page": "Old Manual",
-    "title": "The stage objective",
-    "category": "section",
-    "text": "If there is no stagewise independent uncertainty in the objective, then the stage objective (i.e. ignoring the future cost) can be set via the @stageobjective macro. This is similar to the JuMP @objective macro, but without the sense argument. For example:@stageobjective(sp, obj)If there is stagewise independent noise in the objective, we add an additional argument to @stageobjective that has the form kw=realizations.kw is a symbol that can appear anywhere in obj, and realizations is a vector of realizations of the uncertainty. For example:@stageobjective(sp, kw=realizations, obj)\nsetnoiseprobability!(sp, [0.2, 0.3, 0.5])setnoiseprobability! can be used to specify the finite discrete distribution of the realizations (it must sum to 1.0). If you don\'t explicitly call setnoiseprobability!, the distribution is assumed to be uniform.Other examples include:# noise is a coefficient\n@stageobjective(sp, c=[1.0, 2.0, 3.0], c * x)\n# noise is used to index a variable\n@stageobjective(sp, i=[1,2,3], 2 * x[i])"
-},
-
-{
-    "location": "oldindex.html#Dynamics-with-linear-noise-1",
-    "page": "Old Manual",
-    "title": "Dynamics with linear noise",
-    "category": "section",
-    "text": "SDDP.jl also supports uncertainty in the right-hand-side of constraints. Instead of using the JuMP @constraint macro, we need to use the @rhsnoise macro:@rhsnoise(sp, w=[1,2,3], x <= w)\nsetnoiseprobability!(sp, [0.2, 0.3, 0.5])Compared to @constraint, there are a couple of notable differences:indexing is not supported;\nthe second argument is a kw=realizations key-value pair like the @stageobjective;\nthe kw can on either side of the constraint as written, but when normalised  to an Ax <= b form, it must only appear in the b vector.Multiple @rhsnoise constraints can be added, however they must have an identical number of elements in the realizations vector.For example, the following are invalid in SDDP:# noise appears as a variable coefficient\n@rhsnoise(sp, w=[1,2,3], w * x <= 1)\n\n# JuMP style indexing\n@rhsnoise(sp, w=[1,2,3], [i=1:10; mod(i, 2) == 0], x[i] <= w)\n\n# noises have different number of realizations\n@rhsnoise(sp, w=[1,2,3], x <= w)\n@rhsnoise(sp, w=[2,3],   x >= w-1)note: Note\nNoises in the constraints are sampled with the noise in the objective. Therefore, there should be the same number of elements in the realizations for the stage objective, as there are in the constraint noise.There is also a plural form of the @rhsnoise macro:@rhsnoises(sp, w=[1,2,3], begin\n    x <= w\n    x >= w-1\nend)\nsetnoiseprobability!(sp, [0.2, 0.3, 0.5])"
-},
-
-{
-    "location": "oldindex.html#Asset-Management-Example-1",
-    "page": "Old Manual",
-    "title": "Asset Management Example",
-    "category": "section",
-    "text": "We now have all the information necessary to define the Asset Management example in SDDP.jl:using SDDP, JuMP, Clp\n\nm = SDDPModel(\n               # we are minimizing\n                sense = :Min,\n               # there are 4 stages\n               stages = 4,\n               # a large negative value\n      objective_bound = -1000.0,\n               # a MathOptBase compatible solver\n               solver = ClpSolver(),\n               # transition probabilities of the lattice\n    markov_transition = Array{Float64, 2}[\n                        [1.0]\',\n                        [0.5 0.5],\n                        [0.5 0.5; 0.5 0.5],\n                        [0.5 0.5; 0.5 0.5]\n                    ],\n               # risk measures for each stage\n         risk_measure = [\n                        Expectation(),\n                        Expectation(),\n                        EAVaR(lambda = 0.5, beta=0.5),\n                        Expectation()\n                    ]\n                            ) do sp, t, i\n    # Data used in the problem\n    ωs = [1.25, 1.06]\n    ωb = [1.14, 1.12]\n    Φ  = [-1, 5]\n    Ψ  = [0.02, 0.0]\n\n    # state variables\n    @states(sp, begin\n        xs >= 0, xsbar==0\n        xb >= 0, xbbar==0\n    end)\n\n    if t == 1 # we can switch based on the stage\n        # a constraint without noise\n        @constraint(sp, xs + xb == 55 + xsbar + xbbar)\n        # an objective without noise\n        @stageobjective(sp, 0)\n    elseif t == 2 || t == 3\n        # a constraint with noisein the RHS\n        @rhsnoise(sp, φ=Φ, ωs[i] * xsbar + ωb[i] * xbbar + φ == xs + xb)\n        # an objective with noise\n        @stageobjective(sp, ψ = Ψ, -ψ * xs)\n        # noise will be sampled as (Φ[1], Ψ[1]) w.p. 0.6, (Φ[2], Ψ[2]) w.p. 0.4\n        setnoiseprobability!(sp, [0.6, 0.4])\n    else # when t == 4\n        # some control variables\n        @variable(sp, u >= 0)\n        @variable(sp, v >= 0)\n        # dynamics constraint\n        @constraint(sp, ωs[i] * xsbar + ωb[i] * xbbar + u - v == 80)\n        # an objective without noise\n        @stageobjective(sp, 4u - v)\n    end\nend"
-},
-
-{
-    "location": "oldindex.html#Solving-the-problem-efficiently-1",
-    "page": "Old Manual",
-    "title": "Solving the problem efficiently",
-    "category": "section",
-    "text": "During the solution process, SDDP.jl outputs some logging information (an example of this is given below). We briefly describe the columns:The first column (Objective (Simulation)) is either a single value or a confidence interval from a Monte Carlo simulation (see MonteCarloSimulation). When the entry is a single value, its is the objective from a single (and the most recent) forward pass in SDDP. The single value is not an average. The second column (Objective (Bound)) is the deterministic bound of the problem (lower if minimizing, upper if maximizing). This is calculated every iteration. If a Monte Carlo simulation has been conducted this iteration, then the Objective (% Gap) will also be display. The objective gap is the relative percentage gap between the closest edge of the confidence interval and the deterministic bound.The next two columns relate to the number of iterations (#) and time spend conducting them (Time). This information is printed every iteration. It does not include the time spent simulating the policy as part of the Monte Carlo simulation (i.e. to estimate the upper bound), or the time spent initializing the model.The sixth and seventh columns relate to the Monte Carlo simulations. Specifically the number (#) of replications conducted, and time spent conducting them (Time). You can use these data to determine how often to perform the Monte Carlo simulations. For example, if the time is high relative to the iteration Cut Passes: Time, then you should perform the simulations less frequently.Finally, Total (Time) is the total time (in seconds) of the solution process (including initialization).Logging can be turned off by setting print level to 0. It can also be written to the file specified by the log file keyword.-------------------------------------------------------------------------------\n                      SDDP Solver. © Oscar Dowson, 2017.\n-------------------------------------------------------------------------------\n    Solver:\n        Serial solver\n    Model:\n        Stages:         4\n        States:         2\n        Subproblems:    7\n        Value Function: Default\n-------------------------------------------------------------------------------\n              Objective              |  Cut  Passes    Simulations   Total    \n    Simulation        Bound   % Gap  |   #     Time     #    Time    Time     \n-------------------------------------------------------------------------------\n      -41.484         -9.722         |     1    0.0      0    0.0    0.0\n       -2.172         -7.848         |     2    0.0      0    0.0    0.0\n        4.284         -7.550         |     3    0.0      0    0.0    0.0\n      -10.271         -6.398         |     4    0.0      0    0.0    0.0\n  -7.782    -4.760    -6.346  -22.6  |     5    0.0    500    0.4    0.4\n\n                        ... some lines omitted ...\n\n      -30.756         -5.570         |    29    0.1    1.9K   1.6    1.8\n  -7.716    -4.601    -5.570  -38.5  |    30    0.1    2.4K   2.0    2.2\n  -------------------------------------------------------------------------------\n    Statistics:\n        Iterations:         30\n        Termination Status: iteration_limit\n---------------------------------------------------------------------------------"
-},
-
-{
-    "location": "oldindex.html#Understanding-the-solution-1",
-    "page": "Old Manual",
-    "title": "Understanding the solution",
-    "category": "section",
-    "text": "... still to do ..."
-},
-
-{
-    "location": "oldindex.html#Simulating-the-policy-1",
-    "page": "Old Manual",
-    "title": "Simulating the policy",
-    "category": "section",
-    "text": "You can perform a Monte-Carlo simulation of the policy using the simulate function:simulationresults = simulate(m, 100, [:xs, :xb])simulationresults is a vector of dictionaries (one for each simulation). It has, as keys, a vector (with one element for each stage) of the optimal solution of xs and xb. For example, to query the value of xs in the third stage of the tenth simulation, we can call:simulationresults[10][:xs][3]Alternatively, you can peform one simulation with a given realization for the Markov and stagewise independent noises:simulationresults = simulate(m, [:xs], markov=[1,2,1,1], noise=[1,2,2,3])"
-},
-
-{
-    "location": "oldindex.html#Visualizing-the-policy-simulation-1",
-    "page": "Old Manual",
-    "title": "Visualizing the policy simulation",
-    "category": "section",
-    "text": "First, we create a new plotting object with SDDP.newplot(). Next, we can add any number of subplots to the visualization via the SDDP.addplot! function. Finally, we can launch a web browser to display the plot with SDDP.show.See the SDDP.addplot! documentation for more detail."
-},
-
-{
-    "location": "oldindex.html#Visualizing-the-Value-Function-1",
-    "page": "Old Manual",
-    "title": "Visualizing the Value Function",
-    "category": "section",
-    "text": "Another way to understand the solution is to project the value function into 3 dimensions. This can be done using the method SDDP.plotvaluefunction.SDDP.plotvaluefunction(m, 1, 1, 0:1.0:100, 0:1.0:100;\n    label1=\"Stocks\", label2=\"Bonds\")This will open up a web browser and display a Plotly figure that looks similar to (Image: 3-Dimensional visualisation of Value Function)"
-},
-
-{
-    "location": "oldindex.html#Saving-models-1",
-    "page": "Old Manual",
-    "title": "Saving models",
-    "category": "section",
-    "text": "Saving a model is as simple as calling:SDDP.savemodel!(\"<filename>\", m)Later, you can run:m = SDDP.loadmodel(\"<filename>\")note: Note\nSDDP.savemodel! relies on the base Julia serialize function. This is not backwards compatible with previous versions of Julia, or guaranteed to be forward compatible with future versions. You should only use this to save models for short periods of time. Don\'t save a model you want to come back to in a year.Another (more persistent) method is to use the cut_output_file keyword option in SDDP.solve. This will create a csv file containing a list of all the cuts. These can be loaded at a later date usingSDDP.loadcuts!(m, \"<filename>\")"
-},
-
-{
-    "location": "oldindex.html#Extras-for-experts-1",
-    "page": "Old Manual",
-    "title": "Extras for experts",
-    "category": "section",
-    "text": ""
-},
-
-{
-    "location": "oldindex.html#New-risk-measures-1",
-    "page": "Old Manual",
-    "title": "New risk measures",
-    "category": "section",
-    "text": "SDDP.jl makes it easy to create new risk measures. First, create a new subtype of the abstract type SDDP.AbstractRiskMeasure:struct MyNewRiskMeasure <: SDDP.AbstractRiskMeasure\nendThen, overload the method SDDP.modifyprobability! for your new type. SDDP.modifyprobability! has the following signature:SDDP.modifyprobability!(\n        measure::AbstractRiskMeasure,\n        riskadjusted_distribution,\n        original_distribution::Vector{Float64},\n        observations::Vector{Float64},\n        m::SDDPModel,\n        sp::JuMP.Model\n)where original_distribution contains the risk netural probability of each outcome in observations occurring (so that the probability of observations[i] is original_distribution[i]). The method should modify (in-place) the elements of riskadjusted_distribution to represent the risk-adjusted probabilities of the distribution.To illustrate this, we shall define the worst-case riskmeasure (which places all the probability on the worst outcome):struct WorstCase <: SDDP.AbstractRiskMeasure end\nfunction SDDP.modifyprobability!(measure::WorstCase,\n        riskadjusted_distribution,\n        original_distribution::Vector{Float64},\n        observations::Vector{Float64},\n        m::SDDPModel,\n        sp::JuMP.Model\n    )\n    if JuMP.getobjectivesense(sp) == :Min\n        # if minimizing, worst is the maximum outcome\n        idx = indmax(observations)\n    else\n        # if maximizing, worst is the minimum outcome\n        idx = indmin(observations)\n    end\n    # zero all probabilities\n    riskadjusted_distribution .= 0.0\n    # set worst to 1.0\n    riskadjusted_distribution[idx] = 1.0\n    # return\n    return nothing\nendThe risk measure WorstCase() can now be used in any SDDP model.note: Note\nThis method gets called a lot, so the usual Julia performance tips apply."
-},
-
-{
-    "location": "oldindex.html#New-cut-oracles-1",
-    "page": "Old Manual",
-    "title": "New cut oracles",
-    "category": "section",
-    "text": "SDDP.jl makes it easy to create new cut oracles. In the following example, we give the code to implmeent a cut-selection heuristic that only stores the N most recently discovered cuts. First, we define a new Julia type that is a sub-type of the abstract type SDDP.AbstractCutOracle defined by SDDP.jl:struct LastCutOracle{N} <: SDDP.AbstractCutOracle\n    cuts::Vector{SDDP.Cut}\nend\nLastCutOracle(N::Int) = LastCutOracle{N}(SDDP.Cut[])LastCutOracle has the type parameter N to store the maximum number of most-recent cuts to return. The type has the field cuts to store a vector of discovered cuts. More elaborate cut-selection heuristics may need additional fields to store other information. Next, we overload the SDDP.storecut! method. This method should store the cut c in the oracle o so that it can be queried later. In our example, we append the cut to the list of discovered cuts inside the oracle:function SDDP.storecut!(o::LastCutOracle{N},\n        m::SDDPModel, sp::JuMP.Model, c::SDDP.Cut) where N\n    push!(o.cuts, c)\nendLastly, we overload the SDDP.validcuts method. In our example, the strategy is to return the N most recent cuts. Therefore:function SDDP.validcuts(o::LastCutOracle{N}) where N\n    return o.cuts[max(1,end-N+1):end]\nendThe cut oracle LastCutOracle(N) can now be used in any SDDP model."
 },
 
 {
@@ -881,11 +745,27 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
+    "location": "apireference.html#SDDP.Asynchronous",
+    "page": "Reference",
+    "title": "SDDP.Asynchronous",
+    "category": "type",
+    "text": "Asynchronous(; kwargs...)\n\nDefine\n\nType used to dispatch and control the behaviour of the asynchronous solution algorithm.\n\nArguments\n\nslaves::Vector{Int} the pid\'s of the slave processes. Defaults to workers()\nstep::Float64 the number of iterations to complete before adding another  slave. Used to replicated the scenario incrementation behaviour of  V. de Matos,A. Philpott, E. Finardi, Improving the performance of Stochastic  Dual Dynamic Programming, Journal of Computational and Applied Mathematics  290 (2015) 196–208.\n\nExamples\n\nAsynchronous() # load on all workers\nAsynchronous(slaves=[2,3,4]) # load slaves on processes 2, 3, and 4\nAsynchronous(step=10) # perform 10 iterations before adding new slave\n\n\n\n"
+},
+
+{
+    "location": "apireference.html#SDDP.Serial",
+    "page": "Reference",
+    "title": "SDDP.Serial",
+    "category": "type",
+    "text": "Serial()\n\nDefine\n\nType used to dispatch the serial solution algorithm\n\n\n\n"
+},
+
+{
     "location": "apireference.html#Solving-the-problem-efficiently-1",
     "page": "Reference",
     "title": "Solving the problem efficiently",
     "category": "section",
-    "text": "solve\nMonteCarloSimulation\nBoundConvergence"
+    "text": "solve\nMonteCarloSimulation\nBoundConvergence\nAsynchronous\nSerial"
 },
 
 {
