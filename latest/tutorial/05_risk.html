@@ -64,14 +64,14 @@ end</code></pre><h2><a class="nav-anchor" id="Formulating-the-problem-1" href="#
     else       # dry climate state
         setnoiseprobability!(sp, [0.5, 1/3, 1/6])
     end
-end</code></pre><h2><a class="nav-anchor" id="Solving-the-problem-1" href="#Solving-the-problem-1">Solving the problem</a></h2><p>Deciding when to terminate a risk-averse SDDP model is an unresolved problem in the literature. In addition to the termination methods discussed in previous tutorials, the user can also terminate the solve using the keys <code>[CRTL]+[C]</code>.</p><p>In addition, to demonstrate that we cannot use Monte Carlo simulation to estimate the upper  bound of a risk-averse model, we perform a Monte Carlo simulation of the policy  every two iterations. If left unchecked, this solve will not terminate as we have set <code>termination=false</code>.</p><pre><code class="language-julia">status = solve(m,
+end</code></pre><h2><a class="nav-anchor" id="Solving-the-problem-1" href="#Solving-the-problem-1">Solving the problem</a></h2><p>Deciding when to terminate a risk-averse SDDP model is an unresolved problem in the literature. In addition to the termination methods discussed in previous tutorials, the user can also terminate the solve using the keys <code>[CRTL]+[C]</code>.</p><p>In addition, to demonstrate that we cannot use Monte Carlo simulation to estimate the upper bound of a risk-averse model, we perform a Monte Carlo simulation of the policy every two iterations. If left unchecked, this solve will not terminate as we have set <code>terminate=false</code>.</p><pre><code class="language-julia">status = solve(m,
     simulation = MonteCarloSimulation(
-        frequency   = 2,
-        confidence  = 0.95,
-        termination = false,
-        min         = 50,
-        step        = 50,
-        max         = 100,
+        frequency  = 2,
+        confidence = 0.95,
+        terminate  = false,
+        min        = 50,
+        step       = 50,
+        max        = 100,
     )
 )</code></pre><p>After 7 iterations, we interrupt the solve using the <code>[CRTL]+[C]</code> keys. (Since this is a trivial model to solve, we had to be very quick to terminate!) The return value <code>status</code> is <code>:interrupted</code>, and the log is:</p><pre><code class="language-none">-------------------------------------------------------------------------------
                           SDDP.jl © Oscar Dowson, 2017-2018

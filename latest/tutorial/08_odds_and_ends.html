@@ -66,7 +66,7 @@ m = SDDPModel(
     # ... formulation omitted ...
 end</code></pre><h2><a class="nav-anchor" id="Reading-and-writing-cuts-to-file-1" href="#Reading-and-writing-cuts-to-file-1">Reading and writing cuts to file</a></h2><p>It&#39;s possible to save the cuts that are discovered during a solve to a file so that they can be read back in or used for other analysis. This can be done using the <code>cut_output_file</code> to <a href="../apireference.html#JuMP.solve"><code>solve</code></a>:</p><pre><code class="language-julia">m = build_model()
 SDDP.solve(m
-    max_iterations  = 10,
+    iteration_limit = 10,
     cut_output_file = &quot;cuts.csv&quot;
 )</code></pre><p><code>cuts.csv</code> is a csv file with <code>N+3</code> columns, where <code>N</code> is the number of state variables in the model. The columns are: (1) the index of the stage; (2) the index of the Markov state; (3) the intercept; and (4+), the coefficients of the cuts for each of the state variables.</p><p>This cut file can be read back into a model using <a href="../apireference.html#SDDP.loadcuts!"><code>loadcuts!</code></a>:</p><pre><code class="language-julia">m2 = build_model()
 loadcuts!(m2, &quot;cuts.csv&quot;)</code></pre><h2><a class="nav-anchor" id="Timer-outputs-1" href="#Timer-outputs-1">Timer outputs</a></h2><p>SDDP.jl embeds the great <a href="https://github.com/KristofferC/TimerOutputs.jl">TimerOutputs.jl</a> package to help profile where time is spent during the solution process. You can print the timing statistics by setting <code>print_level=2</code> in a <a href="../apireference.html#JuMP.solve"><code>solve</code></a> call. This produces a log like:</p><pre><code class="language-none">-------------------------------------------------------------------------------
@@ -118,5 +118,5 @@ loadcuts!(m2, &quot;cuts.csv&quot;)</code></pre><h2><a class="nav-anchor" id="Ti
  ─────────────────────────────────────────────────────────────────────────────────
     Other Statistics:
         Iterations:         10
-        Termination Status: max_iterations
+        Termination Status: iteration_limit
 ===============================================================================</code></pre><p>That concludes our eighth tutorial for SDDP.jl. In our next tutorial, <a href="09_nonlinear.html#Tutorial-Nine:-nonlinear-models-1">Tutorial Nine: nonlinear models</a>, we discuss how SDDP.jl can be used to solve problems that have nonlinear transition functions.</p><footer><hr/><a class="previous" href="07_plotting.html"><span class="direction">Previous</span><span class="title">Tutorial Seven: plotting</span></a><a class="next" href="09_nonlinear.html"><span class="direction">Next</span><span class="title">Tutorial Nine: nonlinear models</span></a></footer></article></body></html>

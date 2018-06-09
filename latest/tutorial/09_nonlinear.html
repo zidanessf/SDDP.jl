@@ -30,7 +30,7 @@ m = SDDPModel(
 
     fuel_cost = [50.0, 100.0, 150.0]
     @stageobjective(sp, fuel_cost[t] * thermal_generation )
-end</code></pre><p>This problem can be solved just like any other SDDP model:</p><pre><code class="language-julia">status = solve(m, max_iterations = 10)
+end</code></pre><p>This problem can be solved just like any other SDDP model:</p><pre><code class="language-julia">status = solve(m, iteration_limit = 10)
 simulation_result = simulate(m, 1, [:inflow′])</code></pre><p>Then, we can check that the inflows do indeed follow a log auto-regressive process.</p><pre><code class="language-julia">julia&gt; simulaton_result[1][:inflow′]
  55.0
  60.5

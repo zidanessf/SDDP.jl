@@ -38,8 +38,8 @@ Called from: 1
         setnoiseprobability!(sp, [0.5, 1/3, 1/6])
     end
 end</code></pre><p>We can solve this using SDDP.jl&#39;s asynchronous feature by passing an instance of <a href="../apireference.html#SDDP.Asynchronous"><code>Asynchronous</code></a> to the <code>solve_type</code> keyword in <a href="../apireference.html#JuMP.solve"><code>solve</code></a>:</p><pre><code class="language-julia">status = solve(m,
-    max_iterations = 10,
-    solve_type     = Asynchronous()
+    iteration_limit = 10,
+    solve_type      = Asynchronous()
 )</code></pre><p>If you have multiple processes, SDDP.jl will detect this and choose asynchronous by default. You can force the serial solution by passing an instance of <a href="../apireference.html#SDDP.Serial"><code>Serial</code></a> to <code>solve_type</code>.</p><p>The log is:</p><pre><code class="language-none">-------------------------------------------------------------------------------
                           SDDP.jl © Oscar Dowson, 2017-2018
 -------------------------------------------------------------------------------
@@ -67,5 +67,5 @@ end</code></pre><p>We can solve this using SDDP.jl&#39;s asynchronous feature by
 -------------------------------------------------------------------------------
     Other Statistics:
         Iterations:         10
-        Termination Status: max_iterations
+        Termination Status: iteration_limit
 ===============================================================================</code></pre><p>Note that the order of the <em>Cut #</em> column is not sequential because they are numbered in order of when they were created.</p><p>That concludes our tenth tutorial for SDDP.jl.</p><footer><hr/><a class="previous" href="09_nonlinear.html"><span class="direction">Previous</span><span class="title">Tutorial Nine: nonlinear models</span></a><a class="next" href="../readings.html"><span class="direction">Next</span><span class="title">Readings</span></a></footer></article></body></html>
