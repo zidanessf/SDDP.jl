@@ -293,7 +293,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Tutorial Six: cut selection",
     "title": "Solving the problem",
     "category": "section",
-    "text": "info: Info\nThis will change once JuMP 0.19 lands.Due to the design of JuMP, we are unable to delete cuts from the model. Therefore, selecting a subset of cuts involves rebuilding the subproblems from scratch. The user can control the frequency by which the cuts are selected and the subproblems rebuilt with the cut_selection_frequency keyword argument of the solve method. Frequent cut selection (i.e. when cut_selection_frequency is small) reduces the size of the subproblems that are solved but incurs the overhead of rebuilding the subproblems. However, infrequent cut selection (i.e. when cut_selection_frequency is large) allows the subproblems to grow large (by adding many constraints), leading to an increase in the solve time of individual subproblems. Ultimately, this will be a model-specific trade-off. As a rule of thumb, simpler (i.e. few variables and constraints) models benefit from more frequent cut selection compared with complicated (i.e. many variables and constraints) models.status = solve(m,\n    iteration_limit         = 10,\n    cut_selection_frequency = 5\n)We can get the subproblem from a SDDPModel using SDDP.getsubproblem. For example, the subproblem in the first stage and first Markov state is:sp = SDDP.getsubproblem(m, 1, 1)Then, given a subproblem sp, we can get the cut oracle as follows:oracle = SDDP.cutoracle(sp)Finally, we can query the list of valid cuts in the oracle using SDDP.validcuts:julia> SDDP.validcuts(oracle)\n1-element Array{Cut, 1}:\n SDDP.Cut(29964.8, [-108.333])Whereas we can query all of the cuts in the oracle using SDDP.allcuts:julia> SDDP.allcuts(oracle)\n10-element Array{Cut, 1}:\n SDDP.Cut(29548.2, [-108.229])\n SDDP.Cut(29548.2, [-108.229])\n SDDP.Cut(29964.8, [-108.333])\n SDDP.Cut(29964.8, [-108.333])\n SDDP.Cut(29964.8, [-108.333])\n ⋮So, despite performing 10 SDDP iterations, only one cut is needed to approximate the cost-to-go function! A similar result can be found in the wet Markov state in the second stage:julia> SDDP.validcuts(SDDP.cutoracle(SDDP.getsubproblem(m, 2 1)))\n3-element Array{Cut, 1}:\n SDDP.Cut(20625.0, [-162.5])\n SDDP.Cut(16875.0, [-112.5])\n SDDP.Cut(19375.0, [-137.5])"
+    "text": "info: Info\nThis will change once JuMP 0.19 lands.Due to the design of JuMP, we are unable to delete cuts from the model. Therefore, selecting a subset of cuts involves rebuilding the subproblems from scratch. The user can control the frequency by which the cuts are selected and the subproblems rebuilt with the cut_selection_frequency keyword argument of the solve method. Frequent cut selection (i.e. when cut_selection_frequency is small) reduces the size of the subproblems that are solved but incurs the overhead of rebuilding the subproblems. However, infrequent cut selection (i.e. when cut_selection_frequency is large) allows the subproblems to grow large (by adding many constraints), leading to an increase in the solve time of individual subproblems. Ultimately, this will be a model-specific trade-off. As a rule of thumb, simpler (i.e. few variables and constraints) models benefit from more frequent cut selection compared with complicated (i.e. many variables and constraints) models.status = solve(m,\n    iteration_limit         = 10,\n    cut_selection_frequency = 5\n)We can get the subproblem from a SDDPModel using SDDP.getsubproblem. For example, the subproblem in the first stage and first Markov state is:sp = SDDP.getsubproblem(m, 1, 1)Then, given a subproblem sp, we can get the cut oracle as follows:oracle = SDDP.cutoracle(sp)Finally, we can query the list of valid cuts in the oracle using SDDP.valid_cuts:julia> SDDP.valid_cuts(oracle)\n1-element Array{Cut, 1}:\n SDDP.Cut(29964.8, [-108.333])Whereas we can query all of the cuts in the oracle using SDDP.allcuts:julia> SDDP.allcuts(oracle)\n10-element Array{Cut, 1}:\n SDDP.Cut(29548.2, [-108.229])\n SDDP.Cut(29548.2, [-108.229])\n SDDP.Cut(29964.8, [-108.333])\n SDDP.Cut(29964.8, [-108.333])\n SDDP.Cut(29964.8, [-108.333])\n ⋮So, despite performing 10 SDDP iterations, only one cut is needed to approximate the cost-to-go function! A similar result can be found in the wet Markov state in the second stage:julia> SDDP.valid_cuts(SDDP.cutoracle(SDDP.getsubproblem(m, 2 1)))\n3-element Array{Cut, 1}:\n SDDP.Cut(20625.0, [-162.5])\n SDDP.Cut(16875.0, [-112.5])\n SDDP.Cut(19375.0, [-137.5])"
 },
 
 {
@@ -301,7 +301,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Tutorial Six: cut selection",
     "title": "Extra for experts: new cut selection heurisitics",
     "category": "section",
-    "text": "One of the cool features of SDDP.jl is how easy it is to create new cut selection heuristics.To illustrate this, we implement the Last Cuts strategy. This heuristic selects the last N discovered cuts to keep in each subproblem. First, we need to create a new concrete subtype of the abstract type AbstractCutOracle defined by SDDP.jl:\"\"\"\n    LastCuts(N::Int)\n\nCreate a cut oracle that keeps the last `N` discovered cuts.\n\"\"\"\nstruct LastCuts <: SDDP.AbstractCutOracle\n    cuts::Vector{SDDP.Cut}\n    N::Int\n    LastCuts(N::Int) = new(SDDP.Cut[], N)\nendThen, we need to overload three methods: SDDP.storecut!, SDDP.validcuts, and SDDP.allcuts.SDDP.storecut takes four arguments. The first is an instance of the cut oracle. The second and third arguments are the SDDPModel m and the JuMP subproblem sp. The fourth argument is the cut itself. For our example, we store all the cuts that have been discovered:function SDDP.storecut!(oracle::LastCuts, m::SDDPModel, sp::JuMP.Model, cut::SDDP.Cut)\n    push!(oracle.cuts, cut)\nendSDDP.validcuts returns a list of all of the cuts that are valid cuts to keep in the subproblem. The LastCuts oracle returns the most recent N discovered cuts:function SDDP.validcuts(oracle::LastCuts)\n    oracle.cuts[max(1, end - oracle.N + 1):end]\nendFinally, SDDP.allcuts returns a list of all of the cuts that have been discovered:function SDDP.allcuts(oracle::LastCuts)\n    oracle.cuts\nendNow, the cut oracle LastCuts(500) can be used just like any other cut oracle defined by SDDP.jl.This concludes our sixth tutorial for SDDP.jl. In our next tutorial, Tutorial Seven: plotting, we discuss some of the plotting utilities of SDDP.jl"
+    "text": "One of the cool features of SDDP.jl is how easy it is to create new cut selection heuristics.To illustrate this, we implement the Last Cuts strategy. This heuristic selects the last N discovered cuts to keep in each subproblem. First, we need to create a new concrete subtype of the abstract type AbstractCutOracle defined by SDDP.jl:\"\"\"\n    LastCuts(N::Int)\n\nCreate a cut oracle that keeps the last `N` discovered cuts.\n\"\"\"\nstruct LastCuts <: SDDP.AbstractCutOracle\n    cuts::Vector{SDDP.Cut}\n    N::Int\n    LastCuts(N::Int) = new(SDDP.Cut[], N)\nendThen, we need to overload three methods: SDDP.store_cut, SDDP.valid_cuts, and SDDP.allcuts.SDDP.storecut takes four arguments. The first is an instance of the cut oracle. The second and third arguments are the SDDPModel m and the JuMP subproblem sp. The fourth argument is the cut itself. For our example, we store all the cuts that have been discovered:function SDDP.store_cut(oracle::LastCuts, m::SDDPModel, sp::JuMP.Model, cut::SDDP.Cut)\n    push!(oracle.cuts, cut)\nendSDDP.valid_cuts returns a list of all of the cuts that are valid cuts to keep in the subproblem. The LastCuts oracle returns the most recent N discovered cuts:function SDDP.valid_cuts(oracle::LastCuts)\n    oracle.cuts[max(1, end - oracle.N + 1):end]\nendFinally, SDDP.allcuts returns a list of all of the cuts that have been discovered:function SDDP.allcuts(oracle::LastCuts)\n    oracle.cuts\nendNow, the cut oracle LastCuts(500) can be used just like any other cut oracle defined by SDDP.jl.This concludes our sixth tutorial for SDDP.jl. In our next tutorial, Tutorial Seven: plotting, we discuss some of the plotting utilities of SDDP.jl"
 },
 
 {
@@ -745,27 +745,27 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
-    "location": "apireference.html#SDDP.storecut!",
+    "location": "apireference.html#SDDP.store_cut",
     "page": "Reference",
-    "title": "SDDP.storecut!",
+    "title": "SDDP.store_cut",
     "category": "function",
-    "text": "storecut!(oracle::AbstactCutOracle, m::SDDPModel, sp::JuMP.Model, cut::Cut)\n\nDescription\n\nStore the cut cut in the Cut Oracle oracle. oracle will belong to the subproblem sp in the SDDPModel m.\n\n\n\n"
+    "text": "store_cut(oracle::AbstactCutOracle, model::SDDPModel,\n          subproblem::JuMP.Model, cut::Cut)\n\nDescription\n\nStore the cut cut in the Cut Oracle oracle. oracle will belong to subproblem in the SDDPModel model.\n\n\n\n"
 },
 
 {
-    "location": "apireference.html#SDDP.validcuts",
+    "location": "apireference.html#SDDP.valid_cuts",
     "page": "Reference",
-    "title": "SDDP.validcuts",
+    "title": "SDDP.valid_cuts",
     "category": "function",
-    "text": "validcuts(oracle::AbstactCutOracle)\n\nDescription\n\nReturn an iterable list of all the valid cuts contained within oracle.\n\n\n\n"
+    "text": "valid_cuts(oracle::AbstactCutOracle)\n\nDescription\n\nReturn an iterable list of all the valid cuts contained within oracle.\n\n\n\n"
 },
 
 {
-    "location": "apireference.html#SDDP.allcuts",
+    "location": "apireference.html#SDDP.all_cuts",
     "page": "Reference",
-    "title": "SDDP.allcuts",
+    "title": "SDDP.all_cuts",
     "category": "function",
-    "text": "allcuts(oracle::AbstactCutOracle)\n\nDescription\n\nReturn an iterable list of all the cuts contained within oracle, not just those that are returned by validcuts.\n\n\n\n"
+    "text": "all_cuts(oracle::AbstactCutOracle)\n\nDescription\n\nReturn an iterable list of all the cuts contained within oracle, not just those that are returned by valid_cuts.\n\n\n\n"
 },
 
 {
@@ -789,7 +789,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Reference",
     "title": "Cut Oracles",
     "category": "section",
-    "text": "AbstractCutOracle\nstorecut!\nvalidcuts\nallcuts\nDefaultCutOracle\nLevelOneCutOracle"
+    "text": "AbstractCutOracle\nstore_cut\nvalid_cuts\nall_cuts\nDefaultCutOracle\nLevelOneCutOracle"
 },
 
 {
@@ -941,7 +941,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Reference",
     "title": "SDDP.writecuts!",
     "category": "function",
-    "text": "writecuts!(filename::String, m::SDDPModel; onlyvalid=false)\n\nWrites all cuts from model m to filename.\n\nIf onlyvalid is true, write the cuts returned from validcuts, else write the cuts returned from allcuts.\n\n\n\n"
+    "text": "writecuts!(filename::String, m::SDDPModel; onlyvalid=false)\n\nWrites all cuts from model m to filename.\n\nIf onlyvalid is true, write the cuts returned from valid_cuts, else write the cuts returned from all_cuts.\n\n\n\n"
 },
 
 {
