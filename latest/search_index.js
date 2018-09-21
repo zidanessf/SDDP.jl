@@ -269,7 +269,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Tutorial Five: risk",
     "title": "Extra for experts: new risk measures",
     "category": "section",
-    "text": "One of the cool features of SDDP.jl is how easy it is to create new risk measures. To illustrate this, we consider implementing the worst-case risk measure. First, we need to create a new concrete subtype of the abstract type AbstractRiskMeasure defined by SDDP.jl:\"\"\"\n    TheWorstCase()\n\nCreate an instance of the worst-case risk measures. This places all of the\nweight on the maximum outcome if minimizing, and the minimum outcome if\nmaximizing.\n\"\"\"\nstruct TheWorstCase <: SDDP.AbstractRiskMeasure endThen, we need to overload the SDDP.modifyprobability! function provided by SDDP.jl. This function takes six arguments:an instance of the risk measure (e.g. TheWorstCase());\na vector of the risk-adjusted probability distribution that the function modifies in-place;\na vector of the original probability distribution;\na vector of the observations;\nthe SDDPModel m; and\nthe JuMP subproblem sp.For example, the worst-case risk measure places all of the probability on the worst outcome:function SDDP.modifyprobability!(::TheWorstCase,\n    risk_adjusted_distribution,\n    original_distribution::Vector{Float64},\n    observations::Vector{Float64},\n    m::SDDPModel,\n    sp::JuMP.Model\n    )\n    if getsense(sp) == :Min\n        worst_index = indmax(observations)\n    else\n        worst_index = indmin(observations)\n    end\n    risk_adjusted_distribution .= 0.0\n    risk_adjusted_distribution[worst_index] = 1.0\n    return nothing\nendnote: Note\nThis implementation isn\'t a proper implementation as it assumes that the worst-case outcome has a positive probability of occurring. Accounting for this edge-case efficiently makes the implementation to verbose for this simple example.Now TheWorstCase() can be used like a risk measure defined by SDDP.jl. It is even possible to compose it with other risk measures, for example:risk_measure = 0.5 * Expectation() + 0.5 * TheWorstCase()This concludes our fifth tutorial for SDDP.jl. In the next tutorial, Tutorial Six: cut selection, we introduce cut selection."
+    "text": "One of the cool features of SDDP.jl is how easy it is to create new risk measures. To illustrate this, we consider implementing the worst-case risk measure. First, we need to create a new concrete subtype of the abstract type AbstractRiskMeasure defined by SDDP.jl:\"\"\"\n    TheWorstCase()\n\nCreate an instance of the worst-case risk measures. This places all of the\nweight on the maximum outcome if minimizing, and the minimum outcome if\nmaximizing.\n\"\"\"\nstruct TheWorstCase <: SDDP.AbstractRiskMeasure endThen, we need to overload the SDDP.modify_probability function provided by SDDP.jl. This function takes six arguments:an instance of the risk measure (e.g. TheWorstCase());\na vector of the risk-adjusted probability distribution that the function modifies in-place;\na vector of the original probability distribution;\na vector of the observations;\nthe SDDPModel m; and\nthe JuMP subproblem sp.For example, the worst-case risk measure places all of the probability on the worst outcome:function SDDP.modify_probability(::TheWorstCase,\n    risk_adjusted_distribution,\n    original_distribution::Vector{Float64},\n    observations::Vector{Float64},\n    m::SDDPModel,\n    sp::JuMP.Model\n    )\n    if getsense(sp) == :Min\n        worst_index = indmax(observations)\n    else\n        worst_index = indmin(observations)\n    end\n    risk_adjusted_distribution .= 0.0\n    risk_adjusted_distribution[worst_index] = 1.0\n    return nothing\nendnote: Note\nThis implementation isn\'t a proper implementation as it assumes that the worst-case outcome has a positive probability of occurring. Accounting for this edge-case efficiently makes the implementation to verbose for this simple example.Now TheWorstCase() can be used like a risk measure defined by SDDP.jl. It is even possible to compose it with other risk measures, for example:risk_measure = 0.5 * Expectation() + 0.5 * TheWorstCase()This concludes our fifth tutorial for SDDP.jl. In the next tutorial, Tutorial Six: cut selection, we introduce cut selection."
 },
 
 {
@@ -673,11 +673,11 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
-    "location": "apireference.html#SDDP.modifyprobability!",
+    "location": "apireference.html#SDDP.modify_probability",
     "page": "Reference",
-    "title": "SDDP.modifyprobability!",
+    "title": "SDDP.modify_probability",
     "category": "function",
-    "text": "modifyprobability!(measure::AbstractRiskMeasure,\n        riskadjusted_distribution,\n        original_distribution::Vector{Float64},\n        observations::Vector{Float64},\n        m::SDDPModel,\n        sp::JuMP.Model\n)\n\nDescription\n\nCalculate the risk-adjusted probability of each scenario using the \'change-of-probabilities\' approach of Philpott, de Matos, and Finardi,(2013). On solving multistage stochastic programs with coherent risk measures. Operations Research 61(4), 957-970.\n\nArguments\n\nmeasure::AbstractRiskMeasure\n\nThe risk measure\n\nriskadjusted_distribution\n\nA new probability distribution\n\noriginal_distribution::Vector{Float64}\n\nThe original probability distribution.\n\nobservations::Vector{Float64}\n\nThe vector of objective values from the next stage  problems (one for each scenario).\n\nm::SDDPModel\n\nThe full SDDP model\n\nsp::JuMP.Model\n\nThe stage problem that the cut will be added to.\n\n\n\n"
+    "text": "modify_probability(measure::AbstractRiskMeasure,\n        riskadjusted_distribution,\n        original_distribution::Vector{Float64},\n        observations::Vector{Float64},\n        model::SDDPModel,\n        subproblem::JuMP.Model)\n\nCalculate the risk-adjusted probability of each scenario using the \'change-of-probabilities\' approach of Philpott, de Matos, and Finardi,(2013). On solving multistage stochastic programs with coherent risk measures. Operations Research 61(4), 957-970.\n\nThe function should modify riskadjusted_distribution in-place based on the original probabiltiy distribution (contained in original_distribution) and the costs observed in each scenario (contained in observations).\n\nThe SDDPModel and subproblem are provided for advanced risk measures which may want to make use of the information contained within.\n\n\n\n"
 },
 
 {
@@ -701,7 +701,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Reference",
     "title": "SDDP.EAVaR",
     "category": "function",
-    "text": "EAVaR(;lambda=1.0, beta=1.0)\n\nDescription\n\nA risk measure that is a convex combination of Expectation and Average Value @ Risk (also called Conditional Value @ Risk).\n\nλ * E[x] + (1 - λ) * AV@R(1-β)[x]\n\nKeyword Arguments\n\nlambda\n\nConvex weight on the expectation ((1-lambda) weight is put on the AV@R component. Inreasing values of lambda are less risk averse (more weight on expecattion)\n\nbeta\n\nThe quantile at which to calculate the Average Value @ Risk. Increasing values  of beta are less risk averse. If beta=0, then the AV@R component is the  worst case risk measure.\n\n\n\n"
+    "text": "EAVaR(;lambda=1.0, beta=1.0)\n\nDescription\n\nA risk measure that is a convex combination of Expectation and Average Value @ Risk (also called Conditional Value @ Risk).\n\nλ * E[x] + (1 - λ) * AV@R(1-β)[x]\n\nKeyword Arguments\n\nlambda\n\nConvex weight on the expectation ((1-lambda) weight is put on the AV@R  component. Inreasing values of lambda are less risk averse (more weight on  expecattion)\n\nbeta\n\nThe quantile at which to calculate the Average Value @ Risk. Increasing values  of beta are less risk averse. If beta=0, then the AV@R component is the  worst case risk measure.\n\n\n\n"
 },
 
 {
@@ -717,7 +717,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Reference",
     "title": "SDDP.DRO",
     "category": "type",
-    "text": "DRO(radius::Float64)\n\nThe distributionally robust SDDP risk measure. Constructs a DRO risk measure object that allows probabilities to deviate by radius away from the uniform distribution.\n\n\n\n"
+    "text": "DRO(radius::Float64)\n\nThe distributionally robust SDDP risk measure of\n\nPhilpott, A., de Matos, V., Kapelevich, L. (2017). Distributionally robust SDDP. Tech Report. Electric Power Optimisation Centre. http://www.epoc.org.nz.\n\nNote: requires that the initial probability distribution is uniform.\n\n\n\n"
 },
 
 {
@@ -733,7 +733,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Reference",
     "title": "Risk Measures",
     "category": "section",
-    "text": "AbstractRiskMeasure\nmodifyprobability!\nAVaR\nConvexCombination\nEAVaR\nExpectation\nDRO\nWorstCase"
+    "text": "AbstractRiskMeasure\nmodify_probability\nAVaR\nConvexCombination\nEAVaR\nExpectation\nDRO\nWorstCase"
 },
 
 {
