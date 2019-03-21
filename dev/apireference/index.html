@@ -3,16 +3,16 @@
                transition_matrix::Matrix{Float64},
                root_node_transition::Vector{Float64})</code></pre><p>Construct a Markovian graph object.</p></div></div></section><section class="docstring"><div class="docstring-header"><a class="docstring-binding" id="SDDP.LinearPolicyGraph" href="#SDDP.LinearPolicyGraph"><code>SDDP.LinearPolicyGraph</code></a> — <span class="docstring-category">Function</span>.</div><div><div><pre><code class="language-none">LinearPolicyGraph(builder::Function; stages::Int, kwargs...)</code></pre><p>Create a linear policy graph with <code>stages</code> number of stages.</p><p>See <a href="#SDDP.PolicyGraph"><code>PolicyGraph</code></a> for the other keyword arguments.</p></div></div></section><section class="docstring"><div class="docstring-header"><a class="docstring-binding" id="SDDP.MarkovianPolicyGraph" href="#SDDP.MarkovianPolicyGraph"><code>SDDP.MarkovianPolicyGraph</code></a> — <span class="docstring-category">Function</span>.</div><div><div><pre><code class="language-none">MarkovianPolicyGraph(builder::Function;
     transition_matrices::Vector{Array{Float64, 2}}, kwargs...)</code></pre><p>Create a Markovian policy graph based on the transition matrices given in <code>transition_matrices</code>.</p><p>See <a href="#SDDP.PolicyGraph"><code>PolicyGraph</code></a> for the other keyword arguments.</p></div></div></section><section class="docstring"><div class="docstring-header"><a class="docstring-binding" id="SDDP.PolicyGraph" href="#SDDP.PolicyGraph"><code>SDDP.PolicyGraph</code></a> — <span class="docstring-category">Type</span>.</div><div><div><pre><code class="language-none">PolicyGraph(builder::Function, graph::Graph{T};
-            bellman_function = AverageCut,
+            bellman_function = BellmanFunction,
             optimizer = nothing,
             direct_mode = true) where T</code></pre><p>Construct a a policy graph based on the graph structure of <code>graph</code>. (See <code>Graph</code> for details.)</p><p><strong>Example</strong></p><pre><code class="language-none">function builder(subproblem::JuMP.Model, index)
     # ... subproblem definition ...
 end
 model = PolicyGraph(builder, graph;
-                    bellman_function = AverageCut,
+                    bellman_function = BellmanFunction,
                     optimizer = with_optimizer(GLPK.Optimizer),
                     direct_mode = false)</code></pre><p>Or, using the Julia <code>do ... end</code> syntax:</p><pre><code class="language-none">model = PolicyGraph(graph;
-                    bellman_function = AverageCut,
+                    bellman_function = BellmanFunction,
                     optimizer = with_optimizer(GLPK.Optimizer),
                     direct_mode = true) do subproblem, index
     # ... subproblem definitions ...

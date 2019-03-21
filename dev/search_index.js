@@ -61,7 +61,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Upgrading guide",
     "title": "Upgrading guide",
     "category": "section",
-    "text": "SDDP.jl under went a major re-write to be compatible with JuMP v0.19 and Julia v1.0.Some of the highlights of the new release includeSupport for stagewise-independent noise in the constraint matrix\nA way to simulate out-of-sample realizations of the stagewise-independent noise terms\nExtensible ways to get information such as dual variables out of a simulation\nSupport for infinite horizon multistage stochastic programs\nExtensible stopping rules\nExtensible sampling schemes\nImproved cut selection routines\nBetter checks for numerical issues\nA much tidier (and simpler) implementation, with ample commenting throughout the code base"
+    "text": "SDDP.jl under went a major re-write to be compatible with JuMP v0.19 and Julia v1.0.Some of the highlights of the new release includeSupport for \"multi-cut\"s\nSupport for stagewise-independent noise in the constraint matrix\nA way to simulate out-of-sample realizations of the stagewise-independent noise terms\nExtensible ways to get information such as dual variables out of a simulation\nSupport for infinite horizon multistage stochastic programs\nExtensible stopping rules\nExtensible sampling schemes\nImproved cut selection routines\nBetter checks for numerical issues\nA much tidier (and simpler) implementation, with ample commenting throughout the code base"
 },
 
 {
@@ -833,6 +833,14 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
+    "location": "tutorial/15_performance/#Average-cut-vs-multi-cut-1",
+    "page": "Intermediate V: performance",
+    "title": "Average cut vs multi-cut",
+    "category": "section",
+    "text": "There are two competing ways that cuts can be created in SDDP: average cut and multi-cut. These can be specified as followsSDDP.train(model; cut_type = SDDP.AVERAGE_CUT)\nSDDP.train(model; cut_type = SDDP.MULTI_CUT)The performance of each method is problem-dependent. We recommend that you try both in order to see which one performs better. In general, the average cut method works better when the number of realizations of the stagewise-independent random variable is large."
+},
+
+{
     "location": "apireference/#",
     "page": "Reference",
     "title": "Reference",
@@ -909,7 +917,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Reference",
     "title": "SDDP.PolicyGraph",
     "category": "type",
-    "text": "PolicyGraph(builder::Function, graph::Graph{T};\n            bellman_function = AverageCut,\n            optimizer = nothing,\n            direct_mode = true) where T\n\nConstruct a a policy graph based on the graph structure of graph. (See Graph for details.)\n\nExample\n\nfunction builder(subproblem::JuMP.Model, index)\n    # ... subproblem definition ...\nend\nmodel = PolicyGraph(builder, graph;\n                    bellman_function = AverageCut,\n                    optimizer = with_optimizer(GLPK.Optimizer),\n                    direct_mode = false)\n\nOr, using the Julia do ... end syntax:\n\nmodel = PolicyGraph(graph;\n                    bellman_function = AverageCut,\n                    optimizer = with_optimizer(GLPK.Optimizer),\n                    direct_mode = true) do subproblem, index\n    # ... subproblem definitions ...\nend\n\n\n\n\n\n"
+    "text": "PolicyGraph(builder::Function, graph::Graph{T};\n            bellman_function = BellmanFunction,\n            optimizer = nothing,\n            direct_mode = true) where T\n\nConstruct a a policy graph based on the graph structure of graph. (See Graph for details.)\n\nExample\n\nfunction builder(subproblem::JuMP.Model, index)\n    # ... subproblem definition ...\nend\nmodel = PolicyGraph(builder, graph;\n                    bellman_function = BellmanFunction,\n                    optimizer = with_optimizer(GLPK.Optimizer),\n                    direct_mode = false)\n\nOr, using the Julia do ... end syntax:\n\nmodel = PolicyGraph(graph;\n                    bellman_function = BellmanFunction,\n                    optimizer = with_optimizer(GLPK.Optimizer),\n                    direct_mode = true) do subproblem, index\n    # ... subproblem definitions ...\nend\n\n\n\n\n\n"
 },
 
 {
