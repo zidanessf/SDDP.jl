@@ -981,7 +981,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Reference",
     "title": "SDDP.train",
     "category": "function",
-    "text": "SDDP.train(model::PolicyGraph; kwargs...)\n\nTrain the policy of the model. Keyword arguments are\n\niteration_limit: number of iterations to conduct before termination\ntime_limit: number of seconds to train before termination\nprint_level: control the level of printing to the screen\nlog_file: filepath at which to write a log of the training progress\nrunnumericalstability_report: generate a numerical stability report prior to solve\nrisk_measure\nstoping_rules\nsampling_scheme: a sampling scheme to use on the forward pass of the algorithm. Defaults to InSampleMonteCarlo().\nrefineatsimilar_nodes\n\nThere is also a special option for infinite horizon problems\n\ncyclediscretizationdelta: the maximum distance between states allowed on the forward pass.\n\n\n\n\n\n"
+    "text": "SDDP.train(model::PolicyGraph; kwargs...)\n\nTrain the policy for model. Keyword arguments:\n\niteration_limit::Int: number of iterations to conduct before termination\ntime_limit::Float64: number of seconds to train before termination\nstoping_rules: a vector of SDDP.AbstractStoppingRule\nprint_level: control the level of printing to the screen\nlog_file: filepath at which to write a log of the training progress\nrunnumericalstability_report: generate a numerical stability report prior to solve\nrefine_at_similar_nodes::Bool: if SDDP can detect that two nodes have the  same children, it can cheaply add a cut discovered at one to the other. In  almost all cases this should be set to true.\ncut_deletion_minimum::Int: the minimum number of cuts to cache before  deleting  cuts from the subproblem. This is solver specific; however,  smaller values  result in smaller subproblems, at the expense of more time  spent performing cut selection.\nrisk_measure: the risk measure to use at each node.\nsampling_scheme: a sampling scheme to use on the forward pass of the algorithm. Defaults to InSampleMonteCarlo().\n\nThere is also a special option for infinite horizon problems\n\ncyclediscretizationdelta: the maximum distance between states allowed on the forward pass. This is for advanced users only and needs to be used in conjunction with a different sampling_scheme.\n\n\n\n\n\n"
 },
 
 {
@@ -1014,6 +1014,86 @@ var documenterSearchIndex = {"docs": [
     "title": "Training the policy",
     "category": "section",
     "text": "SDDP.numerical_stability_report\nSDDP.train\nSDDP.termination_status\nSDDP.write_cuts_to_file\nSDDP.read_cuts_from_file"
+},
+
+{
+    "location": "apireference/#SDDP.AbstractStoppingRule",
+    "page": "Reference",
+    "title": "SDDP.AbstractStoppingRule",
+    "category": "type",
+    "text": "AbstractStoppingRule\n\nThe abstract type for the stopping-rule interface.\n\nYou need to define the following methods:\n\nSDDP.stopping_rule_status\nSDDP.convergence_test\n\n\n\n\n\n"
+},
+
+{
+    "location": "apireference/#SDDP.stopping_rule_status",
+    "page": "Reference",
+    "title": "SDDP.stopping_rule_status",
+    "category": "function",
+    "text": "stopping_rule_status(::AbstractStoppingRule)::Symbol\n\nReturn a symbol describing the stopping rule.\n\n\n\n\n\n"
+},
+
+{
+    "location": "apireference/#SDDP.convergence_test",
+    "page": "Reference",
+    "title": "SDDP.convergence_test",
+    "category": "function",
+    "text": "convergence_test(model::PolicyGraph, log::Vector{Log}, ::AbstractStoppingRule)::Bool\n\nReturn a Bool indicating if the algorithm should terminate the training.\n\n\n\n\n\n"
+},
+
+{
+    "location": "apireference/#Stopping-rules-1",
+    "page": "Reference",
+    "title": "Stopping rules",
+    "category": "section",
+    "text": "SDDP.AbstractStoppingRule\nSDDP.stopping_rule_status\nSDDP.convergence_test"
+},
+
+{
+    "location": "apireference/#SDDP.AbstractSamplingScheme",
+    "page": "Reference",
+    "title": "SDDP.AbstractSamplingScheme",
+    "category": "type",
+    "text": "AbstractSamplingScheme\n\nThe abstract type for the sampling-scheme interface.\n\nYou need to define the following methods:\n\nSDDP.sample_scenario\n\n\n\n\n\n"
+},
+
+{
+    "location": "apireference/#SDDP.sample_scenario",
+    "page": "Reference",
+    "title": "SDDP.sample_scenario",
+    "category": "function",
+    "text": "sample_scenario(graph::PolicyGraph{T}, ::AbstractSamplingScheme) where T\n\nSample a scenario from the policy graph graph based on the sampling scheme.\n\nReturns ::Tuple{Vector{Tuple{T, <:Any}}, Bool}, where the first element is the scenario, and the second element is a Boolean flag indicating if the scenario was terminated due to the detection of a cycle.\n\nThe scenario is a list of tuples (type Vector{Tuple{T, <:Any}}) where the first component of each tuple is the index of the node, and the second component is the stagewise-independent noise term observed in that node.\n\n\n\n\n\n"
+},
+
+{
+    "location": "apireference/#Sampling-schemes-1",
+    "page": "Reference",
+    "title": "Sampling schemes",
+    "category": "section",
+    "text": "SDDP.AbstractSamplingScheme\nSDDP.sample_scenario"
+},
+
+{
+    "location": "apireference/#SDDP.AbstractRiskMeasure",
+    "page": "Reference",
+    "title": "SDDP.AbstractRiskMeasure",
+    "category": "type",
+    "text": "AbstractRiskMeasure\n\nThe abstract type for the risk measure interface.\n\nYou need to define the following methods:\n\nSDDP.adjust_probability\n\n\n\n\n\n"
+},
+
+{
+    "location": "apireference/#SDDP.adjust_probability",
+    "page": "Reference",
+    "title": "SDDP.adjust_probability",
+    "category": "function",
+    "text": "adjust_probability(measure::Expectation\n                   risk_adjusted_probability::Vector{Float64},\n                   original_probability::Vector{Float64},\n                   noise_support::Vector{Noise{T}},\n                   objective_realizations::Vector{Float64},\n                   is_minimization::Bool) where T\n\n\n\n\n\n"
+},
+
+{
+    "location": "apireference/#Sampling-schemes-2",
+    "page": "Reference",
+    "title": "Sampling schemes",
+    "category": "section",
+    "text": "SDDP.AbstractRiskMeasure\nSDDP.adjust_probability"
 },
 
 {
