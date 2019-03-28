@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/><title>Basic VIII: debugging · SDDP.jl</title><link href="https://cdnjs.cloudflare.com/ajax/libs/normalize/4.2.0/normalize.min.css" rel="stylesheet" type="text/css"/><link href="https://fonts.googleapis.com/css?family=Lato|Roboto+Mono" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/default.min.css" rel="stylesheet" type="text/css"/><script>documenterBaseURL="../.."</script><script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.2.0/require.min.js" data-main="../../assets/documenter.js"></script><script src="../../siteinfo.js"></script><script src="../../../versions.js"></script><link href="../../assets/documenter.css" rel="stylesheet" type="text/css"/></head><body><nav class="toc"><h1>SDDP.jl</h1><select id="version-selector" onChange="window.location.href=this.value" style="visibility: hidden"></select><form class="search" id="search-form" action="../../search/"><input id="search-query" name="q" type="text" placeholder="Search docs"/></form><ul><li><a class="toctext" href="../../">Home</a></li><li><a class="toctext" href="../../upgrading_guide/">Upgrading guide</a></li><li><span class="toctext">Tutorials</span><ul><li><span class="toctext">Basic</span><ul><li><a class="toctext" href="../01_first_steps/">Basic I: first steps</a></li><li><a class="toctext" href="../02_adding_uncertainty/">Basic II: adding uncertainty</a></li><li><a class="toctext" href="../03_objective_uncertainty/">Basic III: objective uncertainty</a></li><li><a class="toctext" href="../04_markov_uncertainty/">Basic IV: Markov uncertainty</a></li><li><a class="toctext" href="../05_plotting/">Basic V: plotting</a></li><li><a class="toctext" href="../06_warnings/">Basic VI: words of warning</a></li><li><a class="toctext" href="../07_advanced_modelling/">Basic VII: modelling tips</a></li><li class="current"><a class="toctext" href>Basic VIII: debugging</a><ul class="internal"><li><a class="toctext" href="#Writing-subproblems-to-file-1">Writing subproblems to file</a></li></ul></li></ul></li><li><span class="toctext">Intermediate</span><ul><li><a class="toctext" href="../11_risk/">Intermediate I: risk</a></li><li><a class="toctext" href="../12_stopping_rules/">Intermediate II: stopping rules</a></li><li><a class="toctext" href="../13_generic_graphs/">Intermediate III: policy graphs</a></li><li><a class="toctext" href="../14_objective_states/">Intermediate IV: objective states</a></li><li><a class="toctext" href="../15_performance/">Intermediate V: performance</a></li></ul></li></ul></li><li><a class="toctext" href="../../apireference/">Reference</a></li></ul></nav><article id="docs"><header><nav><ul><li>Tutorials</li><li>Basic</li><li><a href>Basic VIII: debugging</a></li></ul><a class="edit-page" href="https://github.com/odow/SDDP.jl/blob/master/docs/src/tutorial/08_debugging.md"><span class="fa"></span> Edit on GitHub</a></nav><hr/><div id="topbar"><span>Basic VIII: debugging</span><a class="fa fa-bars" href="#"></a></div></header><h1><a class="nav-anchor" id="Basic-VIII:-debugging-1" href="#Basic-VIII:-debugging-1">Basic VIII: debugging</a></h1><p>Building multistage stochastic programming models is hard. There are a lot of different pieces that need to be put together, and we typically have no idea of the optimal policy, so it can be hard (impossible?) to validate the solution.</p><p>That said, here are a few tips to verify and validate models built using <code>SDDP.jl</code>.</p><h2><a class="nav-anchor" id="Writing-subproblems-to-file-1" href="#Writing-subproblems-to-file-1">Writing subproblems to file</a></h2><p>The first step to debug a model is to write out the subproblems to a file in order to check that you are actually building what you think you are building.</p><p>This can be achieved with the help of two functions: <a href="../../apireference/#SDDP.parameterize"><code>SDDP.parameterize</code></a> and <a href="../../apireference/#SDDP.write_subproblem_to_file"><code>SDDP.write_subproblem_to_file</code></a>. The first lets you parameterize a node given a noise, and the second writes out the subproblem to a file.</p><p>Here is an example model:</p><pre><code class="language-julia">using SDDP, GLPK
+
+model = SDDP.LinearPolicyGraph(
+            stages = 2,
+            lower_bound = 0.0,
+            optimizer = with_optimizer(GLPK.Optimizer),
+            direct_mode = false
+        ) do subproblem, t
+    @variable(subproblem, x, SDDP.State, initial_value = 1)
+    @variable(subproblem, y)
+    @constraint(subproblem, balance, x.in == x.out + y)
+    SDDP.parameterize(subproblem, [1.1, 2.2]) do ω
+        @stageobjective(subproblem, ω * x.out)
+        JuMP.fix(y, ω)
+    end
+end
+
+# output
+
+A policy graph with 2 nodes.
+ Node indices: 1, 2</code></pre><p>Initially, <code>model</code> hasn&#39;t been parameterized with a concrete realizations of <code>ω</code>. Let&#39;s do so now by parameterizing the first subproblem with <code>ω=1.1</code>.</p><pre><code class="language-julia-repl">julia&gt; SDDP.parameterize(model[1], 1.1)</code></pre><p>Easy! To parameterize the second stage problem, we would have used <code>model[2]</code>.</p><p>Now to write out the problem to a file. We&#39;ll get a few warnings because some variables and constraints don&#39;t have names. They don&#39;t matter, so ignore them.</p><pre><code class="language-julia-repl">julia&gt; SDDP.write_subproblem_to_file(model[1], &quot;subproblem&quot;, format=:lp)
+┌ Warning: Blank name detected for variable MathOptInterface.VariableIndex(4). Renamed to x4.
+└ @ MathOptFormat ~/.julia/packages/MathOptFormat/iRtuE/src/MathOptFormat.jl:95
+┌ Warning: Blank name detected for constraint MathOptInterface.ConstraintIndex{MathOptInterface.SingleVariable,MathOptInterface.EqualTo{Float64}}(1). Renamed to c1.
+└ @ MathOptFormat ~/.julia/packages/MathOptFormat/iRtuE/src/MathOptFormat.jl:54
+┌ Warning: Blank name detected for constraint MathOptInterface.ConstraintIndex{MathOptInterface.SingleVariable,MathOptInterface.GreaterThan{Float64}}(2). Renamed to c2.
+└ @ MathOptFormat ~/.julia/packages/MathOptFormat/iRtuE/src/MathOptFormat.jl:54</code></pre><p>We can check the file by reading it back in again.</p><pre><code class="language-julia-repl">julia&gt; read(&quot;subproblem.lp&quot;) |&gt; String |&gt; print
+minimize
+obj: 1.1 x_out + 1 x4
+subject to
+balance: 1 x_in - 1 x_out - 1 y == 0
+Bounds
+x4 &gt;= 0
+y == 1.1</code></pre><p>It is easy to see that <code>ω</code> has been set in the objective, and as the fixed value for <code>y</code>.</p><p>It is also possible to parameterize the subproblems using values for <code>ω</code> that are not in the original problem formulation.</p><pre><code class="language-julia-repl">julia&gt; SDDP.parameterize(model[1], 3.3)
+
+julia&gt; SDDP.write_subproblem_to_file(model[1], &quot;subproblem&quot;, format=:lp)
+┌ Warning: Blank name detected for variable MathOptInterface.VariableIndex(4). Renamed to x4.
+└ @ MathOptFormat ~/.julia/packages/MathOptFormat/iRtuE/src/MathOptFormat.jl:95
+┌ Warning: Blank name detected for constraint MathOptInterface.ConstraintIndex{MathOptInterface.SingleVariable,MathOptInterface.EqualTo{Float64}}(1). Renamed to c1.
+└ @ MathOptFormat ~/.julia/packages/MathOptFormat/iRtuE/src/MathOptFormat.jl:54
+┌ Warning: Blank name detected for constraint MathOptInterface.ConstraintIndex{MathOptInterface.SingleVariable,MathOptInterface.GreaterThan{Float64}}(2). Renamed to c2.
+└ @ MathOptFormat ~/.julia/packages/MathOptFormat/iRtuE/src/MathOptFormat.jl:54
+
+julia&gt; read(&quot;subproblem.lp&quot;) |&gt; String |&gt; print
+minimize
+obj: 3.3 x_out + 1 x4
+subject to
+balance: 1 x_in - 1 x_out - 1 y == 0
+Bounds
+x4 &gt;= 0
+y == 3.3
+
+julia&gt; rm(&quot;subproblem.lp&quot;)  # Clean up.</code></pre><p>This concludes or series of basic introductory tutorials for <code>SDDP.jl</code>. When you&#39;re ready, continue to our intermediate series of tutorials, beginning with <a href="../11_risk/#Intermediate-I:-risk-1">Intermediate I: risk</a>.</p><footer><hr/><a class="previous" href="../07_advanced_modelling/"><span class="direction">Previous</span><span class="title">Basic VII: modelling tips</span></a><a class="next" href="../11_risk/"><span class="direction">Next</span><span class="title">Intermediate I: risk</span></a></footer></article></body></html>

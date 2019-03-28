@@ -241,6 +241,14 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
+    "location": "tutorial/01_first_steps/#Saving-the-policy-1",
+    "page": "Basic I: first steps",
+    "title": "Saving the policy",
+    "category": "section",
+    "text": "Once you have finished training the policy, you can write the cuts to file using SDDP.write_cuts_to_file. You can read these cuts into a new model using SDDP.read_cuts_from_file. Note that the model must have the same number (and names) of the state variables, as well as the same number and names of the nodes."
+},
+
+{
     "location": "tutorial/01_first_steps/#Simulating-the-policy-1",
     "page": "Basic I: first steps",
     "title": "Simulating the policy",
@@ -465,14 +473,6 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
-    "location": "tutorial/07_advanced_modelling/#Saving-the-policy-1",
-    "page": "Basic VII: modelling tips",
-    "title": "Saving the policy",
-    "category": "section",
-    "text": "Once you have finished training the policy, you can write the cuts to file using SDDP.write_cuts_to_file. You can read these cuts into a new model using SDDP.read_cuts_from_file. Note that the model must have the same number (and names) of the state variables, as well as the same number and names of the nodes."
-},
-
-{
     "location": "tutorial/07_advanced_modelling/#Multi-dimensional-state-variables-1",
     "page": "Basic VII: modelling tips",
     "title": "Multi-dimensional state variables",
@@ -493,7 +493,31 @@ var documenterSearchIndex = {"docs": [
     "page": "Basic VII: modelling tips",
     "title": "Noise in the constraint matrix",
     "category": "section",
-    "text": "SDDP.jl supports coefficients in the constraint matrix through the JuMP.set_coefficient function.julia> model = SDDP.LinearPolicyGraph(\n               stages=3, lower_bound = 0, optimizer = with_optimizer(GLPK.Optimizer)\n               ) do subproblem, t\n           @variable(subproblem, x, SDDP.State, initial_value = 0.0)\n           @constraint(subproblem, emissions, 1x.out <= 1)\n           SDDP.parameterize(subproblem, [0.2, 0.5, 1.0]) do ω\n               JuMP.set_coefficient(emissions, x.out, ω)\n               println(emissions)\n           end\n           @stageobjective(subproblem, -x.out)\n       end\nA policy graph with 3 nodes.\n Node indices: 1, 2, 3\n\njulia> SDDP.simulate(model, 1);\nemissions : x_out <= 1.0\nemissions : 0.2 x_out <= 1.0\nemissions : 0.5 x_out <= 1.0note: Note\nJuMP will canonicalize constraints by moving all variables to the left-hand side. Thus, @constraint(model, 0 <= 1 - x.out) becomes x.out <= 1. JuMP.set_coefficient sets the coefficient on the canonicalized constraint.This concludes or series of basic introductory tutorials for SDDP.jl. When you\'re ready, continue to our intermediate series of tutorials, beginning with Intermediate I: risk."
+    "text": "SDDP.jl supports coefficients in the constraint matrix through the JuMP.set_coefficient function.julia> model = SDDP.LinearPolicyGraph(\n               stages=3, lower_bound = 0, optimizer = with_optimizer(GLPK.Optimizer)\n               ) do subproblem, t\n           @variable(subproblem, x, SDDP.State, initial_value = 0.0)\n           @constraint(subproblem, emissions, 1x.out <= 1)\n           SDDP.parameterize(subproblem, [0.2, 0.5, 1.0]) do ω\n               JuMP.set_coefficient(emissions, x.out, ω)\n               println(emissions)\n           end\n           @stageobjective(subproblem, -x.out)\n       end\nA policy graph with 3 nodes.\n Node indices: 1, 2, 3\n\njulia> SDDP.simulate(model, 1);\nemissions : x_out <= 1.0\nemissions : 0.2 x_out <= 1.0\nemissions : 0.5 x_out <= 1.0note: Note\nJuMP will canonicalize constraints by moving all variables to the left-hand side. Thus, @constraint(model, 0 <= 1 - x.out) becomes x.out <= 1. JuMP.set_coefficient sets the coefficient on the canonicalized constraint.In the next tutorial, Basic VIII: debugging we discuss how to debug models built using SDDP.jl."
+},
+
+{
+    "location": "tutorial/08_debugging/#",
+    "page": "Basic VIII: debugging",
+    "title": "Basic VIII: debugging",
+    "category": "page",
+    "text": ""
+},
+
+{
+    "location": "tutorial/08_debugging/#Basic-VIII:-debugging-1",
+    "page": "Basic VIII: debugging",
+    "title": "Basic VIII: debugging",
+    "category": "section",
+    "text": "Building multistage stochastic programming models is hard. There are a lot of different pieces that need to be put together, and we typically have no idea of the optimal policy, so it can be hard (impossible?) to validate the solution.That said, here are a few tips to verify and validate models built using SDDP.jl."
+},
+
+{
+    "location": "tutorial/08_debugging/#Writing-subproblems-to-file-1",
+    "page": "Basic VIII: debugging",
+    "title": "Writing subproblems to file",
+    "category": "section",
+    "text": "The first step to debug a model is to write out the subproblems to a file in order to check that you are actually building what you think you are building.This can be achieved with the help of two functions: SDDP.parameterize and SDDP.write_subproblem_to_file. The first lets you parameterize a node given a noise, and the second writes out the subproblem to a file.Here is an example model:using SDDP, GLPK\n\nmodel = SDDP.LinearPolicyGraph(\n            stages = 2,\n            lower_bound = 0.0,\n            optimizer = with_optimizer(GLPK.Optimizer),\n            direct_mode = false\n        ) do subproblem, t\n    @variable(subproblem, x, SDDP.State, initial_value = 1)\n    @variable(subproblem, y)\n    @constraint(subproblem, balance, x.in == x.out + y)\n    SDDP.parameterize(subproblem, [1.1, 2.2]) do ω\n        @stageobjective(subproblem, ω * x.out)\n        JuMP.fix(y, ω)\n    end\nend\n\n# output\n\nA policy graph with 2 nodes.\n Node indices: 1, 2Initially, model hasn\'t been parameterized with a concrete realizations of ω. Let\'s do so now by parameterizing the first subproblem with ω=1.1.julia> SDDP.parameterize(model[1], 1.1)Easy! To parameterize the second stage problem, we would have used model[2].Now to write out the problem to a file. We\'ll get a few warnings because some variables and constraints don\'t have names. They don\'t matter, so ignore them.julia> SDDP.write_subproblem_to_file(model[1], \"subproblem\", format=:lp)\n┌ Warning: Blank name detected for variable MathOptInterface.VariableIndex(4). Renamed to x4.\n└ @ MathOptFormat ~/.julia/packages/MathOptFormat/iRtuE/src/MathOptFormat.jl:95\n┌ Warning: Blank name detected for constraint MathOptInterface.ConstraintIndex{MathOptInterface.SingleVariable,MathOptInterface.EqualTo{Float64}}(1). Renamed to c1.\n└ @ MathOptFormat ~/.julia/packages/MathOptFormat/iRtuE/src/MathOptFormat.jl:54\n┌ Warning: Blank name detected for constraint MathOptInterface.ConstraintIndex{MathOptInterface.SingleVariable,MathOptInterface.GreaterThan{Float64}}(2). Renamed to c2.\n└ @ MathOptFormat ~/.julia/packages/MathOptFormat/iRtuE/src/MathOptFormat.jl:54We can check the file by reading it back in again.julia> read(\"subproblem.lp\") |> String |> print\nminimize\nobj: 1.1 x_out + 1 x4\nsubject to\nbalance: 1 x_in - 1 x_out - 1 y == 0\nBounds\nx4 >= 0\ny == 1.1It is easy to see that ω has been set in the objective, and as the fixed value for y.It is also possible to parameterize the subproblems using values for ω that are not in the original problem formulation.julia> SDDP.parameterize(model[1], 3.3)\n\njulia> SDDP.write_subproblem_to_file(model[1], \"subproblem\", format=:lp)\n┌ Warning: Blank name detected for variable MathOptInterface.VariableIndex(4). Renamed to x4.\n└ @ MathOptFormat ~/.julia/packages/MathOptFormat/iRtuE/src/MathOptFormat.jl:95\n┌ Warning: Blank name detected for constraint MathOptInterface.ConstraintIndex{MathOptInterface.SingleVariable,MathOptInterface.EqualTo{Float64}}(1). Renamed to c1.\n└ @ MathOptFormat ~/.julia/packages/MathOptFormat/iRtuE/src/MathOptFormat.jl:54\n┌ Warning: Blank name detected for constraint MathOptInterface.ConstraintIndex{MathOptInterface.SingleVariable,MathOptInterface.GreaterThan{Float64}}(2). Renamed to c2.\n└ @ MathOptFormat ~/.julia/packages/MathOptFormat/iRtuE/src/MathOptFormat.jl:54\n\njulia> read(\"subproblem.lp\") |> String |> print\nminimize\nobj: 3.3 x_out + 1 x4\nsubject to\nbalance: 1 x_in - 1 x_out - 1 y == 0\nBounds\nx4 >= 0\ny == 3.3\n\njulia> rm(\"subproblem.lp\")  # Clean up.This concludes or series of basic introductory tutorials for SDDP.jl. When you\'re ready, continue to our intermediate series of tutorials, beginning with Intermediate I: risk."
 },
 
 {
@@ -941,7 +965,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Reference",
     "title": "SDDP.parameterize",
     "category": "function",
-    "text": "parameterize(modify::Function,\n             subproblem::JuMP.Model,\n             realizations::Vector{T},\n             probability::Vector{Float64} = fill(1.0 / length(realizations))\n                 ) where T\n\nAdd a parameterization function modify to subproblem. The modify function takes one argument and modifies subproblem based on the realization of the noise sampled from realizations with corresponding probabilities probability.\n\nIn order to conduct an out-of-sample simulation, modify should accept arguments that are not in realizations (but still of type T).\n\nExample\n\nSDDP.parameterize(subproblem, [1, 2, 3], [0.4, 0.3, 0.3]) do ω\n    JuMP.set_upper_bound(x, ω)\nend\n\n\n\n\n\n"
+    "text": "parameterize(modify::Function,\n             subproblem::JuMP.Model,\n             realizations::Vector{T},\n             probability::Vector{Float64} = fill(1.0 / length(realizations))\n                 ) where T\n\nAdd a parameterization function modify to subproblem. The modify function takes one argument and modifies subproblem based on the realization of the noise sampled from realizations with corresponding probabilities probability.\n\nIn order to conduct an out-of-sample simulation, modify should accept arguments that are not in realizations (but still of type T).\n\nExample\n\nSDDP.parameterize(subproblem, [1, 2, 3], [0.4, 0.3, 0.3]) do ω\n    JuMP.set_upper_bound(x, ω)\nend\n\n\n\n\n\nparameterize(node::Node, noise)\n\nParameterize node node with the noise noise.\n\n\n\n\n\n"
 },
 
 {
@@ -1158,6 +1182,22 @@ var documenterSearchIndex = {"docs": [
     "title": "Visualizing the policy",
     "category": "section",
     "text": "SDDP.SpaghettiPlot\nSDDP.add_spaghetti\nSDDP.publication_plot"
+},
+
+{
+    "location": "apireference/#SDDP.write_subproblem_to_file",
+    "page": "Reference",
+    "title": "SDDP.write_subproblem_to_file",
+    "category": "function",
+    "text": "write_subproblem_to_file(node::Node, filename::String; format=:both)\n\nWrite the subproblem contained in node to the file filename.\n\nformat should be one of :mps, :lp, or :both.\n\n\n\n\n\n"
+},
+
+{
+    "location": "apireference/#Debugging-the-model-1",
+    "page": "Reference",
+    "title": "Debugging the model",
+    "category": "section",
+    "text": "SDDP.write_subproblem_to_file"
 },
 
 ]}
