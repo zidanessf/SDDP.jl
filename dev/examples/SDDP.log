@@ -1,0 +1,38 @@
+-------------------------------------------------------
+         SDDP.jl (c) Oscar Dowson, 2017-19
+
+Numerical stability report
+  Non-zero Matrix range     [1e+00, 2e+01]
+  Non-zero Objective range  [1e+00, 1e+03]
+  Non-zero Bounds range     [6e+03, Inf]
+  Non-zero RHS range        [2e+02, 5e+02]
+WARNING: numerical stability issues detected
+  - Bounds range contains large coefficients
+Very large or small absolute values of coefficients
+can cause numerical stability issues. Consider
+reformulating the model.
+
+ Iteration    Simulation       Bound         Time (s)
+        1   -9.800000e+04   1.320000e+05   1.151085e-03
+        2    8.000000e+03   1.290000e+05   1.555204e-03
+        3    1.086000e+05   1.268139e+05   1.918077e-03
+        4    8.163785e+04   1.219636e+05   2.248049e-03
+        5    4.780727e+04   1.121210e+05   2.580166e-03
+        6    1.589371e+05   1.104195e+05   2.940178e-03
+        7    1.047405e+05   1.095042e+05   3.280163e-03
+        8    1.095042e+05   1.088611e+05   3.613234e-03
+        9    1.665556e+05   1.088021e+05   3.942013e-03
+       10    1.655812e+05   1.084962e+05   4.385233e-03
+       11    1.658738e+05   1.083900e+05   4.733086e-03
+       12    1.093500e+05   1.083900e+05   5.053043e-03
+       13    4.882000e+04   1.083900e+05   5.501032e-03
+       14    1.093500e+05   1.083900e+05   5.861998e-03
+       15    4.882000e+04   1.083900e+05   6.177187e-03
+       16    1.093500e+05   1.083900e+05   6.490231e-03
+       17    4.882000e+04   1.083900e+05   6.829023e-03
+       18    1.093500e+05   1.083900e+05   7.139206e-03
+       19    1.670000e+05   1.083900e+05   7.447004e-03
+       20    4.882000e+04   1.083900e+05   7.796049e-03
+
+Terminating training with status: iteration_limit
+-------------------------------------------------------
