@@ -38,15 +38,11 @@ LinearPolicyGraph(optimizer = with_optimizer(Gurobi.Optimizer, OutputFlag = 0))<
 
 # becomes
 
-@variable(subproblem, 0 &lt;= x[i=1:2] &lt;= 1, SDDP.State, initial_value = i)
-
-x0[1]
+@variable(subproblem, 0 &lt;= x[i=1:2] &lt;= 1, SDDP.State, initial_value = i)</code></pre><pre><code class="language-julia">x0[1]
 
 # becomes
 
-x[1].in
-
-x[2]
+x[1].in</code></pre><pre><code class="language-julia">x[2]
 
 # becomes
 
@@ -59,6 +55,18 @@ setnoiseprobability!(subproblem, [0.5, 0.2, 0.3])
 @constraint(subproblem, 2x &lt;= ω)
 SDDP.parameterize(subproblem, [1, 2, 3], [0.5, 0.2, 0.3]) do ϕ
     JuMP.fix(ω, ϕ)
+end</code></pre><p>If you had multiple <code>@rhsnoise</code> constraints, use:</p><pre><code class="language-julia">@rhsnoise(subproblem, ω = [1, 2, 3], 2x &lt;= ω)
+@rhsnoise(subproblem, ω = [4, 5, 6], y &gt;= 3ω)
+setnoiseprobability!(subproblem, [0.5, 0.2, 0.3])
+
+# becomes
+
+@variable(subproblem, ω[1:2])
+@constraint(subproblem, 2x &lt;= ω[1])
+@constraint(subproblem, y &gt;= 3 * ω[2])
+SDDP.parameterize(subproblem, [(1, 4), (2, 5), (3, 6)], [0.5, 0.2, 0.3]) do ϕ
+    JuMP.fix(ω[1], ϕ[1])
+    JuMP.fix(ω[2], ϕ[2])
 end</code></pre><h4><a class="nav-anchor" id="@stageobjective-1" href="#@stageobjective-1"><code>@stageobjective</code></a></h4><p><code>@stageobjective</code> no longer accepts a random list of parameters. Use <a href="../apireference/#SDDP.parameterize"><code>SDDP.parameterize</code></a> instead.</p><pre><code class="language-julia">@stageobjective(subproblem, ω = [1, 2, 3], ω * x)
 setnoiseprobability!(subproblem, [0.5, 0.2, 0.3])
 
