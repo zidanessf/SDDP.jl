@@ -20,12 +20,7 @@ end
 
 A policy graph with 2 nodes.
  Node indices: 1, 2</code></pre><p>Initially, <code>model</code> hasn&#39;t been parameterized with a concrete realizations of <code>ω</code>. Let&#39;s do so now by parameterizing the first subproblem with <code>ω=1.1</code>.</p><pre><code class="language-julia-repl">julia&gt; SDDP.parameterize(model[1], 1.1)</code></pre><p>Easy! To parameterize the second stage problem, we would have used <code>model[2]</code>.</p><p>Now to write out the problem to a file. We&#39;ll get a few warnings because some variables and constraints don&#39;t have names. They don&#39;t matter, so ignore them.</p><pre><code class="language-julia-repl">julia&gt; SDDP.write_subproblem_to_file(model[1], &quot;subproblem&quot;, format=:lp)
-┌ Warning: Blank name detected for variable MathOptInterface.VariableIndex(4). Renamed to x4.
-└ @ MathOptFormat ~/.julia/packages/MathOptFormat/iRtuE/src/MathOptFormat.jl:95
-┌ Warning: Blank name detected for constraint MathOptInterface.ConstraintIndex{MathOptInterface.SingleVariable,MathOptInterface.EqualTo{Float64}}(1). Renamed to c1.
-└ @ MathOptFormat ~/.julia/packages/MathOptFormat/iRtuE/src/MathOptFormat.jl:54
-┌ Warning: Blank name detected for constraint MathOptInterface.ConstraintIndex{MathOptInterface.SingleVariable,MathOptInterface.GreaterThan{Float64}}(2). Renamed to c2.
-└ @ MathOptFormat ~/.julia/packages/MathOptFormat/iRtuE/src/MathOptFormat.jl:54</code></pre><p>We can check the file by reading it back in again.</p><pre><code class="language-julia-repl">julia&gt; read(&quot;subproblem.lp&quot;) |&gt; String |&gt; print
+</code></pre><p>We can check the file by reading it back in again.</p><pre><code class="language-julia-repl">julia&gt; read(&quot;subproblem.lp&quot;) |&gt; String |&gt; print
 minimize
 obj: 1.1 x_out + 1 x4
 subject to
@@ -35,12 +30,7 @@ x4 &gt;= 0
 y == 1.1</code></pre><p>It is easy to see that <code>ω</code> has been set in the objective, and as the fixed value for <code>y</code>.</p><p>It is also possible to parameterize the subproblems using values for <code>ω</code> that are not in the original problem formulation.</p><pre><code class="language-julia-repl">julia&gt; SDDP.parameterize(model[1], 3.3)
 
 julia&gt; SDDP.write_subproblem_to_file(model[1], &quot;subproblem&quot;, format=:lp)
-┌ Warning: Blank name detected for variable MathOptInterface.VariableIndex(4). Renamed to x4.
-└ @ MathOptFormat ~/.julia/packages/MathOptFormat/iRtuE/src/MathOptFormat.jl:95
-┌ Warning: Blank name detected for constraint MathOptInterface.ConstraintIndex{MathOptInterface.SingleVariable,MathOptInterface.EqualTo{Float64}}(1). Renamed to c1.
-└ @ MathOptFormat ~/.julia/packages/MathOptFormat/iRtuE/src/MathOptFormat.jl:54
-┌ Warning: Blank name detected for constraint MathOptInterface.ConstraintIndex{MathOptInterface.SingleVariable,MathOptInterface.GreaterThan{Float64}}(2). Renamed to c2.
-└ @ MathOptFormat ~/.julia/packages/MathOptFormat/iRtuE/src/MathOptFormat.jl:54
+
 
 julia&gt; read(&quot;subproblem.lp&quot;) |&gt; String |&gt; print
 minimize
@@ -66,4 +56,4 @@ Solver name: GLPK
 julia&gt; optimize!(det_equiv)
 
 julia&gt; objective_value(det_equiv)
--5.4725</code></pre><div class="admonition warning"><div class="admonition-title">Warning</div><div class="admonition-text"><p>The determinstic equivalent scales poorly with problem size. Only use this on small problems!</p></div></div><p>This concludes or series of basic introductory tutorials for <code>SDDP.jl</code>. When you&#39;re ready, continue to our intermediate series of tutorials, beginning with <a href="../11_risk/#Intermediate-I:-risk-1">Intermediate I: risk</a>.</p><footer><hr/><a class="previous" href="../07_advanced_modelling/"><span class="direction">Previous</span><span class="title">Basic VII: modelling tips</span></a><a class="next" href="../11_risk/"><span class="direction">Next</span><span class="title">Intermediate I: risk</span></a></footer></article></body></html>
+-5.472500000000001</code></pre><div class="admonition warning"><div class="admonition-title">Warning</div><div class="admonition-text"><p>The determinstic equivalent scales poorly with problem size. Only use this on small problems!</p></div></div><p>This concludes or series of basic introductory tutorials for <code>SDDP.jl</code>. When you&#39;re ready, continue to our intermediate series of tutorials, beginning with <a href="../11_risk/#Intermediate-I:-risk-1">Intermediate I: risk</a>.</p><footer><hr/><a class="previous" href="../07_advanced_modelling/"><span class="direction">Previous</span><span class="title">Basic VII: modelling tips</span></a><a class="next" href="../11_risk/"><span class="direction">Next</span><span class="title">Intermediate I: risk</span></a></footer></article></body></html>

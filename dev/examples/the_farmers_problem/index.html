@@ -129,26 +129,26 @@ can cause numerical stability issues. Consider
 reformulating the model.
 
  Iteration    Simulation       Bound         Time (s)
-        1   -9.800000e+04   1.320000e+05   1.217842e-03
-        2    2.800000e+04   1.290000e+05   1.630068e-03
-        3    1.376000e+05   1.268139e+05   2.003908e-03
-        4    8.163785e+04   1.219636e+05   2.360106e-03
-        5    4.780727e+04   1.121210e+05   2.770901e-03
-        6    1.121210e+05   1.104195e+05   3.154755e-03
-        7    4.784940e+04   1.095042e+05   3.523827e-03
-        8    1.626819e+05   1.088611e+05   3.891945e-03
-        9    4.956667e+04   1.088021e+05   4.244804e-03
-       10    1.655812e+05   1.084962e+05   4.728794e-03
-       11    1.658738e+05   1.083900e+05   5.128860e-03
-       12    1.670000e+05   1.083900e+05   5.490780e-03
-       13    1.670000e+05   1.083900e+05   5.940914e-03
-       14    4.882000e+04   1.083900e+05   6.319761e-03
-       15    4.882000e+04   1.083900e+05   6.705761e-03
-       16    1.670000e+05   1.083900e+05   7.068634e-03
-       17    1.093500e+05   1.083900e+05   7.438660e-03
-       18    4.882000e+04   1.083900e+05   7.786751e-03
-       19    4.882000e+04   1.083900e+05   8.132696e-03
-       20    1.670000e+05   1.083900e+05   8.509636e-03
+        1   -9.800000e+04   1.320000e+05   1.300812e-03
+        2    2.800000e+04   1.290000e+05   1.741886e-03
+        3    1.086000e+05   1.268139e+05   2.121687e-03
+        4    3.003659e+04   1.219636e+05   2.487898e-03
+        5    1.550000e+05   1.121210e+05   2.890825e-03
+        6    1.589371e+05   1.104195e+05   3.486872e-03
+        7    1.047405e+05   1.095042e+05   4.101992e-03
+        8    1.095042e+05   1.088611e+05   4.472971e-03
+        9    1.088611e+05   1.088021e+05   4.879951e-03
+       10    4.988974e+04   1.084962e+05   5.366087e-03
+       11    1.658738e+05   1.083900e+05   5.785942e-03
+       12    1.670000e+05   1.083900e+05   6.155729e-03
+       13    4.882000e+04   1.083900e+05   6.653547e-03
+       14    1.093500e+05   1.083900e+05   7.053614e-03
+       15    1.670000e+05   1.083900e+05   7.434607e-03
+       16    1.093500e+05   1.083900e+05   7.808685e-03
+       17    4.882000e+04   1.083900e+05   8.183718e-03
+       18    4.882000e+04   1.083900e+05   8.547544e-03
+       19    1.670000e+05   1.083900e+05   8.944750e-03
+       20    1.093500e+05   1.083900e+05   9.321690e-03
 
 Terminating training with status: iteration_limit
 -------------------------------------------------------</code></pre><h2><a class="nav-anchor" id="Checking-the-policy-1" href="#Checking-the-policy-1">Checking the policy</a></h2><p>Birge and Louveaux report that the optimal objective value is \$108,390. Check that we got the correct solution using <a href="../../apireference/#SDDP.calculate_bound"><code>SDDP.calculate_bound</code></a>:</p><pre><code class="language-julia">@assert SDDP.calculate_bound(model) == 108_390.0</code></pre><p><em>This page was generated using <a href="https://github.com/fredrikekre/Literate.jl">Literate.jl</a>.</em></p><footer><hr/><a class="previous" href="../../tutorial/16_performance/"><span class="direction">Previous</span><span class="title">Intermediate VI: performance</span></a><a class="next" href="../../apireference/"><span class="direction">Next</span><span class="title">Reference</span></a></footer></article></body></html>
