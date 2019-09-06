@@ -22,11 +22,11 @@ A policy graph with 2 nodes.
  Node indices: 1, 2</code></pre><p>Initially, <code>model</code> hasn&#39;t been parameterized with a concrete realizations of <code>ω</code>. Let&#39;s do so now by parameterizing the first subproblem with <code>ω=1.1</code>.</p><pre><code class="language-julia-repl">julia&gt; SDDP.parameterize(model[1], 1.1)</code></pre><p>Easy! To parameterize the second stage problem, we would have used <code>model[2]</code>.</p><p>Now to write out the problem to a file. We&#39;ll get a few warnings because some variables and constraints don&#39;t have names. They don&#39;t matter, so ignore them.</p><pre><code class="language-julia-repl">julia&gt; SDDP.write_subproblem_to_file(model[1], &quot;subproblem&quot;, format=:lp)
 </code></pre><p>We can check the file by reading it back in again.</p><pre><code class="language-julia-repl">julia&gt; read(&quot;subproblem.lp&quot;) |&gt; String |&gt; print
 minimize
-obj: 1.1 x_out + 1 x4
+obj: 1.1 x_out + 1 x2
 subject to
 balance: 1 x_in - 1 x_out - 1 y = 0
 Bounds
-x4 &gt;= 0
+x2 &gt;= 0
 y = 1.1
 End</code></pre><p>It is easy to see that <code>ω</code> has been set in the objective, and as the fixed value for <code>y</code>.</p><p>It is also possible to parameterize the subproblems using values for <code>ω</code> that are not in the original problem formulation.</p><pre><code class="language-julia-repl">julia&gt; SDDP.parameterize(model[1], 3.3)
 
@@ -35,11 +35,11 @@ julia&gt; SDDP.write_subproblem_to_file(model[1], &quot;subproblem&quot;, format
 
 julia&gt; read(&quot;subproblem.lp&quot;) |&gt; String |&gt; print
 minimize
-obj: 3.3 x_out + 1 x4
+obj: 3.3 x_out + 1 x2
 subject to
 balance: 1 x_in - 1 x_out - 1 y = 0
 Bounds
-x4 &gt;= 0
+x2 &gt;= 0
 y = 3.3
 End
 
@@ -47,10 +47,10 @@ julia&gt; rm(&quot;subproblem.lp&quot;)  # Clean up.</code></pre><h2><a class="n
 A JuMP Model
 Feasibility problem with:
 Variables: 24
+`GenericAffExpr{Float64,VariableRef}`-in-`MathOptInterface.EqualTo{Float64}`: 10 constraints
 `VariableRef`-in-`MathOptInterface.EqualTo{Float64}`: 8 constraints
 `VariableRef`-in-`MathOptInterface.GreaterThan{Float64}`: 6 constraints
 `VariableRef`-in-`MathOptInterface.LessThan{Float64}`: 4 constraints
-`GenericAffExpr{Float64,VariableRef}`-in-`MathOptInterface.EqualTo{Float64}`: 10 constraints
 Model mode: AUTOMATIC
 CachingOptimizer state: EMPTY_OPTIMIZER
 Solver name: GLPK
