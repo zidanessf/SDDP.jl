@@ -55,26 +55,26 @@ print(&quot;Finished training and simulating.&quot;)</code></pre><pre><code clas
          SDDP.jl (c) Oscar Dowson, 2017-19
 
  Iteration    Simulation       Bound         Time (s)
-        1    7.218750e+03   3.160920e+03   6.828899e-01
-        2    8.167500e+03   4.075227e+03   6.840010e-01
-        3    9.765625e+03   5.000000e+03   6.849720e-01
-        4    8.250000e+03   5.000000e+03   6.861231e-01
-        5    7.818750e+03   5.047123e+03   6.871610e-01
-        6    3.906250e+03   5.047123e+03   6.881871e-01
-        7    5.859375e+03   5.089445e+03   6.892991e-01
-        8    8.413846e+03   5.092593e+03   6.904089e-01
-        9    5.197500e+03   5.092593e+03   6.914439e-01
-       10    0.000000e+00   5.092593e+03   6.925218e-01
+        1    1.117188e+04   4.653846e+03   8.119740e-01
+        2    5.365385e+03   4.678634e+03   8.132110e-01
+        3    2.213115e+03   4.830014e+03   8.142641e-01
+        4    9.765625e+03   5.023982e+03   8.153021e-01
+        5    6.412500e+03   5.023982e+03   8.163080e-01
+        6    7.226563e+03   5.023982e+03   8.173270e-01
+        7    5.400000e+03   5.023982e+03   8.183162e-01
+        8    6.640625e+03   5.023982e+03   8.193512e-01
+        9    2.343750e+03   5.042463e+03   8.205082e-01
+       10    2.847062e+03   5.092593e+03   8.216743e-01
 
 Terminating training with status: iteration_limit
 -------------------------------------------------------
 Finished training and simulating.</code></pre><p>To demonstrate how the objective states are updated, consider the sequence of noise observations:</p><pre><code class="language-julia">[stage[:noise_term] for stage in simulations[1]]</code></pre><pre><code class="language-none">3-element Array{NamedTuple{(:fuel, :inflow),Tuple{Float64,Float64}},1}:
- (fuel = 1.25, inflow = 0.0)
- (fuel = 1.25, inflow = 0.0)
- (fuel = 1.25, inflow = 0.0)</code></pre><p>This, the fuel cost in the first stage should be <code>0.75 * 50 = 37.5</code>. The fuel cost in the second stage should be <code>0.9 * 37.5 = 33.75</code>. The fuel cost in the third stage should be <code>1.25 * 33.75 = 42.1875</code>.</p><p>To confirm this, the values of the objective state in a simulation can be queried using the <code>:objective_state</code> key.</p><pre><code class="language-julia">[stage[:objective_state] for stage in simulations[1]]</code></pre><pre><code class="language-none">3-element Array{Float64,1}:
- 62.5    
- 78.125  
- 97.65625</code></pre><h2><a class="nav-anchor" id="Multi-dimensional-objective-states-1" href="#Multi-dimensional-objective-states-1">Multi-dimensional objective states</a></h2><p>You can construct multi-dimensional price processes using <code>NTuple</code>s. Just replace every scalar value associated with the objective state by a tuple. For example, <code>initial_value = 1.0</code> becomes <code>initial_value = (1.0, 2.0)</code>.</p><p>Here is an example:</p><pre><code class="language-julia">model = SDDP.LinearPolicyGraph(
+ (fuel = 0.9, inflow = 0.0)   
+ (fuel = 0.9, inflow = 50.0)  
+ (fuel = 1.25, inflow = 100.0)</code></pre><p>This, the fuel cost in the first stage should be <code>0.75 * 50 = 37.5</code>. The fuel cost in the second stage should be <code>0.9 * 37.5 = 33.75</code>. The fuel cost in the third stage should be <code>1.25 * 33.75 = 42.1875</code>.</p><p>To confirm this, the values of the objective state in a simulation can be queried using the <code>:objective_state</code> key.</p><pre><code class="language-julia">[stage[:objective_state] for stage in simulations[1]]</code></pre><pre><code class="language-none">3-element Array{Float64,1}:
+ 45.0  
+ 40.5  
+ 50.625</code></pre><h2><a class="nav-anchor" id="Multi-dimensional-objective-states-1" href="#Multi-dimensional-objective-states-1">Multi-dimensional objective states</a></h2><p>You can construct multi-dimensional price processes using <code>NTuple</code>s. Just replace every scalar value associated with the objective state by a tuple. For example, <code>initial_value = 1.0</code> becomes <code>initial_value = (1.0, 2.0)</code>.</p><p>Here is an example:</p><pre><code class="language-julia">model = SDDP.LinearPolicyGraph(
     stages = 3,
     sense = :Min,
     lower_bound = 0.0,
@@ -123,20 +123,20 @@ print(&quot;Finished training and simulating.&quot;)</code></pre><pre><code clas
          SDDP.jl (c) Oscar Dowson, 2017-19
 
  Iteration    Simulation       Bound         Time (s)
-        1    1.000000e+03   2.150673e+03   4.989450e-01
-        2    0.000000e+00   2.462121e+03   5.002100e-01
-        3    2.500000e+03   2.683081e+03   5.013950e-01
-        4    0.000000e+00   2.846170e+03   5.025671e-01
-        5    3.625000e+03   4.843216e+03   5.037031e-01
-        6    3.625000e+03   4.843216e+03   5.047932e-01
-        7    2.000000e+03   4.843216e+03   5.058391e-01
-        8    8.500000e+03   4.843216e+03   5.073643e-01
-        9    0.000000e+00   4.852852e+03   5.086501e-01
-       10    4.950000e+03   4.905037e+03   5.102432e-01
+        1    2.812500e+03   3.953529e+03   4.994130e-01
+        2    2.000000e+03   3.971156e+03   5.006230e-01
+        3    3.125000e+03   4.028862e+03   5.018289e-01
+        4    1.875000e+03   4.031961e+03   5.032690e-01
+        5    3.500000e+03   4.730914e+03   5.044332e-01
+        6    1.187500e+03   4.731555e+03   5.055370e-01
+        7    1.031812e+04   4.939704e+03   5.067120e-01
+        8    5.875000e+03   4.939704e+03   5.079310e-01
+        9    2.625000e+03   4.943865e+03   5.091481e-01
+       10    1.812500e+03   4.943865e+03   5.104370e-01
 
 Terminating training with status: iteration_limit
 -------------------------------------------------------
 Finished training and simulating.</code></pre><p>This time, since our objective state is two-dimensional, the objective states are tuples with two elements:</p><pre><code class="language-julia">[stage[:objective_state] for stage in simulations[1]]</code></pre><pre><code class="language-none">3-element Array{Tuple{Float64,Float64},1}:
- (40.0, 50.0)
- (25.0, 40.0)
- (27.5, 25.0)</code></pre><h2><a class="nav-anchor" id="objective_state_warnings-1" href="#objective_state_warnings-1">Warnings</a></h2><p>There are number of things to be aware of when using objective states.</p><ul><li><p>The key assumption is that price is independent of the states and actions in the model.</p><p>That means that the price cannot appear in any <code>@constraint</code>s. Nor can you use any <code>@variable</code>s in the update function.</p></li><li><p>Choosing an appropriate Lipschitz constant is difficult.</p><p>The points discussed in <a href="../06_warnings/#Choosing-an-initial-bound-1">Choosing an initial bound</a> are relevant. The Lipschitz constant should not be chosen as large as possible (since this will help with convergence and the numerical issues discussed above), but if chosen to small, it may cut of the feasible region and lead to a sub-optimal solution.</p></li><li><p>You need to ensure that the cost-to-go function is concave with respect to the objective state <em>before</em> the update.</p><p>If the update function is linear, this is always the case. In some situations, the update function can be nonlinear (e.g., multiplicative as we have above). In general, placing constraints on the price (e.g., <code>clamp(price, 0, 1)</code>) will destroy concavity. <a href="https://en.wikipedia.org/wiki/Caveat_emptor">Caveat emptor</a>. It&#39;s up to you if this is a problem. If it isn&#39;t you&#39;ll get a good heuristic with no guarantee of global optimality.</p></li></ul><p><em>This page was generated using <a href="https://github.com/fredrikekre/Literate.jl">Literate.jl</a>.</em></p><footer><hr/><a class="previous" href="../06_warnings/"><span class="direction">Previous</span><span class="title">Basic VI: words of warning</span></a><a class="next" href="../12_belief_states/"><span class="direction">Next</span><span class="title">Advanced II: belief states</span></a></footer></article></body></html>
+ (55.0, 50.0) 
+ (67.5, 55.0) 
+ (68.75, 67.5)</code></pre><h2><a class="nav-anchor" id="objective_state_warnings-1" href="#objective_state_warnings-1">Warnings</a></h2><p>There are number of things to be aware of when using objective states.</p><ul><li><p>The key assumption is that price is independent of the states and actions in the model.</p><p>That means that the price cannot appear in any <code>@constraint</code>s. Nor can you use any <code>@variable</code>s in the update function.</p></li><li><p>Choosing an appropriate Lipschitz constant is difficult.</p><p>The points discussed in <a href="../06_warnings/#Choosing-an-initial-bound-1">Choosing an initial bound</a> are relevant. The Lipschitz constant should not be chosen as large as possible (since this will help with convergence and the numerical issues discussed above), but if chosen to small, it may cut of the feasible region and lead to a sub-optimal solution.</p></li><li><p>You need to ensure that the cost-to-go function is concave with respect to the objective state <em>before</em> the update.</p><p>If the update function is linear, this is always the case. In some situations, the update function can be nonlinear (e.g., multiplicative as we have above). In general, placing constraints on the price (e.g., <code>clamp(price, 0, 1)</code>) will destroy concavity. <a href="https://en.wikipedia.org/wiki/Caveat_emptor">Caveat emptor</a>. It&#39;s up to you if this is a problem. If it isn&#39;t you&#39;ll get a good heuristic with no guarantee of global optimality.</p></li></ul><p><em>This page was generated using <a href="https://github.com/fredrikekre/Literate.jl">Literate.jl</a>.</em></p><footer><hr/><a class="previous" href="../06_warnings/"><span class="direction">Previous</span><span class="title">Basic VI: words of warning</span></a><a class="next" href="../12_belief_states/"><span class="direction">Next</span><span class="title">Advanced II: belief states</span></a></footer></article></body></html>

@@ -67,16 +67,16 @@ Numerical stability report
 No problems detected
 
  Iteration    Simulation       Bound         Time (s)
-        1    1.500000e+04   5.329294e+03   9.047985e-04
-        2    1.243622e+04   7.975336e+03   1.532078e-03
-        3    1.625000e+04   8.072917e+03   2.133131e-03
-        4    1.312500e+04   8.072917e+03   2.756119e-03
-        5    5.000000e+03   8.072917e+03   3.347158e-03
-        6    1.875000e+03   8.072917e+03   3.926039e-03
-        7    1.875000e+03   8.072917e+03   4.494905e-03
-        8    2.437500e+04   8.072917e+03   5.089998e-03
-        9    1.875000e+03   8.072917e+03   5.676985e-03
-       10    2.750000e+04   8.072917e+03   6.275892e-03
+        1    0.000000e+00   7.196558e+03   8.640289e-04
+        2    4.522059e+03   8.024230e+03   1.435995e-03
+        3    2.750000e+04   8.036060e+03   2.017975e-03
+        4    1.875000e+03   8.072917e+03   2.673864e-03
+        5    5.000000e+03   8.072917e+03   3.247023e-03
+        6    1.875000e+03   8.072917e+03   3.860950e-03
+        7    5.000000e+03   8.072917e+03   4.423857e-03
+        8    5.000000e+03   8.072917e+03   2.234578e-02
+        9    2.437500e+04   8.072917e+03   2.311873e-02
+       10    1.875000e+03   8.072917e+03   2.384949e-02
 
 Terminating training with status: iteration_limit
 -------------------------------------------------------</code></pre><p>Instead of performing a Monte Carlo simulation like the previous tutorials, we may want to simulate one particular sequence of noise realizations. This <em>historical</em> simulation can also be conducted by passing a <a href="../../apireference/#SDDP.Historical"><code>SDDP.Historical</code></a> sampling scheme to the <code>sampling_scheme</code> keyword of the <a href="../../apireference/#SDDP.simulate"><code>SDDP.simulate</code></a> function.</p><p>We can confirm that the historical sequence of nodes was visited by querying the <code>:node_index</code> key of the simulation results.</p><pre><code class="language-julia">simulations = SDDP.simulate(
