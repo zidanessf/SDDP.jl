@@ -42,16 +42,16 @@ Numerical stability report
 No problems detected
 
  Iteration    Simulation       Bound         Time (s)
-        1    2.000000e+04   3.437500e+03   9.633780e-02
-        2    1.156250e+04   7.500000e+03   9.676790e-02
-        3    2.500000e+03   8.333333e+03   9.710789e-02
-        4    5.000000e+03   8.333333e+03   9.742999e-02
-        5    1.500000e+04   8.333333e+03   9.773707e-02
-        6    5.000000e+03   8.333333e+03   9.804010e-02
-        7    7.500000e+03   8.333333e+03   9.835696e-02
-        8    5.000000e+03   8.333333e+03   9.864807e-02
-        9    1.250000e+04   8.333333e+03   9.897804e-02
-       10    1.250000e+04   8.333333e+03   9.931207e-02
+        1    7.500000e+03   5.000000e+03   9.719610e-02
+        2    5.000000e+03   8.333333e+03   9.760594e-02
+        3    2.500000e+03   8.333333e+03   9.793782e-02
+        4    2.500000e+03   8.333333e+03   9.824300e-02
+        5    2.500000e+03   8.333333e+03   9.853601e-02
+        6    7.500000e+03   8.333333e+03   9.882498e-02
+        7    2.500000e+03   8.333333e+03   9.914207e-02
+        8    2.000000e+04   8.333333e+03   9.945202e-02
+        9    7.500000e+03   8.333333e+03   9.978509e-02
+       10    1.500000e+04   8.333333e+03   1.001360e-01
 
 Terminating training with status: iteration_limit
 -------------------------------------------------------</code></pre><p>We can also simulate the policy. Note that this time, the simulation is stochastic. One common approach to quantify the quality of the policy is to perform  a Monte Carlo simulation and then form a confidence interval for the expected cost. This confidence interval is an estimate for the upper bound.</p><p>In addition to the confidence interval, we can calculate the lower bound using <a href="../../apireference/#SDDP.calculate_bound"><code>SDDP.calculate_bound</code></a>.</p><pre><code class="language-julia">using Statistics
@@ -67,7 +67,7 @@ objective_values = [
 ci = round(1.96 * std(objective_values) / sqrt(500), digits = 2)
 
 println(&quot;Confidence interval: &quot;, μ, &quot; ± &quot;, ci)
-println(&quot;Lower bound: &quot;, round(SDDP.calculate_bound(model), digits = 2))</code></pre><pre><code class="language-none">Confidence interval: 8260.0 ± 406.11
+println(&quot;Lower bound: &quot;, round(SDDP.calculate_bound(model), digits = 2))</code></pre><pre><code class="language-none">Confidence interval: 8185.0 ± 407.72
 Lower bound: 8333.33</code></pre><p>In addition to simulating the primal values of variables, we can also pass <code>SDDP.jl</code> custom recorder functions. Each of these functions takes one argument, the JuMP subproblem, and returns anything you can compute. For example, the dual of the demand constraint (which we named <code>demand_constraint</code>) corresponds to the price we should charge for electricity, since it represents the cost of each additional unit of demand. To calculate this, we can go</p><pre><code class="language-julia">simulations = SDDP.simulate(
     model,
     1,

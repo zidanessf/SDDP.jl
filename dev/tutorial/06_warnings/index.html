@@ -42,11 +42,11 @@ SDDP.train(model, iteration_limit = 5, run_numerical_stability_report = false)</
          SDDP.jl (c) Oscar Dowson, 2017-19
 
  Iteration    Simulation       Bound         Time (s)
-        1    6.500000e+00   3.000000e+00   6.759167e-04
-        2    3.500000e+00   3.500000e+00   9.489059e-04
-        3    3.500000e+00   3.500000e+00   1.136780e-03
-        4    3.500000e+00   3.500000e+00   1.328945e-03
-        5    3.500000e+00   3.500000e+00   1.528740e-03
+        1    6.500000e+00   3.000000e+00   5.309582e-04
+        2    3.500000e+00   3.500000e+00   7.748604e-04
+        3    3.500000e+00   3.500000e+00   9.949207e-04
+        4    3.500000e+00   3.500000e+00   1.272917e-03
+        5    3.500000e+00   3.500000e+00   1.489878e-03
 
 Terminating training with status: iteration_limit
 -------------------------------------------------------</code></pre><p>Now consider the case when we set the <code>lower_bound</code> to <code>10.0</code>:</p><pre><code class="language-julia">using SDDP, GLPK
@@ -69,11 +69,11 @@ SDDP.train(model, iteration_limit = 5, run_numerical_stability_report = false)</
          SDDP.jl (c) Oscar Dowson, 2017-19
 
  Iteration    Simulation       Bound         Time (s)
-        1    6.500000e+00   1.100000e+01   4.649162e-04
-        2    5.500000e+00   1.100000e+01   7.438660e-04
-        3    5.500000e+00   1.100000e+01   9.727478e-04
-        4    5.500000e+00   1.100000e+01   1.162767e-03
-        5    5.500000e+00   1.100000e+01   1.608849e-03
+        1    6.500000e+00   1.100000e+01   4.661083e-04
+        2    5.500000e+00   1.100000e+01   6.961823e-04
+        3    5.500000e+00   1.100000e+01   8.780956e-04
+        4    5.500000e+00   1.100000e+01   1.076221e-03
+        5    5.500000e+00   1.100000e+01   1.260042e-03
 
 Terminating training with status: iteration_limit
 -------------------------------------------------------</code></pre><p>How do we tell which is more appropriate? There are a few clues that you should look out for.</p><ul><li><p>The bound converges to a value above (if minimizing) the simulated cost of the policy. In this case, the problem is deterministic, so it is easy to tell. But you can also check by performing a Monte Carlo simulation like we did in <a href="../02_adding_uncertainty/#Basic-II:-adding-uncertainty-1">Basic II: adding uncertainty</a>.</p></li><li><p>The bound converges to different values when we change the bound. This is another clear give-away. The bound provided by the user is only used in the initial iterations. <strong>It should not change the value of the converged policy.</strong> Thus, if you don&#39;t know an appropriate value for the bound, choose an initial value, and then increase (or decrease) the value of the bound to confirm that the value of the policy doesn&#39;t change.</p></li><li><p>The bound converges to a value <em>close</em> to the bound provided by the user. This varies between models, but notice that <code>11.0</code> is quite close to <code>10.0</code> compared with <code>3.5</code> and <code>0.0</code>.</p></li></ul><p>This concludes our sixth tutorial for <code>SDDP.jl</code>. You&#39;re now ready to start solving multistage stochastic programs with <code>SDDP.jl</code>!</p><p><em>This page was generated using <a href="https://github.com/fredrikekre/Literate.jl">Literate.jl</a>.</em></p><footer><hr/><a class="previous" href="../05_plotting/"><span class="direction">Previous</span><span class="title">Basic V: plotting</span></a><a class="next" href="../11_objective_states/"><span class="direction">Next</span><span class="title">Advanced I: objective states</span></a></footer></article></body></html>
