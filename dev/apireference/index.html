@@ -6,24 +6,36 @@ add_ambiguity_set(graph, [3], [1e5])</code></pre></div></div><div><div><pre><cod
 add_ambiguity_set(graph, [1, 2], 1e3)
 add_ambiguity_set(graph, [3], 1e5)</code></pre></div></div></section><section class="docstring"><div class="docstring-header"><a class="docstring-binding" id="SDDP.LinearGraph" href="#SDDP.LinearGraph"><code>SDDP.LinearGraph</code></a> — <span class="docstring-category">Function</span>.</div><div><div><pre><code class="language-julia">LinearGraph(stages::Int)</code></pre></div></div></section><section class="docstring"><div class="docstring-header"><a class="docstring-binding" id="SDDP.MarkovianGraph" href="#SDDP.MarkovianGraph"><code>SDDP.MarkovianGraph</code></a> — <span class="docstring-category">Function</span>.</div><div><div><pre><code class="language-julia">MarkovianGraph(transition_matrices::Vector{Matrix{Float64}})</code></pre></div></div><div><div><pre><code class="language-none">MarkovianGraph(; stages::Int,
                transition_matrix::Matrix{Float64},
-               root_node_transition::Vector{Float64})</code></pre><p>Construct a Markovian graph object.</p></div></div></section><section class="docstring"><div class="docstring-header"><a class="docstring-binding" id="SDDP.LinearPolicyGraph" href="#SDDP.LinearPolicyGraph"><code>SDDP.LinearPolicyGraph</code></a> — <span class="docstring-category">Function</span>.</div><div><div><pre><code class="language-julia">LinearPolicyGraph(builder::Function; stages::Int, kwargs...)</code></pre><p>Create a linear policy graph with <code>stages</code> number of stages.</p><p>See <a href="#SDDP.PolicyGraph"><code>SDDP.PolicyGraph</code></a> for the other keyword arguments.</p></div></div></section><section class="docstring"><div class="docstring-header"><a class="docstring-binding" id="SDDP.MarkovianPolicyGraph" href="#SDDP.MarkovianPolicyGraph"><code>SDDP.MarkovianPolicyGraph</code></a> — <span class="docstring-category">Function</span>.</div><div><div><pre><code class="language-julia">MarkovianPolicyGraph(builder::Function;
-    transition_matrices::Vector{Array{Float64, 2}}, kwargs...)</code></pre><p>Create a Markovian policy graph based on the transition matrices given in <code>transition_matrices</code>.</p><p>See <a href="#SDDP.PolicyGraph"><code>SDDP.PolicyGraph</code></a> for the other keyword arguments.</p></div></div></section><section class="docstring"><div class="docstring-header"><a class="docstring-binding" id="SDDP.PolicyGraph" href="#SDDP.PolicyGraph"><code>SDDP.PolicyGraph</code></a> — <span class="docstring-category">Type</span>.</div><div><div><pre><code class="language-julia">PolicyGraph(builder::Function, graph::Graph{T};
+               root_node_transition::Vector{Float64})</code></pre><p>Construct a Markovian graph object.</p></div></div></section><section class="docstring"><div class="docstring-header"><a class="docstring-binding" id="SDDP.LinearPolicyGraph" href="#SDDP.LinearPolicyGraph"><code>SDDP.LinearPolicyGraph</code></a> — <span class="docstring-category">Function</span>.</div><div><div><pre><code class="language-julia">LinearPolicyGraph(builder::Function; stages::Int, kwargs...)</code></pre><p>Create a linear policy graph with <code>stages</code> number of stages.</p><p>See <a href="#SDDP.PolicyGraph"><code>SDDP.PolicyGraph</code></a> for the other keyword arguments.</p></div></div></section><section class="docstring"><div class="docstring-header"><a class="docstring-binding" id="SDDP.MarkovianPolicyGraph" href="#SDDP.MarkovianPolicyGraph"><code>SDDP.MarkovianPolicyGraph</code></a> — <span class="docstring-category">Function</span>.</div><div><div><pre><code class="language-julia">MarkovianPolicyGraph(
+    builder::Function;
+    transition_matrices::Vector{Array{Float64, 2}},
+    kwargs...
+)</code></pre><p>Create a Markovian policy graph based on the transition matrices given in <code>transition_matrices</code>.</p><p>See <a href="#SDDP.PolicyGraph"><code>SDDP.PolicyGraph</code></a> for the other keyword arguments.</p></div></div></section><section class="docstring"><div class="docstring-header"><a class="docstring-binding" id="SDDP.PolicyGraph" href="#SDDP.PolicyGraph"><code>SDDP.PolicyGraph</code></a> — <span class="docstring-category">Type</span>.</div><div><div><pre><code class="language-julia">PolicyGraph(
+    builder::Function,
+    graph::Graph{T};
     sense = :Min,
-    bellman_function = nothing,
     lower_bound = -Inf,
     upper_bound = Inf,
     optimizer = nothing,
-    direct_mode = true) where {T}</code></pre><p>Construct a policy graph based on the graph structure of <code>graph</code>. (See <a href="#SDDP.Graph"><code>SDDP.Graph</code></a> for details.)</p><p><strong>Example</strong></p><pre><code class="language-none">function builder(subproblem::JuMP.Model, index)
+    bellman_function = nothing,
+    direct_mode = true,
+    integrality_handler = ContinuousRelaxation(),
+) where {T}</code></pre><p>Construct a policy graph based on the graph structure of <code>graph</code>. (See <a href="#SDDP.Graph"><code>SDDP.Graph</code></a> for details.)</p><p><strong>Example</strong></p><pre><code class="language-none">function builder(subproblem::JuMP.Model, index)
     # ... subproblem definition ...
 end
 
-model = PolicyGraph(builder, graph;
-                    lower_bound = 0.0,
-                    optimizer = with_optimizer(GLPK.Optimizer),
-                    direct_mode = false)</code></pre><p>Or, using the Julia <code>do ... end</code> syntax:</p><pre><code class="language-none">model = PolicyGraph(graph;
-                    lower_bound = 0.0,
-                    optimizer = with_optimizer(GLPK.Optimizer),
-                    direct_mode = true) do subproblem, index
+model = PolicyGraph(
+    builder,
+    graph;
+    lower_bound = 0.0,
+    optimizer = with_optimizer(GLPK.Optimizer),
+    direct_mode = false
+)</code></pre><p>Or, using the Julia <code>do ... end</code> syntax:</p><pre><code class="language-none">model = PolicyGraph(
+    graph;
+    lower_bound = 0.0,
+    optimizer = with_optimizer(GLPK.Optimizer),
+    direct_mode = true
+) do subproblem, index
     # ... subproblem definitions ...
 end</code></pre></div></div></section><h2><a class="nav-anchor" id="Subproblem-definition-1" href="#Subproblem-definition-1">Subproblem definition</a></h2><section class="docstring"><div class="docstring-header"><a class="docstring-binding" id="SDDP.@stageobjective" href="#SDDP.@stageobjective"><code>SDDP.@stageobjective</code></a> — <span class="docstring-category">Macro</span>.</div><div><div><pre><code class="language-julia">@stageobjective(subproblem, expr)</code></pre><p>Set the stage-objective of <code>subproblem</code> to <code>expr</code>.</p><p><strong>Example</strong></p><pre><code class="language-none">@stageobjective(subproblem, 2x + y)</code></pre></div></div></section><section class="docstring"><div class="docstring-header"><a class="docstring-binding" id="SDDP.parameterize" href="#SDDP.parameterize"><code>SDDP.parameterize</code></a> — <span class="docstring-category">Function</span>.</div><div><div><pre><code class="language-julia">parameterize(modify::Function,
              subproblem::JuMP.Model,
