@@ -131,26 +131,26 @@ can cause numerical stability issues. Consider
 reformulating the model.
 
  Iteration    Simulation       Bound         Time (s)
-        1   -9.800000e+04   1.320000e+05   1.461983e-03
-        2    2.800000e+04   1.290000e+05   1.878023e-03
-        3    4.840000e+04   1.268139e+05   2.245903e-03
-        4    8.163785e+04   1.219636e+05   2.629995e-03
-        5    1.098545e+05   1.121210e+05   3.004074e-03
-        6    5.072028e+04   1.104195e+05   3.388882e-03
-        7    1.616316e+05   1.095042e+05   3.740072e-03
-        8    1.626819e+05   1.088611e+05   4.098892e-03
-        9    1.088611e+05   1.088021e+05   4.429817e-03
-       10    1.655812e+05   1.084962e+05   4.833937e-03
-       11    1.658738e+05   1.083900e+05   5.204916e-03
-       12    4.882000e+04   1.083900e+05   5.540848e-03
-       13    4.882000e+04   1.083900e+05   5.944967e-03
-       14    1.093500e+05   1.083900e+05   6.298780e-03
-       15    1.670000e+05   1.083900e+05   6.659746e-03
-       16    1.093500e+05   1.083900e+05   7.018805e-03
-       17    1.093500e+05   1.083900e+05   7.361650e-03
-       18    1.093500e+05   1.083900e+05   7.711649e-03
-       19    1.093500e+05   1.083900e+05   8.073807e-03
-       20    1.670000e+05   1.083900e+05   8.429766e-03
+        1   -9.800000e+04   1.320000e+05   1.569986e-03
+        2    4.800000e+04   1.290000e+05   2.089024e-03
+        3    1.376000e+05   1.268139e+05   2.532959e-03
+        4    8.163785e+04   1.219636e+05   2.908945e-03
+        5    1.098545e+05   1.121210e+05   3.293037e-03
+        6    5.072028e+04   1.104195e+05   3.667116e-03
+        7    1.616316e+05   1.095042e+05   4.037142e-03
+        8    1.626819e+05   1.088611e+05   4.397154e-03
+        9    1.665556e+05   1.088021e+05   4.744053e-03
+       10    4.988974e+04   1.084962e+05   5.216122e-03
+       11    1.658738e+05   1.083900e+05   5.607128e-03
+       12    1.670000e+05   1.083900e+05   5.968094e-03
+       13    4.882000e+04   1.083900e+05   6.373167e-03
+       14    1.670000e+05   1.083900e+05   6.726027e-03
+       15    1.093500e+05   1.083900e+05   7.088184e-03
+       16    4.882000e+04   1.083900e+05   7.434130e-03
+       17    1.093500e+05   1.083900e+05   7.801056e-03
+       18    1.670000e+05   1.083900e+05   8.167267e-03
+       19    1.670000e+05   1.083900e+05   8.530140e-03
+       20    1.093500e+05   1.083900e+05   8.938074e-03
 
 Terminating training with status: iteration_limit
--------------------------------------------------------</code></pre><h2 id="Checking-the-policy-1"><a class="docs-heading-anchor" href="#Checking-the-policy-1">Checking the policy</a><a class="docs-heading-anchor-permalink" href="#Checking-the-policy-1" title="Permalink"></a></h2><p>Birge and Louveaux report that the optimal objective value is \$108,390. Check that we got the correct solution using <a href="../../apireference/#SDDP.calculate_bound"><code>SDDP.calculate_bound</code></a>:</p><pre><code class="language-julia">@assert SDDP.calculate_bound(model) == 108_390.0</code></pre><p><em>This page was generated using <a href="https://github.com/fredrikekre/Literate.jl">Literate.jl</a>.</em></p></article><nav class="docs-footer"><a class="docs-footer-prevpage" href="../../tutorial/13_integrality/">« Advanced III: integrality</a><a class="docs-footer-nextpage" href="../../apireference/">Reference »</a></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> on <span class="colophon-date" title="Monday 2 December 2019 22:45">Monday 2 December 2019</span>. Using Julia version 1.0.5.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>
+-------------------------------------------------------</code></pre><h2 id="Checking-the-policy-1"><a class="docs-heading-anchor" href="#Checking-the-policy-1">Checking the policy</a><a class="docs-heading-anchor-permalink" href="#Checking-the-policy-1" title="Permalink"></a></h2><p>Birge and Louveaux report that the optimal objective value is \$108,390. Check that we got the correct solution using <a href="../../apireference/#SDDP.calculate_bound"><code>SDDP.calculate_bound</code></a>:</p><pre><code class="language-julia">@assert SDDP.calculate_bound(model) == 108_390.0</code></pre><hr/><p><em>This page was generated using <a href="https://github.com/fredrikekre/Literate.jl">Literate.jl</a>.</em></p></article><nav class="docs-footer"><a class="docs-footer-prevpage" href="../../tutorial/13_integrality/">« Advanced III: integrality</a><a class="docs-footer-nextpage" href="../../apireference/">Reference »</a></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> on <span class="colophon-date" title="Wednesday 11 December 2019 01:06">Wednesday 11 December 2019</span>. Using Julia version 1.0.5.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>

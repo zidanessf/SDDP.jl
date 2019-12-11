@@ -42,11 +42,11 @@ SDDP.train(model, iteration_limit = 5, run_numerical_stability_report = false)</
          SDDP.jl (c) Oscar Dowson, 2017-19
 
  Iteration    Simulation       Bound         Time (s)
-        1    6.500000e+00   3.000000e+00   5.631447e-04
-        2    3.500000e+00   3.500000e+00   8.141994e-04
-        3    3.500000e+00   3.500000e+00   1.030207e-03
-        4    3.500000e+00   3.500000e+00   1.250267e-03
-        5    3.500000e+00   3.500000e+00   1.458168e-03
+        1    6.500000e+00   3.000000e+00   1.919031e-03
+        2    3.500000e+00   3.500000e+00   2.271175e-03
+        3    3.500000e+00   3.500000e+00   2.608061e-03
+        4    3.500000e+00   3.500000e+00   3.064156e-03
+        5    3.500000e+00   3.500000e+00   3.360033e-03
 
 Terminating training with status: iteration_limit
 -------------------------------------------------------</code></pre><p>Now consider the case when we set the <code>lower_bound</code> to <code>10.0</code>:</p><pre><code class="language-julia">using SDDP, GLPK
@@ -69,11 +69,11 @@ SDDP.train(model, iteration_limit = 5, run_numerical_stability_report = false)</
          SDDP.jl (c) Oscar Dowson, 2017-19
 
  Iteration    Simulation       Bound         Time (s)
-        1    6.500000e+00   1.100000e+01   5.078316e-04
-        2    5.500000e+00   1.100000e+01   7.610321e-04
-        3    5.500000e+00   1.100000e+01   9.639263e-04
-        4    5.500000e+00   1.100000e+01   1.157045e-03
-        5    5.500000e+00   1.100000e+01   1.372099e-03
+        1    6.500000e+00   1.100000e+01   1.786947e-03
+        2    5.500000e+00   1.100000e+01   2.098799e-03
+        3    5.500000e+00   1.100000e+01   2.330780e-03
+        4    5.500000e+00   1.100000e+01   2.725840e-03
+        5    5.500000e+00   1.100000e+01   2.972841e-03
 
 Terminating training with status: iteration_limit
--------------------------------------------------------</code></pre><p>How do we tell which is more appropriate? There are a few clues that you should look out for.</p><ul><li><p>The bound converges to a value above (if minimizing) the simulated cost of the policy. In this case, the problem is deterministic, so it is easy to tell. But you can also check by performing a Monte Carlo simulation like we did in <a href="../02_adding_uncertainty/#Basic-II:-adding-uncertainty-1">Basic II: adding uncertainty</a>.</p></li><li><p>The bound converges to different values when we change the bound. This is another clear give-away. The bound provided by the user is only used in the initial iterations. <strong>It should not change the value of the converged policy.</strong> Thus, if you don&#39;t know an appropriate value for the bound, choose an initial value, and then increase (or decrease) the value of the bound to confirm that the value of the policy doesn&#39;t change.</p></li><li><p>The bound converges to a value <em>close</em> to the bound provided by the user. This varies between models, but notice that <code>11.0</code> is quite close to <code>10.0</code> compared with <code>3.5</code> and <code>0.0</code>.</p></li></ul><p>This concludes our sixth tutorial for <code>SDDP.jl</code>. You&#39;re now ready to start solving multistage stochastic programs with <code>SDDP.jl</code>!</p><p><em>This page was generated using <a href="https://github.com/fredrikekre/Literate.jl">Literate.jl</a>.</em></p></article><nav class="docs-footer"><a class="docs-footer-prevpage" href="../05_plotting/">« Basic V: plotting</a><a class="docs-footer-nextpage" href="../11_objective_states/">Advanced I: objective states »</a></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> on <span class="colophon-date" title="Monday 2 December 2019 22:45">Monday 2 December 2019</span>. Using Julia version 1.0.5.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>
+-------------------------------------------------------</code></pre><p>How do we tell which is more appropriate? There are a few clues that you should look out for.</p><ul><li><p>The bound converges to a value above (if minimizing) the simulated cost of the policy. In this case, the problem is deterministic, so it is easy to tell. But you can also check by performing a Monte Carlo simulation like we did in <a href="../02_adding_uncertainty/#Basic-II:-adding-uncertainty-1">Basic II: adding uncertainty</a>.</p></li><li><p>The bound converges to different values when we change the bound. This is another clear give-away. The bound provided by the user is only used in the initial iterations. <strong>It should not change the value of the converged policy.</strong> Thus, if you don&#39;t know an appropriate value for the bound, choose an initial value, and then increase (or decrease) the value of the bound to confirm that the value of the policy doesn&#39;t change.</p></li><li><p>The bound converges to a value <em>close</em> to the bound provided by the user. This varies between models, but notice that <code>11.0</code> is quite close to <code>10.0</code> compared with <code>3.5</code> and <code>0.0</code>.</p></li></ul><p>This concludes our sixth tutorial for <code>SDDP.jl</code>. You&#39;re now ready to start solving multistage stochastic programs with <code>SDDP.jl</code>!</p><hr/><p><em>This page was generated using <a href="https://github.com/fredrikekre/Literate.jl">Literate.jl</a>.</em></p></article><nav class="docs-footer"><a class="docs-footer-prevpage" href="../05_plotting/">« Basic V: plotting</a><a class="docs-footer-nextpage" href="../11_objective_states/">Advanced I: objective states »</a></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> on <span class="colophon-date" title="Wednesday 11 December 2019 01:06">Wednesday 11 December 2019</span>. Using Julia version 1.0.5.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>

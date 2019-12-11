@@ -13,12 +13,12 @@ add_ambiguity_set(graph, [3], 1e5)</code></pre></div></section></article><articl
 )</code></pre><p>Create a Markovian policy graph based on the transition matrices given in <code>transition_matrices</code>.</p><p>See <a href="#SDDP.PolicyGraph"><code>SDDP.PolicyGraph</code></a> for the other keyword arguments.</p></div></section></article><article class="docstring"><header><a class="docstring-binding" id="SDDP.PolicyGraph" href="#SDDP.PolicyGraph"><code>SDDP.PolicyGraph</code></a> — <span class="docstring-category">Type</span></header><section><div><pre><code class="language-julia">PolicyGraph(
     builder::Function,
     graph::Graph{T};
-    sense = :Min,
+    sense::Symbol = :Min,
     lower_bound = -Inf,
     upper_bound = Inf,
     optimizer = nothing,
     bellman_function = nothing,
-    direct_mode = true,
+    direct_mode::Bool = false,
     integrality_handler = ContinuousRelaxation(),
 ) where {T}</code></pre><p>Construct a policy graph based on the graph structure of <code>graph</code>. (See <a href="#SDDP.Graph"><code>SDDP.Graph</code></a> for details.)</p><p><strong>Example</strong></p><pre><code class="language-none">function builder(subproblem::JuMP.Model, index)
     # ... subproblem definition ...
@@ -113,4 +113,4 @@ end</code></pre></div></section></article><h2 id="Debugging-the-model-1"><a clas
     optimizer::Union{JuMP.OptimizerFactory, Nothing} = nothing;
     time_limit::Union{Real, Nothing} = 60.0
 )</code></pre><p>Form a JuMP model that represents the deterministic equivalent of the problem.</p><p><strong>Examples</strong></p><pre><code class="language-none">deterministic_equivalent(model)
-deterministic_equivalent(model, with_optimizer(GLPK.Optimizer))</code></pre></div></section></article></article><nav class="docs-footer"><a class="docs-footer-prevpage" href="../examples/the_farmers_problem/">« The farmer&#39;s problem</a></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> on <span class="colophon-date" title="Monday 2 December 2019 22:45">Monday 2 December 2019</span>. Using Julia version 1.0.5.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>
+deterministic_equivalent(model, with_optimizer(GLPK.Optimizer))</code></pre></div></section></article></article><nav class="docs-footer"><a class="docs-footer-prevpage" href="../examples/the_farmers_problem/">« The farmer&#39;s problem</a></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> on <span class="colophon-date" title="Wednesday 11 December 2019 01:06">Wednesday 11 December 2019</span>. Using Julia version 1.0.5.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>
