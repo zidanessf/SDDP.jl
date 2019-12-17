@@ -50,26 +50,26 @@ println(&quot;Completed $(length(simulations)) simulations.&quot;)</code></pre><
 Solver: serial mode
 
  Iteration    Simulation       Bound         Time (s)    Proc. ID
-        1    1.500000e+04   5.588397e+03   1.667500e-02          1
-        2    8.829545e+03   7.975336e+03   1.749706e-02          1
-        3    1.875000e+04   8.072917e+03   1.828003e-02          1
-        4    1.875000e+03   8.072917e+03   1.902914e-02          1
-        5    1.875000e+03   8.072917e+03   1.981091e-02          1
-        6    1.625000e+04   8.072917e+03   2.057910e-02          1
-        7    5.000000e+03   8.072917e+03   2.134895e-02          1
-        8    1.125000e+04   8.072917e+03   2.224493e-02          1
-        9    1.125000e+04   8.072917e+03   2.305913e-02          1
-       10    2.750000e+04   8.072917e+03   2.387309e-02          1
-       11    1.875000e+03   8.072917e+03   2.465796e-02          1
-       12    1.875000e+03   8.072917e+03   2.542210e-02          1
-       13    1.875000e+03   8.072917e+03   2.619195e-02          1
-       14    1.875000e+03   8.072917e+03   2.696109e-02          1
-       15    1.875000e+03   8.072917e+03   2.782607e-02          1
-       16    1.250000e+04   8.072917e+03   2.862811e-02          1
-       17    9.375000e+03   8.072917e+03   2.942705e-02          1
-       18    1.875000e+03   8.072917e+03   3.025103e-02          1
-       19    1.875000e+03   8.072917e+03   3.105092e-02          1
-       20    2.437500e+04   8.072917e+03   3.186798e-02          1
+        1    0.000000e+00   7.196558e+03   1.363611e-02          1
+        2    3.375000e+04   7.874927e+03   1.442218e-02          1
+        3    5.000000e+03   7.892778e+03   1.513720e-02          1
+        4    1.250000e+04   7.892778e+03   1.583409e-02          1
+        5    1.875000e+03   8.072917e+03   1.657414e-02          1
+        6    1.875000e+03   8.072917e+03   1.730704e-02          1
+        7    1.125000e+04   8.072917e+03   1.804805e-02          1
+        8    1.875000e+03   8.072917e+03   1.880407e-02          1
+        9    9.375000e+03   8.072917e+03   1.953220e-02          1
+       10    1.875000e+03   8.072917e+03   2.023315e-02          1
+       11    1.875000e+03   8.072917e+03   2.094316e-02          1
+       12    1.875000e+03   8.072917e+03   2.165413e-02          1
+       13    1.875000e+03   8.072917e+03   2.250099e-02          1
+       14    1.875000e+03   8.072917e+03   2.328706e-02          1
+       15    1.875000e+03   8.072917e+03   2.403998e-02          1
+       16    5.000000e+03   8.072917e+03   2.479815e-02          1
+       17    1.312500e+04   8.072917e+03   2.559304e-02          1
+       18    5.000000e+03   8.072917e+03   2.638817e-02          1
+       19    1.875000e+03   8.072917e+03   2.721119e-02          1
+       20    1.250000e+04   8.072917e+03   2.799416e-02          1
 
 Terminating training with status: iteration_limit
 ------------------------------------------------------------------
@@ -96,4 +96,4 @@ plot(
     layout = (1, 2),
     margin_bottom = 5,
     size = (1000, 300)
-)</code></pre><p>This should open a plot window with a plot that looks like:</p><p><img src="../../assets/publication_plot.png" alt="publication plot"/></p><p>You can save this plot as a PDF using the <code>Plots.jl</code> function <code>savefig</code>:</p><pre><code class="language-julia">Plots.savefig(&quot;my_picture.pdf&quot;)</code></pre><h2 id="Convergence-dashboard-1"><a class="docs-heading-anchor" href="#Convergence-dashboard-1">Convergence dashboard</a><a class="docs-heading-anchor-permalink" href="#Convergence-dashboard-1" title="Permalink"></a></h2><p>If the text-based logging isn&#39;t to your liking, you can open a visualization of the training by passing  <code>dashboard = true</code> to <a href="../../apireference/#SDDP.train"><code>SDDP.train</code></a>.</p><pre><code class="language-julia">SDDP.train(model; dashboard = true)</code></pre><p>By default, <code>dashboard = false</code> because there is an initial overhead associated with opening and preparing the plot.</p><div class="admonition is-warning"><header class="admonition-header">Warning</header><div class="admonition-body"><p>The dashboard is experimental. There are known bugs associated with it, e.g., <a href="https://github.com/odow/SDDP.jl/issues/226">SDDP.jl#226</a>.</p></div></div><p>This concludes our fifth tutorial for <code>SDDP.jl</code>. In our next tutorial, <a href="../06_warnings/#Basic-VI:-words-of-warning-1">Basic VI: words of warning</a> we discuss some of the issues that you should be aware of when creating your own models.</p><hr/><p><em>This page was generated using <a href="https://github.com/fredrikekre/Literate.jl">Literate.jl</a>.</em></p></article><nav class="docs-footer"><a class="docs-footer-prevpage" href="../04_markov_uncertainty/">« Basic IV: Markov uncertainty</a><a class="docs-footer-nextpage" href="../06_warnings/">Basic VI: words of warning »</a></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> on <span class="colophon-date" title="Tuesday 17 December 2019 15:05">Tuesday 17 December 2019</span>. Using Julia version 1.0.5.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>
+)</code></pre><p>This should open a plot window with a plot that looks like:</p><p><img src="../../assets/publication_plot.png" alt="publication plot"/></p><p>You can save this plot as a PDF using the <code>Plots.jl</code> function <code>savefig</code>:</p><pre><code class="language-julia">Plots.savefig(&quot;my_picture.pdf&quot;)</code></pre><h2 id="Convergence-dashboard-1"><a class="docs-heading-anchor" href="#Convergence-dashboard-1">Convergence dashboard</a><a class="docs-heading-anchor-permalink" href="#Convergence-dashboard-1" title="Permalink"></a></h2><p>If the text-based logging isn&#39;t to your liking, you can open a visualization of the training by passing  <code>dashboard = true</code> to <a href="../../apireference/#SDDP.train"><code>SDDP.train</code></a>.</p><pre><code class="language-julia">SDDP.train(model; dashboard = true)</code></pre><p>By default, <code>dashboard = false</code> because there is an initial overhead associated with opening and preparing the plot.</p><div class="admonition is-warning"><header class="admonition-header">Warning</header><div class="admonition-body"><p>The dashboard is experimental. There are known bugs associated with it, e.g., <a href="https://github.com/odow/SDDP.jl/issues/226">SDDP.jl#226</a>.</p></div></div><p>This concludes our fifth tutorial for <code>SDDP.jl</code>. In our next tutorial, <a href="../06_warnings/#Basic-VI:-words-of-warning-1">Basic VI: words of warning</a> we discuss some of the issues that you should be aware of when creating your own models.</p><hr/><p><em>This page was generated using <a href="https://github.com/fredrikekre/Literate.jl">Literate.jl</a>.</em></p></article><nav class="docs-footer"><a class="docs-footer-prevpage" href="../04_markov_uncertainty/">« Basic IV: Markov uncertainty</a><a class="docs-footer-nextpage" href="../06_warnings/">Basic VI: words of warning »</a></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> on <span class="colophon-date" title="Tuesday 17 December 2019 15:56">Tuesday 17 December 2019</span>. Using Julia version 1.0.5.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>
