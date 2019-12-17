@@ -19,8 +19,9 @@ end
 # output
 
 A policy graph with 2 nodes.
- Node indices: 1, 2</code></pre><p>Initially, <code>model</code> hasn&#39;t been parameterized with a concrete realizations of <code>ω</code>. Let&#39;s do so now by parameterizing the first subproblem with <code>ω=1.1</code>.</p><pre><code class="language-julia-repl">julia&gt; SDDP.parameterize(model[1], 1.1)</code></pre><p>Easy! To parameterize the second stage problem, we would have used <code>model[2]</code>.</p><p>Now to write out the problem to a file. We&#39;ll get a few warnings because some variables and constraints don&#39;t have names. They don&#39;t matter, so ignore them.</p><pre><code class="language-julia-repl">julia&gt; SDDP.write_subproblem_to_file(model[1], &quot;subproblem&quot;, format=:lp)
-</code></pre><p>We can check the file by reading it back in again.</p><pre><code class="language-julia-repl">julia&gt; read(&quot;subproblem.lp&quot;) |&gt; String |&gt; print
+ Node indices: 1, 2</code></pre><p>Initially, <code>model</code> hasn&#39;t been parameterized with a concrete realizations of <code>ω</code>. Let&#39;s do so now by parameterizing the first subproblem with <code>ω=1.1</code>.</p><pre><code class="language-julia-repl">julia&gt; SDDP.parameterize(model[1], 1.1)</code></pre><p>Easy! To parameterize the second stage problem, we would have used <code>model[2]</code>.</p><p>Now to write out the problem to a file. We&#39;ll get a few warnings because some variables and constraints don&#39;t have names. They don&#39;t matter, so ignore them.</p><pre><code class="language-julia-repl">julia&gt; SDDP.write_subproblem_to_file(model[1], &quot;subproblem.lp&quot;)
+
+julia&gt; read(&quot;subproblem.lp&quot;) |&gt; String |&gt; print
 minimize
 obj: 1.1 x_out + 1 x2
 subject to
@@ -30,8 +31,7 @@ x2 &gt;= 0
 y = 1.1
 End</code></pre><p>It is easy to see that <code>ω</code> has been set in the objective, and as the fixed value for <code>y</code>.</p><p>It is also possible to parameterize the subproblems using values for <code>ω</code> that are not in the original problem formulation.</p><pre><code class="language-julia-repl">julia&gt; SDDP.parameterize(model[1], 3.3)
 
-julia&gt; SDDP.write_subproblem_to_file(model[1], &quot;subproblem&quot;, format=:lp)
-
+julia&gt; SDDP.write_subproblem_to_file(model[1], &quot;subproblem.lp&quot;)
 
 julia&gt; read(&quot;subproblem.lp&quot;) |&gt; String |&gt; print
 minimize
@@ -58,4 +58,4 @@ Solver name: GLPK
 julia&gt; optimize!(det_equiv)
 
 julia&gt; objective_value(det_equiv)
--5.472500000000001</code></pre><div class="admonition is-warning"><header class="admonition-header">Warning</header><div class="admonition-body"><p>The determinstic equivalent scales poorly with problem size. Only use this on small problems!</p></div></div></article><nav class="docs-footer"><a class="docs-footer-prevpage" href="../create_a_general_policy_graph/">« Create a general policy graph</a><a class="docs-footer-nextpage" href="../improve_computational_performance/">Improve computational performance »</a></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> on <span class="colophon-date" title="Monday 16 December 2019 23:26">Monday 16 December 2019</span>. Using Julia version 1.0.5.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>
+-5.472500000000001</code></pre><div class="admonition is-warning"><header class="admonition-header">Warning</header><div class="admonition-body"><p>The determinstic equivalent scales poorly with problem size. Only use this on small problems!</p></div></div></article><nav class="docs-footer"><a class="docs-footer-prevpage" href="../create_a_general_policy_graph/">« Create a general policy graph</a><a class="docs-footer-nextpage" href="../improve_computational_performance/">Improve computational performance »</a></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> on <span class="colophon-date" title="Tuesday 17 December 2019 15:05">Tuesday 17 December 2019</span>. Using Julia version 1.0.5.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>
