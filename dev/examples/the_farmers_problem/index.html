@@ -117,7 +117,7 @@ end</code></pre><pre><code class="language-none">second_stage_uncertainty (gener
 end</code></pre><pre><code class="language-none">A policy graph with 2 nodes.
  Node indices: 1, 2
 </code></pre><h2 id="Training-a-policy-1"><a class="docs-heading-anchor" href="#Training-a-policy-1">Training a policy</a><a class="docs-heading-anchor-permalink" href="#Training-a-policy-1" title="Permalink"></a></h2><p>Now that we&#39;ve built a model, we need to train it using <a href="../../apireference/#SDDP.train"><code>SDDP.train</code></a>. The keyword <code>iteration_limit</code> stops the training after 20 iterations. See <a href="../../guides/choose_a_stopping_rule/#Choose-a-stopping-rule-1">Choose a stopping rule</a> for other ways to stop the training.</p><pre><code class="language-julia">SDDP.train(model; iteration_limit = 20)</code></pre><pre><code class="language-none">------------------------------------------------------------------
-                SDDP.jl (c) Oscar Dowson, 2017-19
+                SDDP.jl (c) Oscar Dowson, 2017-20
 
 Numerical stability report
   Non-zero Matrix range     [1e+00, 2e+01]
@@ -133,26 +133,26 @@ reformulating the model.
 Solver: serial mode
 
  Iteration    Simulation       Bound         Time (s)    Proc. ID
-        1   -9.800000e+04   1.320000e+05   1.396179e-03          1
-        2    8.000000e+03   1.290000e+05   1.815081e-03          1
-        3    1.376000e+05   1.268139e+05   2.158165e-03          1
-        4    1.332391e+05   1.219636e+05   2.480984e-03          1
-        5    1.098545e+05   1.121210e+05   2.830029e-03          1
-        6    1.121210e+05   1.104195e+05   3.167152e-03          1
-        7    1.616316e+05   1.095042e+05   3.497124e-03          1
-        8    5.125161e+04   1.088611e+05   3.882170e-03          1
-        9    1.088611e+05   1.088021e+05   4.204988e-03          1
-       10    1.093355e+05   1.084962e+05   4.592180e-03          1
-       11    1.084962e+05   1.083900e+05   4.990101e-03          1
-       12    4.882000e+04   1.083900e+05   5.321980e-03          1
-       13    1.670000e+05   1.083900e+05   5.658150e-03          1
-       14    1.670000e+05   1.083900e+05   5.983114e-03          1
-       15    1.093500e+05   1.083900e+05   6.345034e-03          1
-       16    1.670000e+05   1.083900e+05   6.685019e-03          1
-       17    4.882000e+04   1.083900e+05   7.025003e-03          1
-       18    1.670000e+05   1.083900e+05   7.367134e-03          1
-       19    4.882000e+04   1.083900e+05   7.754087e-03          1
-       20    1.670000e+05   1.083900e+05   8.100033e-03          1
+        1   -9.800000e+04   1.320000e+05   1.427889e-03          1
+        2    2.800000e+04   1.290000e+05   1.829863e-03          1
+        3    1.376000e+05   1.268139e+05   2.171040e-03          1
+        4    8.163785e+04   1.219636e+05   2.508879e-03          1
+        5    4.780727e+04   1.121210e+05   2.847910e-03          1
+        6    5.072028e+04   1.104195e+05   3.187895e-03          1
+        7    4.784940e+04   1.095042e+05   3.547907e-03          1
+        8    1.626819e+05   1.088611e+05   3.872871e-03          1
+        9    1.088611e+05   1.088021e+05   4.179955e-03          1
+       10    1.655812e+05   1.084962e+05   4.603863e-03          1
+       11    4.823846e+04   1.083900e+05   5.024910e-03          1
+       12    1.670000e+05   1.083900e+05   5.378008e-03          1
+       13    1.670000e+05   1.083900e+05   5.711079e-03          1
+       14    4.882000e+04   1.083900e+05   6.029844e-03          1
+       15    1.093500e+05   1.083900e+05   6.356955e-03          1
+       16    1.093500e+05   1.083900e+05   6.686926e-03          1
+       17    1.093500e+05   1.083900e+05   7.004023e-03          1
+       18    4.882000e+04   1.083900e+05   7.359028e-03          1
+       19    1.670000e+05   1.083900e+05   7.709980e-03          1
+       20    1.093500e+05   1.083900e+05   8.043051e-03          1
 
 Terminating training with status: iteration_limit
-------------------------------------------------------------------</code></pre><h2 id="Checking-the-policy-1"><a class="docs-heading-anchor" href="#Checking-the-policy-1">Checking the policy</a><a class="docs-heading-anchor-permalink" href="#Checking-the-policy-1" title="Permalink"></a></h2><p>Birge and Louveaux report that the optimal objective value is \$108,390. Check that we got the correct solution using <a href="../../apireference/#SDDP.calculate_bound"><code>SDDP.calculate_bound</code></a>:</p><pre><code class="language-julia">@assert SDDP.calculate_bound(model) == 108_390.0</code></pre><hr/><p><em>This page was generated using <a href="https://github.com/fredrikekre/Literate.jl">Literate.jl</a>.</em></p></article><nav class="docs-footer"><a class="docs-footer-prevpage" href="../../tutorial/13_integrality/">« Advanced III: integrality</a><a class="docs-footer-nextpage" href="../../apireference/">Reference »</a></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> on <span class="colophon-date" title="Tuesday 7 January 2020 22:19">Tuesday 7 January 2020</span>. Using Julia version 1.0.5.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>
+------------------------------------------------------------------</code></pre><h2 id="Checking-the-policy-1"><a class="docs-heading-anchor" href="#Checking-the-policy-1">Checking the policy</a><a class="docs-heading-anchor-permalink" href="#Checking-the-policy-1" title="Permalink"></a></h2><p>Birge and Louveaux report that the optimal objective value is \$108,390. Check that we got the correct solution using <a href="../../apireference/#SDDP.calculate_bound"><code>SDDP.calculate_bound</code></a>:</p><pre><code class="language-julia">@assert SDDP.calculate_bound(model) == 108_390.0</code></pre><hr/><p><em>This page was generated using <a href="https://github.com/fredrikekre/Literate.jl">Literate.jl</a>.</em></p></article><nav class="docs-footer"><a class="docs-footer-prevpage" href="../../tutorial/13_integrality/">« Advanced III: integrality</a><a class="docs-footer-nextpage" href="../../apireference/">Reference »</a></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> on <span class="colophon-date" title="Tuesday 7 January 2020 22:54">Tuesday 7 January 2020</span>. Using Julia version 1.0.5.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>
