@@ -133,26 +133,26 @@ reformulating the model.
 Solver: serial mode
 
  Iteration    Simulation       Bound         Time (s)    Proc. ID
-        1   -9.800000e+04   1.320000e+05   1.423836e-03          1
-        2    2.800000e+04   1.290000e+05   1.826048e-03          1
-        3    1.376000e+05   1.268139e+05   2.284050e-03          1
-        4    1.332391e+05   1.219636e+05   2.645969e-03          1
-        5    1.098545e+05   1.121210e+05   2.986908e-03          1
-        6    1.589371e+05   1.104195e+05   3.358841e-03          1
-        7    1.047405e+05   1.095042e+05   3.705025e-03          1
-        8    1.095042e+05   1.088611e+05   4.040003e-03          1
-        9    1.665556e+05   1.088021e+05   4.385948e-03          1
-       10    1.655812e+05   1.084962e+05   4.781961e-03          1
-       11    1.658738e+05   1.083900e+05   5.190849e-03          1
-       12    4.882000e+04   1.083900e+05   5.533934e-03          1
-       13    4.882000e+04   1.083900e+05   5.919933e-03          1
-       14    1.093500e+05   1.083900e+05   6.304026e-03          1
-       15    1.093500e+05   1.083900e+05   6.636858e-03          1
-       16    1.093500e+05   1.083900e+05   6.959915e-03          1
-       17    1.670000e+05   1.083900e+05   7.297039e-03          1
-       18    1.093500e+05   1.083900e+05   7.630825e-03          1
-       19    1.670000e+05   1.083900e+05   7.959843e-03          1
-       20    1.670000e+05   1.083900e+05   8.299828e-03          1
+        1   -9.800000e+04   1.320000e+05   1.484871e-03          1
+        2    2.800000e+04   1.290000e+05   1.912832e-03          1
+        3    1.086000e+05   1.268139e+05   2.280951e-03          1
+        4    1.332391e+05   1.219636e+05   2.607822e-03          1
+        5    1.098545e+05   1.121210e+05   2.967834e-03          1
+        6    5.072028e+04   1.104195e+05   3.330946e-03          1
+        7    4.784940e+04   1.095042e+05   3.671885e-03          1
+        8    1.626819e+05   1.088611e+05   4.034996e-03          1
+        9    1.088611e+05   1.088021e+05   4.364014e-03          1
+       10    4.988974e+04   1.084962e+05   4.789829e-03          1
+       11    1.084962e+05   1.083900e+05   5.225897e-03          1
+       12    1.093500e+05   1.083900e+05   5.587816e-03          1
+       13    1.093500e+05   1.083900e+05   5.940914e-03          1
+       14    4.882000e+04   1.083900e+05   6.266832e-03          1
+       15    4.882000e+04   1.083900e+05   6.588936e-03          1
+       16    4.882000e+04   1.083900e+05   6.923914e-03          1
+       17    1.093500e+05   1.083900e+05   7.251978e-03          1
+       18    1.670000e+05   1.083900e+05   7.583857e-03          1
+       19    1.670000e+05   1.083900e+05   7.922888e-03          1
+       20    1.670000e+05   1.083900e+05   8.250952e-03          1
 
 Terminating training with status: iteration_limit
-------------------------------------------------------------------</code></pre><h2 id="Checking-the-policy-1"><a class="docs-heading-anchor" href="#Checking-the-policy-1">Checking the policy</a><a class="docs-heading-anchor-permalink" href="#Checking-the-policy-1" title="Permalink"></a></h2><p>Birge and Louveaux report that the optimal objective value is \$108,390. Check that we got the correct solution using <a href="../../apireference/#SDDP.calculate_bound"><code>SDDP.calculate_bound</code></a>:</p><pre><code class="language-julia">@assert SDDP.calculate_bound(model) == 108_390.0</code></pre><hr/><p><em>This page was generated using <a href="https://github.com/fredrikekre/Literate.jl">Literate.jl</a>.</em></p></article><nav class="docs-footer"><a class="docs-footer-prevpage" href="../simple_hydro_thermal/">« Hydro-thermal scheduling</a><a class="docs-footer-nextpage" href="../../apireference/">Reference »</a></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> on <span class="colophon-date" title="Thursday 9 January 2020 18:31">Thursday 9 January 2020</span>. Using Julia version 1.0.5.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>
+------------------------------------------------------------------</code></pre><h2 id="Checking-the-policy-1"><a class="docs-heading-anchor" href="#Checking-the-policy-1">Checking the policy</a><a class="docs-heading-anchor-permalink" href="#Checking-the-policy-1" title="Permalink"></a></h2><p>Birge and Louveaux report that the optimal objective value is \$108,390. Check that we got the correct solution using <a href="../../apireference/#SDDP.calculate_bound"><code>SDDP.calculate_bound</code></a>:</p><pre><code class="language-julia">@assert SDDP.calculate_bound(model) == 108_390.0</code></pre><hr/><p><em>This page was generated using <a href="https://github.com/fredrikekre/Literate.jl">Literate.jl</a>.</em></p></article><nav class="docs-footer"><a class="docs-footer-prevpage" href="../simple_hydro_thermal/">« Hydro-thermal scheduling</a><a class="docs-footer-nextpage" href="../../apireference/">Reference »</a></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> on <span class="colophon-date" title="Wednesday 15 January 2020 17:31">Wednesday 15 January 2020</span>. Using Julia version 1.0.5.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>
