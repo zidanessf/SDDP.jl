@@ -69,16 +69,16 @@ No problems detected
 Solver: serial mode
 
  Iteration    Simulation       Bound         Time (s)    Proc. ID
-        1    3.375000e+04   5.588397e+03   2.272129e-03          1
-        2    5.306122e+03   7.975336e+03   2.975941e-03          1
-        3    5.000000e+03   8.072917e+03   3.690004e-03          1
-        4    1.125000e+04   8.072917e+03   4.341125e-03          1
-        5    1.875000e+03   8.072917e+03   4.963160e-03          1
-        6    1.312500e+04   8.072917e+03   5.609989e-03          1
-        7    1.125000e+04   8.072917e+03   6.245136e-03          1
-        8    1.875000e+03   8.072917e+03   6.870985e-03          1
-        9    1.875000e+04   8.072917e+03   7.519007e-03          1
-       10    5.000000e+03   8.072917e+03   8.204937e-03          1
+        1    1.500000e+04   5.329294e+03   2.308130e-03          1
+        2    1.875000e+03   7.975336e+03   3.236055e-03          1
+        3    5.000000e+03   8.072917e+03   4.055023e-03          1
+        4    1.125000e+04   8.072917e+03   4.781008e-03          1
+        5    5.000000e+03   8.072917e+03   5.479097e-03          1
+        6    1.875000e+03   8.072917e+03   6.166935e-03          1
+        7    1.875000e+03   8.072917e+03   6.835938e-03          1
+        8    5.000000e+03   8.072917e+03   7.553101e-03          1
+        9    1.875000e+03   8.072917e+03   8.315086e-03          1
+       10    2.750000e+04   8.072917e+03   9.016991e-03          1
 
 Terminating training with status: iteration_limit
 ------------------------------------------------------------------</code></pre><p>Instead of performing a Monte Carlo simulation like the previous tutorials, we may want to simulate one particular sequence of noise realizations. This <em>historical</em> simulation can also be conducted by passing a <a href="../../apireference/#SDDP.Historical"><code>SDDP.Historical</code></a> sampling scheme to the <code>sampling_scheme</code> keyword of the <a href="../../apireference/#SDDP.simulate"><code>SDDP.simulate</code></a> function.</p><p>We can confirm that the historical sequence of nodes was visited by querying the <code>:node_index</code> key of the simulation results.</p><pre><code class="language-julia">simulations = SDDP.simulate(
@@ -93,4 +93,4 @@ Terminating training with status: iteration_limit
 [stage[:node_index] for stage in simulations[1]]</code></pre><pre><code class="language-none">3-element Array{Tuple{Int64,Int64},1}:
  (1, 1)
  (2, 2)
- (3, 1)</code></pre><p>This concludes our fourth tutorial for <code>SDDP.jl</code>. In the next tutorial, <a href="../05_plotting/#Basic-V:-plotting-1">Basic V: plotting</a> we discuss the plotting utilities included in <code>SDDP.jl</code>.</p><hr/><p><em>This page was generated using <a href="https://github.com/fredrikekre/Literate.jl">Literate.jl</a>.</em></p></article><nav class="docs-footer"><a class="docs-footer-prevpage" href="../03_objective_uncertainty/">« Basic III: objective uncertainty</a><a class="docs-footer-nextpage" href="../05_plotting/">Basic V: plotting »</a></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> on <span class="colophon-date" title="Thursday 23 January 2020 16:21">Thursday 23 January 2020</span>. Using Julia version 1.0.5.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>
+ (3, 1)</code></pre><p>This concludes our fourth tutorial for <code>SDDP.jl</code>. In the next tutorial, <a href="../05_plotting/#Basic-V:-plotting-1">Basic V: plotting</a> we discuss the plotting utilities included in <code>SDDP.jl</code>.</p><hr/><p><em>This page was generated using <a href="https://github.com/fredrikekre/Literate.jl">Literate.jl</a>.</em></p></article><nav class="docs-footer"><a class="docs-footer-prevpage" href="../03_objective_uncertainty/">« Basic III: objective uncertainty</a><a class="docs-footer-nextpage" href="../05_plotting/">Basic V: plotting »</a></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> on <span class="colophon-date" title="Thursday 23 January 2020 16:31">Thursday 23 January 2020</span>. Using Julia version 1.0.5.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>
