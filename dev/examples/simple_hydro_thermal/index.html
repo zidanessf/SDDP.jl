@@ -12,19 +12,19 @@ Arcs
  1 =&gt; 2 w.p. 1.0
  2 =&gt; 3 w.p. 1.0
 </code></pre><p>Then, because we want to solve an infinite-horizon problem, we add an additional edge between node <code>3</code> and node <code>1</code> with probability <code>0.95</code>:</p><pre><code class="language-julia">SDDP.add_edge(graph, 3 =&gt; 1, 0.95)</code></pre><h2 id="Constructing-the-model-1"><a class="docs-heading-anchor" href="#Constructing-the-model-1">Constructing the model</a><a class="docs-heading-anchor-permalink" href="#Constructing-the-model-1" title="Permalink"></a></h2><p>Much of the macro code (i.e., lines starting with <code>@</code>) in the first part of the following should be familiar to users of JuMP.</p><p>Inside the <code>do-end</code> block (if this isn&#39;t familiar, see <a href="../../tutorial/01_first_steps/#What&#39;s-this-weird-do-syntax?-1">What&#39;s this weird <code>do</code> syntax?</a>), <code>sp</code> is a standard JuMP model, and <code>t</code> is an index for the state variable that will be called with <code>t = 1, 2, 3</code>.</p><p>The state variable <code>x</code>, constructed by passing the <code>SDDP.State</code> tag to <code>@variable</code> is actually a Julia struct with two fields: <code>x.in</code> and <code>x.out</code> corresponding to the incoming and outgoing state variables respectively. Both <code>x.in</code> and <code>x.out</code> are standard JuMP variables. The <code>initial_value</code> keyword provides the value of the state variable in the root node (i.e., <code>x_0</code>).</p><p>Compared to a JuMP model, one key difference is that we use <a href="../../apireference/#SDDP.@stageobjective"><code>@stageobjective</code></a> instead of <code>@objective</code>. The <a href="../../apireference/#SDDP.parameterize"><code>SDDP.parameterize</code></a> function takes a list of supports for <code>w</code> and parameterizes the JuMP model <code>sp</code> by setting the right-hand sides of the appropriate constraints (note how the constraints initially have a right-hand side of <code>0</code>). By default, it is assumed that the realizations have uniform probability, but a probability mass vector can also be provided.</p><pre><code class="language-julia">model = SDDP.PolicyGraph(
-  graph, sense = :Min, lower_bound = 0.0, optimizer = with_optimizer(GLPK.Optimizer)
+    graph, sense = :Min, lower_bound = 0.0, optimizer = GLPK.Optimizer
 ) do sp, t
-  @variable(sp, 5 &lt;= x &lt;= 15, SDDP.State, initial_value = 10)
-  @variable(sp, g_t &gt;= 0)
-  @variable(sp, g_h &gt;= 0)
-  @variable(sp, s &gt;= 0)
-  @constraint(sp, balance, x.out - x.in + g_h + s == 0)
-  @constraint(sp, demand, g_h + g_t == 0)
-  @stageobjective(sp, s + t * g_t)
-  SDDP.parameterize(sp, [[0, 7.5], [3, 5], [10, 2.5]]) do w
-    set_normalized_rhs(balance, w[1])
-    set_normalized_rhs(demand, w[2])
-  end
+    @variable(sp, 5 &lt;= x &lt;= 15, SDDP.State, initial_value = 10)
+    @variable(sp, g_t &gt;= 0)
+    @variable(sp, g_h &gt;= 0)
+    @variable(sp, s &gt;= 0)
+    @constraint(sp, balance, x.out - x.in + g_h + s == 0)
+    @constraint(sp, demand, g_h + g_t == 0)
+    @stageobjective(sp, s + t * g_t)
+    SDDP.parameterize(sp, [[0, 7.5], [3, 5], [10, 2.5]]) do w
+        set_normalized_rhs(balance, w[1])
+        set_normalized_rhs(demand, w[2])
+    end
 end</code></pre><pre><code class="language-none">A policy graph with 3 nodes.
  Node indices: 1, 2, 3
 </code></pre><h2 id="Training-the-policy-1"><a class="docs-heading-anchor" href="#Training-the-policy-1">Training the policy</a><a class="docs-heading-anchor-permalink" href="#Training-the-policy-1" title="Permalink"></a></h2><p>Once a model has been constructed, the next step is to train the policy. This can be achieved using <a href="../../apireference/#SDDP.train"><code>SDDP.train</code></a>. There are many options that can be passed, but <code>iteration_limit</code> terminates the training after the prescribed number of SDDP iterations.</p><pre><code class="language-julia">SDDP.train(model, iteration_limit = 100)</code></pre><pre><code class="language-none">--------------------------------------------------------------------------------
@@ -40,109 +40,109 @@ No problems detected
 Solver: serial mode
 
  Iteration    Simulation       Bound         Time (s)    Proc. ID   # Solves
-        1    5.950000e+01   2.959255e+01   3.021531e-01          1         63
-        2    4.030000e+02   7.909168e+01   3.110511e-01          1        342
-        3    9.250000e+01   9.693990e+01   3.139522e-01          1        429
-        4    6.610178e+02   1.738563e+02   3.395500e-01          1       1116
-        5    3.065000e+02   1.907487e+02   3.668971e-01          1       1431
-        6    2.661809e+02   1.966225e+02   3.750162e-01          1       1614
-        7    1.710000e+02   2.017914e+02   3.824322e-01          1       1773
-        8    1.079783e+01   2.023891e+02   3.832381e-01          1       1788
-        9    1.637834e+02   2.090263e+02   3.935542e-01          1       2019
-       10    1.337878e+02   2.106458e+02   4.004800e-01          1       2166
-       11    2.712315e+02   2.158776e+02   4.154961e-01          1       2445
-       12    5.840409e+01   2.167844e+02   4.189720e-01          1       2508
-       13    1.130776e+02   2.182966e+02   4.239862e-01          1       2595
-       14    6.251212e+02   2.237639e+02   4.647920e-01          1       3270
-       15    4.063085e+01   2.244342e+02   4.672201e-01          1       3309
-       16    1.006260e+02   2.246653e+02   4.714792e-01          1       3372
-       17    6.219050e+01   2.251299e+02   4.752991e-01          1       3435
-       18    5.233497e+02   2.284269e+02   5.103922e-01          1       3978
-       19    3.987475e+02   2.296491e+02   5.526872e-01          1       4377
-       20    1.894838e+02   2.302905e+02   5.634592e-01          1       4524
-       21    5.048895e+02   2.310508e+02   5.920081e-01          1       4911
-       22    6.342975e+01   2.314962e+02   6.051440e-01          1       5082
-       23    6.736241e+00   2.314962e+02   6.062291e-01          1       5097
-       24    1.079272e+02   2.318817e+02   6.188712e-01          1       5268
-       25    2.768174e+02   2.321232e+02   6.411772e-01          1       5559
-       26    1.627945e+02   2.327882e+02   6.599841e-01          1       5814
-       27    1.893238e+02   2.329090e+02   6.724112e-01          1       5973
-       28    3.332259e+02   2.336251e+02   7.022221e-01          1       6336
-       29    9.440343e+01   2.336251e+02   7.063432e-01          1       6387
-       30    9.238376e+02   2.347218e+02   7.872610e-01          1       7338
-       31    2.135613e+02   2.348518e+02   8.173282e-01          1       7521
-       32    1.551577e+01   2.348574e+02   8.195992e-01          1       7548
-       33    5.350031e+01   2.349802e+02   8.341620e-01          1       7707
-       34    1.112066e+02   2.349803e+02   8.408141e-01          1       7782
-       35    1.367450e+02   2.350496e+02   8.466101e-01          1       7845
-       36    3.026511e+02   2.352498e+02   8.773122e-01          1       8160
-       37    3.624806e+02   2.353698e+02   9.151261e-01          1       8559
-       38    1.740301e+02   2.354586e+02   9.281852e-01          1       8694
-       39    7.582740e+01   2.354709e+02   9.354482e-01          1       8769
-       40    1.930648e+02   2.355622e+02   9.596841e-01          1       9024
-       41    1.117228e+02   2.355940e+02   9.687302e-01          1       9111
-       42    1.228404e+02   2.356124e+02   9.772081e-01          1       9198
-       43    6.893229e+01   2.356454e+02   9.820392e-01          1       9249
-       44    4.525490e+02   2.356802e+02   1.028843e+00          1       9720
-       45    3.564627e+02   2.358075e+02   1.067255e+00          1      10095
-       46    1.999181e+02   2.358644e+02   1.092425e+00          1      10338
-       47    1.691495e+02   2.359020e+02   1.127123e+00          1      10545
-       48    9.134225e+01   2.359067e+02   1.135064e+00          1      10620
-       49    3.870809e+02   2.359992e+02   1.171663e+00          1      10959
-       50    9.374518e+01   2.360002e+02   1.179481e+00          1      11034
-       51    3.203769e+01   2.360209e+02   1.184990e+00          1      11085
-       52    1.696540e+02   2.360295e+02   1.205804e+00          1      11280
-       53    6.705062e+01   2.360645e+02   1.218139e+00          1      11391
-       54    1.246938e+03   2.361469e+02   1.356678e+00          1      12582
-       55    6.197661e+02   2.362124e+02   1.431066e+00          1      13197
-       56    2.427629e+01   2.362135e+02   1.435611e+00          1      13236
-       57    5.472058e+01   2.362260e+02   1.445871e+00          1      13323
-       58    5.959374e+01   2.362265e+02   1.452147e+00          1      13374
-       59    3.424454e+02   2.362652e+02   1.525036e+00          1      13869
-       60    2.352393e+02   2.362710e+02   1.546396e+00          1      14040
-       61    1.375185e+02   2.362844e+02   1.564401e+00          1      14175
-       62    2.596543e+02   2.362926e+02   1.590678e+00          1      14382
-       63    1.939491e+02   2.362992e+02   1.611176e+00          1      14541
-       64    4.247823e+01   2.363049e+02   1.617252e+00          1      14592
-       65    1.001687e+01   2.363052e+02   1.623531e+00          1      14643
-       66    5.165358e+02   2.363279e+02   1.691905e+00          1      15174
-       67    2.490764e+01   2.363279e+02   1.695532e+00          1      15201
-       68    2.415298e+02   2.363444e+02   1.741340e+00          1      15552
-       69    3.934616e+02   2.363474e+02   1.782234e+00          1      15855
-       70    1.364978e+02   2.363554e+02   1.800347e+00          1      15990
-       71    1.214123e+02   2.363566e+02   1.812017e+00          1      16077
-       72    1.845895e+02   2.363599e+02   1.833843e+00          1      16236
-       73    5.925381e+02   2.363722e+02   1.923681e+00          1      16779
-       74    5.962033e+01   2.363729e+02   1.936285e+00          1      16866
-       75    2.885141e+02   2.363792e+02   1.971895e+00          1      17109
-       76    3.731091e+02   2.363820e+02   2.025316e+00          1      17484
-       77    1.499661e+02   2.363877e+02   2.052014e+00          1      17667
-       78    7.200294e+02   2.363916e+02   2.155663e+00          1      18366
-       79    7.799096e+01   2.363952e+02   2.172571e+00          1      18477
-       80    4.985713e+00   2.363952e+02   2.176540e+00          1      18504
-       81    5.001441e+01   2.363968e+02   2.193548e+00          1      18615
-       82    4.649762e+01   2.363974e+02   2.199216e+00          1      18654
-       83    8.899572e+01   2.363990e+02   2.213982e+00          1      18753
-       84    2.195280e+02   2.364003e+02   2.249512e+00          1      18984
-       85    1.010071e+02   2.364021e+02   2.269210e+00          1      19107
-       86    6.776321e+02   2.364049e+02   2.406725e+00          1      19878
-       87    4.148918e+01   2.364072e+02   2.414561e+00          1      19929
-       88    8.699110e+01   2.364080e+02   2.430200e+00          1      20028
-       89    2.214854e+02   2.364096e+02   2.461556e+00          1      20223
-       90    2.035298e+02   2.364105e+02   2.492444e+00          1      20418
-       91    8.500015e+01   2.364107e+02   2.513299e+00          1      20553
-       92    2.134995e+02   2.364132e+02   2.553390e+00          1      20796
-       93    2.530287e+02   2.364152e+02   2.586112e+00          1      21003
-       94    1.590020e+02   2.364155e+02   2.616110e+00          1      21198
-       95    7.650057e+01   2.364168e+02   2.623633e+00          1      21249
-       96    2.505015e+02   2.364181e+02   2.656181e+00          1      21444
-       97    2.425007e+02   2.364188e+02   2.711782e+00          1      21747
-       98    9.559951e+02   2.364220e+02   2.879307e+00          1      22638
-       99    2.175102e+02   2.364225e+02   2.914006e+00          1      22845
-      100    3.449970e+02   2.364248e+02   2.993543e+00          1      23304
+        1    1.470000e+02   4.097393e+01   3.073740e-01          1        135
+        2    3.985000e+02   9.013454e+01   3.176141e-01          1        414
+        3    3.152749e+02   1.380448e+02   3.308260e-01          1        729
+        4    1.163838e+02   1.562226e+02   3.379290e-01          1        888
+        5    7.285000e+02   1.930709e+02   3.833911e-01          1       1587
+        6    2.363014e+02   1.978843e+02   3.964491e-01          1       1842
+        7    8.895000e+02   2.177619e+02   4.444990e-01          1       2697
+        8    2.388830e+02   2.199033e+02   4.621751e-01          1       2976
+        9    1.197365e+03   2.272116e+02   5.337811e-01          1       4023
+       10    2.432160e+02   2.281719e+02   5.637879e-01          1       4266
+       11    2.122383e+02   2.290356e+02   5.749540e-01          1       4425
+       12    9.089290e+01   2.291162e+02   5.807590e-01          1       4500
+       13    4.341413e+01   2.294119e+02   5.852990e-01          1       4563
+       14    4.038783e+02   2.304757e+02   6.147721e-01          1       4962
+       15    1.238358e+02   2.307953e+02   6.222680e-01          1       5061
+       16    6.818781e+01   2.311199e+02   6.309671e-01          1       5172
+       17    5.553193e+00   2.311965e+02   6.330709e-01          1       5199
+       18    1.302172e+02   2.314796e+02   6.435940e-01          1       5334
+       19    1.900000e+01   2.315463e+02   6.465051e-01          1       5373
+       20    1.508420e+02   2.320979e+02   6.627750e-01          1       5568
+       21    2.739223e+01   2.320979e+02   6.638761e-01          1       5583
+       22    2.869974e+02   2.327335e+02   6.848330e-01          1       5850
+       23    7.900443e+01   2.329351e+02   6.917810e-01          1       5937
+       24    1.328814e+02   2.330742e+02   6.997790e-01          1       6036
+       25    2.652471e+02   2.334436e+02   7.191761e-01          1       6267
+       26    6.873240e+01   2.335908e+02   7.302589e-01          1       6402
+       27    2.471826e+01   2.337221e+02   7.336011e-01          1       6441
+       28    3.499620e+02   2.339282e+02   7.578101e-01          1       6720
+       29    4.559600e+02   2.344854e+02   8.195381e-01          1       7239
+       30    1.414349e+02   2.345416e+02   8.339920e-01          1       7386
+       31    5.069204e+02   2.348965e+02   8.923230e-01          1       7989
+       32    2.176186e+02   2.349852e+02   9.146731e-01          1       8220
+       33    6.788268e+01   2.350321e+02   9.223080e-01          1       8295
+       34    2.778269e+02   2.351283e+02   9.595561e-01          1       8670
+       35    5.795350e+02   2.353770e+02   1.013609e+00          1       9213
+       36    2.139606e+02   2.354430e+02   1.039197e+00          1       9468
+       37    3.613964e+01   2.354925e+02   1.044624e+00          1       9519
+       38    1.558734e+02   2.355260e+02   1.059278e+00          1       9654
+       39    2.978935e+02   2.356037e+02   1.092003e+00          1       9957
+       40    8.265179e+01   2.356152e+02   1.099053e+00          1      10020
+       41    3.417932e+01   2.356325e+02   1.105923e+00          1      10083
+       42    5.299634e+01   2.356501e+02   1.114377e+00          1      10158
+       43    1.254424e+02   2.357022e+02   1.122114e+00          1      10233
+       44    3.400000e+01   2.357121e+02   1.126217e+00          1      10272
+       45    6.767034e+00   2.357121e+02   1.127780e+00          1      10287
+       46    4.965328e+01   2.357320e+02   1.130622e+00          1      10314
+       47    6.507446e+01   2.357551e+02   1.154405e+00          1      10413
+       48    8.741827e+01   2.357775e+02   1.164066e+00          1      10500
+       49    2.203806e+01   2.357828e+02   1.170483e+00          1      10563
+       50    1.718131e+02   2.358297e+02   1.188364e+00          1      10722
+       51    2.564881e+02   2.358907e+02   1.214564e+00          1      10965
+       52    4.449090e+01   2.359038e+02   1.225160e+00          1      11064
+       53    7.982369e+00   2.359083e+02   1.227920e+00          1      11091
+       54    3.753013e+01   2.359221e+02   1.233406e+00          1      11142
+       55    4.719773e+02   2.359731e+02   1.283535e+00          1      11577
+       56    3.156781e+02   2.360526e+02   1.330190e+00          1      11964
+       57    1.244098e+02   2.360629e+02   1.343811e+00          1      12087
+       58    1.306401e+02   2.360884e+02   1.353764e+00          1      12174
+       59    1.510638e+02   2.361058e+02   1.381428e+00          1      12405
+       60    2.779504e+01   2.361198e+02   1.384236e+00          1      12432
+       61    2.196940e+01   2.361266e+02   1.390182e+00          1      12483
+       62    7.111984e+01   2.361289e+02   1.398102e+00          1      12546
+       63    2.795817e+02   2.361761e+02   1.437419e+00          1      12873
+       64    4.524092e+02   2.361943e+02   1.490448e+00          1      13308
+       65    3.250047e+01   2.362026e+02   1.494969e+00          1      13347
+       66    2.000188e+01   2.362052e+02   1.499528e+00          1      13386
+       67    7.909565e+01   2.362052e+02   1.510000e+00          1      13473
+       68    1.750209e+01   2.362097e+02   1.511662e+00          1      13488
+       69    1.484758e+02   2.362180e+02   1.543856e+00          1      13647
+       70    1.209252e+02   2.362299e+02   1.560770e+00          1      13782
+       71    2.689483e+02   2.362400e+02   1.599108e+00          1      14073
+       72    1.825122e+02   2.362524e+02   1.621228e+00          1      14244
+       73    1.750000e+01   2.362527e+02   1.623142e+00          1      14259
+       74    1.665667e+02   2.362629e+02   1.649766e+00          1      14466
+       75    8.053263e+01   2.362676e+02   1.654794e+00          1      14505
+       76    1.715319e+02   2.362709e+02   1.672666e+00          1      14640
+       77    4.702333e+01   2.362735e+02   1.677851e+00          1      14679
+       78    6.971055e+02   2.362910e+02   1.786992e+00          1      15474
+       79    3.060051e+02   2.363103e+02   1.835387e+00          1      15825
+       80    2.744759e+02   2.363142e+02   1.865595e+00          1      16044
+       81    5.896305e+01   2.363191e+02   1.875935e+00          1      16119
+       82    1.295297e+02   2.363211e+02   1.894764e+00          1      16254
+       83    1.059738e+02   2.363254e+02   1.910205e+00          1      16365
+       84    2.248012e+01   2.363262e+02   1.915427e+00          1      16404
+       85    8.449893e+01   2.363299e+02   1.928096e+00          1      16491
+       86    5.102690e+01   2.363310e+02   1.942023e+00          1      16590
+       87    2.947518e+01   2.363344e+02   1.965464e+00          1      16653
+       88    1.355012e+02   2.363376e+02   1.997722e+00          1      16872
+       89    1.140207e+02   2.363383e+02   2.011890e+00          1      16971
+       90    2.090135e+02   2.363462e+02   2.031870e+00          1      17106
+       91    6.489743e+02   2.363550e+02   2.140740e+00          1      17817
+       92    2.925408e+02   2.363669e+02   2.177049e+00          1      18060
+       93    1.145619e+02   2.363679e+02   2.195776e+00          1      18183
+       94    2.601986e+01   2.363714e+02   2.205056e+00          1      18246
+       95    5.115111e+02   2.363743e+02   2.272830e+00          1      18693
+       96    2.224574e+02   2.363790e+02   2.307961e+00          1      18924
+       97    3.921672e+02   2.363817e+02   2.377298e+00          1      19371
+       98    2.895215e+02   2.363866e+02   2.417319e+00          1      19626
+       99    8.776507e+02   2.363906e+02   2.568090e+00          1      20457
+      100    3.270219e+02   2.363966e+02   2.618114e+00          1      20772
 
 Terminating training with status: iteration_limit
 ------------------------------------------------------------------------------</code></pre><h2 id="Simulating-the-policy-1"><a class="docs-heading-anchor" href="#Simulating-the-policy-1">Simulating the policy</a><a class="docs-heading-anchor-permalink" href="#Simulating-the-policy-1" title="Permalink"></a></h2><p>After training, we can simulate the policy using <a href="../../apireference/#SDDP.simulate"><code>SDDP.simulate</code></a>.</p><pre><code class="language-julia">sims = SDDP.simulate(model, 100, [:g_t])
 mu = round(mean([s[1][:g_t] for s in sims]), digits = 2)
-println(&quot;On average, $(mu) units of thermal are used in the first stage.&quot;)</code></pre><pre><code class="language-none">On average, 2.5 units of thermal are used in the first stage.</code></pre><h2 id="Extracting-the-water-values-1"><a class="docs-heading-anchor" href="#Extracting-the-water-values-1">Extracting the water values</a><a class="docs-heading-anchor-permalink" href="#Extracting-the-water-values-1" title="Permalink"></a></h2><p>Finally, we can use <a href="../../apireference/#SDDP.ValueFunction"><code>SDDP.ValueFunction</code></a> and <a href="../../apireference/#SDDP.evaluate"><code>SDDP.evaluate</code></a> to obtain and evaluate the value function at different points in the state-space. Note that since we are minimizing, the price has a negative sign: each additional unit of water leads to a decrease in the the expected long-run cost.</p><pre><code class="language-julia">V = SDDP.ValueFunction(model[1])
-cost, price = SDDP.evaluate(V, x = 10)</code></pre><pre><code class="language-none">(233.5507020825126, Dict(:x=&gt;-0.659927))</code></pre><hr/><p><em>This page was generated using <a href="https://github.com/fredrikekre/Literate.jl">Literate.jl</a>.</em></p></article><nav class="docs-footer"><a class="docs-footer-prevpage" href="../../tutorial/13_integrality/">« Advanced III: integrality</a><a class="docs-footer-nextpage" href="../the_farmers_problem/">The farmer&#39;s problem »</a></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> on <span class="colophon-date" title="Saturday 8 February 2020 20:19">Saturday 8 February 2020</span>. Using Julia version 1.0.5.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>
+println(&quot;On average, $(mu) units of thermal are used in the first stage.&quot;)</code></pre><pre><code class="language-none">On average, 2.06 units of thermal are used in the first stage.</code></pre><h2 id="Extracting-the-water-values-1"><a class="docs-heading-anchor" href="#Extracting-the-water-values-1">Extracting the water values</a><a class="docs-heading-anchor-permalink" href="#Extracting-the-water-values-1" title="Permalink"></a></h2><p>Finally, we can use <a href="../../apireference/#SDDP.ValueFunction"><code>SDDP.ValueFunction</code></a> and <a href="../../apireference/#SDDP.evaluate"><code>SDDP.evaluate</code></a> to obtain and evaluate the value function at different points in the state-space. Note that since we are minimizing, the price has a negative sign: each additional unit of water leads to a decrease in the the expected long-run cost.</p><pre><code class="language-julia">V = SDDP.ValueFunction(model[1])
+cost, price = SDDP.evaluate(V, x = 10)</code></pre><pre><code class="language-none">(233.519387981554, Dict(:x=&gt;-0.66027))</code></pre><hr/><p><em>This page was generated using <a href="https://github.com/fredrikekre/Literate.jl">Literate.jl</a>.</em></p></article><nav class="docs-footer"><a class="docs-footer-prevpage" href="../../tutorial/13_integrality/">« Advanced III: integrality</a><a class="docs-footer-nextpage" href="../the_farmers_problem/">The farmer&#39;s problem »</a></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> on <span class="colophon-date" title="Tuesday 18 February 2020 03:11">Tuesday 18 February 2020</span>. Using Julia version 1.0.5.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>

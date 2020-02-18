@@ -102,7 +102,7 @@ end</code></pre><pre><code class="language-none">second_stage_uncertainty (gener
             stages = 2,
             sense = :Max,
             upper_bound = 500_000.0,
-            optimizer = with_optimizer(GLPK.Optimizer),
+            optimizer = GLPK.Optimizer,
             direct_mode = false
         ) do subproblem, stage
     add_state_variables(subproblem)
@@ -133,26 +133,26 @@ reformulating the model.
 Solver: serial mode
 
  Iteration    Simulation       Bound         Time (s)    Proc. ID   # Solves
-        1   -9.800000e+04   1.320000e+05   1.444101e-03          1          6
-        2    2.800000e+04   1.290000e+05   1.857996e-03          1         12
-        3    1.086000e+05   1.268139e+05   2.232075e-03          1         18
-        4    3.003659e+04   1.219636e+05   2.572060e-03          1         24
-        5    1.098545e+05   1.121210e+05   2.955198e-03          1         30
-        6    1.589371e+05   1.104195e+05   3.321171e-03          1         36
-        7    1.047405e+05   1.095042e+05   3.688097e-03          1         42
-        8    1.626819e+05   1.088611e+05   4.042149e-03          1         48
-        9    1.665556e+05   1.088021e+05   4.381180e-03          1         54
-       10    4.988974e+04   1.084962e+05   4.868031e-03          1         60
-       11    1.084962e+05   1.083900e+05   5.305052e-03          1         66
-       12    1.093500e+05   1.083900e+05   5.681992e-03          1         72
-       13    1.093500e+05   1.083900e+05   6.044149e-03          1         78
-       14    1.093500e+05   1.083900e+05   6.386995e-03          1         84
-       15    1.670000e+05   1.083900e+05   6.747007e-03          1         90
-       16    1.670000e+05   1.083900e+05   7.110119e-03          1         96
-       17    1.093500e+05   1.083900e+05   7.456064e-03          1        102
-       18    1.093500e+05   1.083900e+05   7.820129e-03          1        108
-       19    1.670000e+05   1.083900e+05   8.174181e-03          1        114
-       20    1.093500e+05   1.083900e+05   8.517981e-03          1        120
+        1   -9.800000e+04   1.320000e+05   1.725197e-03          1          6
+        2    2.800000e+04   1.290000e+05   2.192974e-03          1         12
+        3    4.840000e+04   1.268139e+05   2.588987e-03          1         18
+        4    1.332391e+05   1.219636e+05   2.933979e-03          1         24
+        5    1.098545e+05   1.121210e+05   3.305197e-03          1         30
+        6    1.121210e+05   1.104195e+05   3.676176e-03          1         36
+        7    1.616316e+05   1.095042e+05   4.032135e-03          1         42
+        8    1.095042e+05   1.088611e+05   4.386187e-03          1         48
+        9    1.665556e+05   1.088021e+05   4.742146e-03          1         54
+       10    1.093355e+05   1.084962e+05   5.167961e-03          1         60
+       11    4.823846e+04   1.083900e+05   5.681038e-03          1         66
+       12    1.670000e+05   1.083900e+05   6.081104e-03          1         72
+       13    1.093500e+05   1.083900e+05   6.453037e-03          1         78
+       14    1.093500e+05   1.083900e+05   6.802082e-03          1         84
+       15    4.882000e+04   1.083900e+05   7.452011e-03          1         90
+       16    1.093500e+05   1.083900e+05   7.908106e-03          1         96
+       17    1.670000e+05   1.083900e+05   8.318186e-03          1        102
+       18    1.670000e+05   1.083900e+05   8.718967e-03          1        108
+       19    1.670000e+05   1.083900e+05   9.119034e-03          1        114
+       20    4.882000e+04   1.083900e+05   9.504080e-03          1        120
 
 Terminating training with status: iteration_limit
-------------------------------------------------------------------------------</code></pre><h2 id="Checking-the-policy-1"><a class="docs-heading-anchor" href="#Checking-the-policy-1">Checking the policy</a><a class="docs-heading-anchor-permalink" href="#Checking-the-policy-1" title="Permalink"></a></h2><p>Birge and Louveaux report that the optimal objective value is \$108,390. Check that we got the correct solution using <a href="../../apireference/#SDDP.calculate_bound"><code>SDDP.calculate_bound</code></a>:</p><pre><code class="language-julia">@assert SDDP.calculate_bound(model) == 108_390.0</code></pre><hr/><p><em>This page was generated using <a href="https://github.com/fredrikekre/Literate.jl">Literate.jl</a>.</em></p></article><nav class="docs-footer"><a class="docs-footer-prevpage" href="../simple_hydro_thermal/">« Hydro-thermal scheduling</a><a class="docs-footer-nextpage" href="../../apireference/">Reference »</a></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> on <span class="colophon-date" title="Saturday 8 February 2020 20:19">Saturday 8 February 2020</span>. Using Julia version 1.0.5.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>
+------------------------------------------------------------------------------</code></pre><h2 id="Checking-the-policy-1"><a class="docs-heading-anchor" href="#Checking-the-policy-1">Checking the policy</a><a class="docs-heading-anchor-permalink" href="#Checking-the-policy-1" title="Permalink"></a></h2><p>Birge and Louveaux report that the optimal objective value is \$108,390. Check that we got the correct solution using <a href="../../apireference/#SDDP.calculate_bound"><code>SDDP.calculate_bound</code></a>:</p><pre><code class="language-julia">@assert SDDP.calculate_bound(model) == 108_390.0</code></pre><hr/><p><em>This page was generated using <a href="https://github.com/fredrikekre/Literate.jl">Literate.jl</a>.</em></p></article><nav class="docs-footer"><a class="docs-footer-prevpage" href="../simple_hydro_thermal/">« Hydro-thermal scheduling</a><a class="docs-footer-nextpage" href="../../apireference/">Reference »</a></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> on <span class="colophon-date" title="Tuesday 18 February 2020 03:12">Tuesday 18 February 2020</span>. Using Julia version 1.0.5.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>
