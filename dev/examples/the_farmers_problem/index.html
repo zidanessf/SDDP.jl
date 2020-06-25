@@ -133,26 +133,26 @@ reformulating the model.
 Solver: serial mode
 
  Iteration    Simulation       Bound         Time (s)    Proc. ID   # Solves
-        1   -9.800000e+04   1.320000e+05   1.503944e-03          1          6
-        2    2.800000e+04   1.290000e+05   2.002001e-03          1         12
-        3    1.376000e+05   1.268139e+05   2.403975e-03          1         18
-        4    1.332391e+05   1.219636e+05   2.758980e-03          1         24
-        5    1.098545e+05   1.121210e+05   3.119946e-03          1         30
-        6    1.121210e+05   1.104195e+05   3.511906e-03          1         36
-        7    1.616316e+05   1.095042e+05   3.875017e-03          1         42
-        8    1.095042e+05   1.088611e+05   4.237890e-03          1         48
-        9    1.665556e+05   1.088021e+05   1.746607e-02          1         54
-       10    1.655812e+05   1.084962e+05   1.802588e-02          1         60
-       11    1.658738e+05   1.083900e+05   1.850104e-02          1         66
-       12    4.882000e+04   1.083900e+05   1.888108e-02          1         72
-       13    1.093500e+05   1.083900e+05   1.929903e-02          1         78
-       14    1.670000e+05   1.083900e+05   1.966810e-02          1         84
-       15    1.670000e+05   1.083900e+05   2.002692e-02          1         90
-       16    4.882000e+04   1.083900e+05   2.039790e-02          1         96
-       17    1.093500e+05   1.083900e+05   2.075791e-02          1        102
-       18    4.882000e+04   1.083900e+05   2.112508e-02          1        108
-       19    1.093500e+05   1.083900e+05   2.151704e-02          1        114
-       20    1.670000e+05   1.083900e+05   2.190399e-02          1        120
+        1   -9.800000e+04   1.320000e+05   1.711130e-03          1          6
+        2    2.800000e+04   1.290000e+05   2.196074e-03          1         12
+        3    4.840000e+04   1.268139e+05   2.640009e-03          1         18
+        4    1.332391e+05   1.219636e+05   3.020048e-03          1         24
+        5    4.780727e+04   1.121210e+05   3.414154e-03          1         30
+        6    5.072028e+04   1.104195e+05   3.837109e-03          1         36
+        7    4.784940e+04   1.095042e+05   4.240990e-03          1         42
+        8    1.095042e+05   1.088611e+05   4.666090e-03          1         48
+        9    1.665556e+05   1.088021e+05   5.077124e-03          1         54
+       10    1.093355e+05   1.084962e+05   5.536079e-03          1         60
+       11    1.658738e+05   1.083900e+05   6.015062e-03          1         66
+       12    1.670000e+05   1.083900e+05   6.410122e-03          1         72
+       13    1.670000e+05   1.083900e+05   6.814957e-03          1         78
+       14    4.882000e+04   1.083900e+05   7.198095e-03          1         84
+       15    1.093500e+05   1.083900e+05   7.596016e-03          1         90
+       16    4.882000e+04   1.083900e+05   7.981062e-03          1         96
+       17    4.882000e+04   1.083900e+05   8.360147e-03          1        102
+       18    4.882000e+04   1.083900e+05   8.805037e-03          1        108
+       19    1.670000e+05   1.083900e+05   9.199142e-03          1        114
+       20    1.670000e+05   1.083900e+05   9.618044e-03          1        120
 
 Terminating training with status: iteration_limit
-------------------------------------------------------------------------------</code></pre><h2 id="Checking-the-policy-1"><a class="docs-heading-anchor" href="#Checking-the-policy-1">Checking the policy</a><a class="docs-heading-anchor-permalink" href="#Checking-the-policy-1" title="Permalink"></a></h2><p>Birge and Louveaux report that the optimal objective value is \$108,390. Check that we got the correct solution using <a href="../../apireference/#SDDP.calculate_bound"><code>SDDP.calculate_bound</code></a>:</p><pre><code class="language-julia">@assert SDDP.calculate_bound(model) == 108_390.0</code></pre><hr/><p><em>This page was generated using <a href="https://github.com/fredrikekre/Literate.jl">Literate.jl</a>.</em></p></article><nav class="docs-footer"><a class="docs-footer-prevpage" href="../simple_hydro_thermal/">« Hydro-thermal scheduling</a><a class="docs-footer-nextpage" href="../../apireference/">Reference »</a></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> on <span class="colophon-date" title="Friday 19 June 2020 02:21">Friday 19 June 2020</span>. Using Julia version 1.0.5.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>
+------------------------------------------------------------------------------</code></pre><h2 id="Checking-the-policy-1"><a class="docs-heading-anchor" href="#Checking-the-policy-1">Checking the policy</a><a class="docs-heading-anchor-permalink" href="#Checking-the-policy-1" title="Permalink"></a></h2><p>Birge and Louveaux report that the optimal objective value is \$108,390. Check that we got the correct solution using <a href="../../apireference/#SDDP.calculate_bound"><code>SDDP.calculate_bound</code></a>:</p><pre><code class="language-julia">@assert SDDP.calculate_bound(model) == 108_390.0</code></pre><hr/><p><em>This page was generated using <a href="https://github.com/fredrikekre/Literate.jl">Literate.jl</a>.</em></p></article><nav class="docs-footer"><a class="docs-footer-prevpage" href="../simple_hydro_thermal/">« Hydro-thermal scheduling</a><a class="docs-footer-nextpage" href="../../apireference/">Reference »</a></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> on <span class="colophon-date" title="Thursday 25 June 2020 14:41">Thursday 25 June 2020</span>. Using Julia version 1.0.5.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>
