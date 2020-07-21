@@ -34,9 +34,9 @@ model = SDDP.LinearPolicyGraph(
             ω.fuel_multiplier * fuel_cost[t] * thermal_generation
         )
     end
-end</code></pre><pre><code class="language-none">A policy graph with 3 nodes.
+end</code></pre><pre class="documenter-example-output">A policy graph with 3 nodes.
  Node indices: 1, 2, 3
-</code></pre><h2 id="Training-and-simulating-the-policy"><a class="docs-heading-anchor" href="#Training-and-simulating-the-policy">Training and simulating the policy</a><a id="Training-and-simulating-the-policy-1"></a><a class="docs-heading-anchor-permalink" href="#Training-and-simulating-the-policy" title="Permalink"></a></h2><p>As in the previous two tutorials, we train and simulate the policy:</p><pre><code class="language-julia">SDDP.train(model; iteration_limit = 10)
+</pre><h2 id="Training-and-simulating-the-policy"><a class="docs-heading-anchor" href="#Training-and-simulating-the-policy">Training and simulating the policy</a><a id="Training-and-simulating-the-policy-1"></a><a class="docs-heading-anchor-permalink" href="#Training-and-simulating-the-policy" title="Permalink"></a></h2><p>As in the previous two tutorials, we train and simulate the policy:</p><pre><code class="language-julia">SDDP.train(model; iteration_limit = 10)
 
 simulations = SDDP.simulate(model, 500)
 
@@ -50,7 +50,7 @@ using Statistics
 ci = round(1.96 * std(objective_values) / sqrt(500), digits = 2)
 
 println(&quot;Confidence interval: &quot;, μ, &quot; ± &quot;, ci)
-println(&quot;Lower bound: &quot;, round(SDDP.calculate_bound(model), digits = 2))</code></pre><pre><code class="language-none">--------------------------------------------------------------------------------
+println(&quot;Lower bound: &quot;, round(SDDP.calculate_bound(model), digits = 2))</code></pre><pre class="documenter-example-output">--------------------------------------------------------------------------------
                       SDDP.jl (c) Oscar Dowson, 2017-20
 
 Numerical stability report
@@ -63,18 +63,18 @@ No problems detected
 Solver: serial mode
 
  Iteration    Simulation       Bound         Time (s)    Proc. ID   # Solves
-        1    2.250000e+04   8.173077e+03   1.138961e-01          1         12
-        2    1.168269e+04   1.050595e+04   1.146722e-01          1         24
-        3    1.553571e+04   1.062500e+04   1.153390e-01          1         36
-        4    1.125000e+04   1.062500e+04   1.159482e-01          1         48
-        5    1.125000e+04   1.062500e+04   1.165762e-01          1         60
-        6    3.375000e+04   1.062500e+04   1.172452e-01          1         72
-        7    1.875000e+04   1.062500e+04   1.178732e-01          1         84
-        8    1.125000e+04   1.062500e+04   1.185141e-01          1         96
-        9    1.875000e+03   1.062500e+04   1.191211e-01          1        108
-       10    1.125000e+04   1.062500e+04   1.197472e-01          1        120
+        1    2.250000e+04   8.173077e+03   1.025672e-01          1         12
+        2    1.125000e+04   1.050595e+04   1.032622e-01          1         24
+        3    2.223214e+04   1.062500e+04   1.038740e-01          1         36
+        4    1.625000e+04   1.062500e+04   1.044621e-01          1         48
+        5    9.375000e+03   1.062500e+04   1.050460e-01          1         60
+        6    3.375000e+04   1.062500e+04   1.056242e-01          1         72
+        7    5.000000e+03   1.062500e+04   1.062541e-01          1         84
+        8    1.125000e+04   1.062500e+04   1.068571e-01          1         96
+        9    1.125000e+04   1.062500e+04   1.074531e-01          1        108
+       10    1.875000e+04   1.062500e+04   1.080501e-01          1        120
 
 Terminating training with status: iteration_limit
 ------------------------------------------------------------------------------
-Confidence interval: 10638.75 ± 752.99
-Lower bound: 10625.0</code></pre><p>This concludes our third tutorial for <code>SDDP.jl</code>. In the next tutorial, <a href="../04_markov_uncertainty/#Basic-IV:-Markov-uncertainty">Basic IV: Markov uncertainty</a>, we add stagewise-dependence to the inflows using a Markov chain.</p><hr/><p><em>This page was generated using <a href="https://github.com/fredrikekre/Literate.jl">Literate.jl</a>.</em></p></article><nav class="docs-footer"><a class="docs-footer-prevpage" href="../02_adding_uncertainty/">« Basic II: adding uncertainty</a><a class="docs-footer-nextpage" href="../04_markov_uncertainty/">Basic IV: Markov uncertainty »</a></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> on <span class="colophon-date" title="Monday 20 July 2020 20:12">Monday 20 July 2020</span>. Using Julia version 1.0.5.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>
+Confidence interval: 10765.0 ± 741.61
+Lower bound: 10625.0</pre><p>This concludes our third tutorial for <code>SDDP.jl</code>. In the next tutorial, <a href="../04_markov_uncertainty/#Basic-IV:-Markov-uncertainty">Basic IV: Markov uncertainty</a>, we add stagewise-dependence to the inflows using a Markov chain.</p><hr/><p><em>This page was generated using <a href="https://github.com/fredrikekre/Literate.jl">Literate.jl</a>.</em></p></article><nav class="docs-footer"><a class="docs-footer-prevpage" href="../02_adding_uncertainty/">« Basic II: adding uncertainty</a><a class="docs-footer-nextpage" href="../04_markov_uncertainty/">Basic IV: Markov uncertainty »</a><div class="flexbox-break"></div><p class="footer-message">Powered by <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> and the <a href="https://julialang.org/">Julia Programming Language</a>.</p></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> on <span class="colophon-date" title="Tuesday 21 July 2020 15:53">Tuesday 21 July 2020</span>. Using Julia version 1.0.5.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>

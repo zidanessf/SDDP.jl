@@ -9,7 +9,7 @@ model = SDDP.LinearPolicyGraph(
     @stageobjective(subproblem, 1e9 * x.out)
 end
 
-SDDP.numerical_stability_report(model)</code></pre><pre><code class="language-none">Numerical stability report
+SDDP.numerical_stability_report(model)</code></pre><pre class="documenter-example-output">Numerical stability report
   Non-zero Matrix range     [1e-06, 1e+09]
   Non-zero Objective range  [1e+00, 1e+09]
   Non-zero Bounds range     [1e+07, 1e+10]
@@ -22,7 +22,7 @@ WARNING: numerical stability issues detected
   - RHS range contains small coefficients
 Very large or small absolute values of coefficients
 can cause numerical stability issues. Consider
-reformulating the model.</code></pre><p>The report analyses the magnitude (in absolute terms) of the coefficients in the constraint matrix, the objective function, any variable bounds, and in the RHS of the constraints. A warning will be thrown in <code>SDDP.jl</code> detects very large or small values. As discussed in <a href="#Problem-scaling">Problem scaling</a>, this is an indication that you should reformulate your model.</p><p>By default, a numerical stability check is run when you call <a href="../../apireference/#SDDP.train"><code>SDDP.train</code></a>, although it can be turned off by passing <code>run_numerical_stability_report = false</code>.</p><h3 id="Solver-specific-options"><a class="docs-heading-anchor" href="#Solver-specific-options">Solver-specific options</a><a id="Solver-specific-options-1"></a><a class="docs-heading-anchor-permalink" href="#Solver-specific-options" title="Permalink"></a></h3><p>If you have a particularly troublesome model, you should investigate setting solver-specific options to improve the numerical stability of each solver. For example, Gurobi has a <a href="http://www.gurobi.com/documentation/8.1/refman/numericfocus.html#parameter:NumericFocus"><code>NumericFocus</code> option</a>.</p><h2 id="Choosing-an-initial-bound"><a class="docs-heading-anchor" href="#Choosing-an-initial-bound">Choosing an initial bound</a><a id="Choosing-an-initial-bound-1"></a><a class="docs-heading-anchor-permalink" href="#Choosing-an-initial-bound" title="Permalink"></a></h2><p>One of the important requirements when building a SDDP model is to choose an appropriate bound on the objective (lower if minimizing, upper if maximizing). However, it can be hard to choose a bound if you don&#39;t know the solution! (Which is very likely.)</p><p>The bound should not be as large as possible (since this will help with convergence and the numerical issues discussed above), but if chosen to small, it may cut of the feasible region and lead to a sub-optimal solution.</p><p>Consider the following simple model, where we first set <code>lower_bound</code> to <code>0.0</code>.</p><pre><code class="language-julia">using SDDP, GLPK
+reformulating the model.</pre><p>The report analyses the magnitude (in absolute terms) of the coefficients in the constraint matrix, the objective function, any variable bounds, and in the RHS of the constraints. A warning will be thrown in <code>SDDP.jl</code> detects very large or small values. As discussed in <a href="#Problem-scaling">Problem scaling</a>, this is an indication that you should reformulate your model.</p><p>By default, a numerical stability check is run when you call <a href="../../apireference/#SDDP.train"><code>SDDP.train</code></a>, although it can be turned off by passing <code>run_numerical_stability_report = false</code>.</p><h3 id="Solver-specific-options"><a class="docs-heading-anchor" href="#Solver-specific-options">Solver-specific options</a><a id="Solver-specific-options-1"></a><a class="docs-heading-anchor-permalink" href="#Solver-specific-options" title="Permalink"></a></h3><p>If you have a particularly troublesome model, you should investigate setting solver-specific options to improve the numerical stability of each solver. For example, Gurobi has a <a href="http://www.gurobi.com/documentation/8.1/refman/numericfocus.html#parameter:NumericFocus"><code>NumericFocus</code> option</a>.</p><h2 id="Choosing-an-initial-bound"><a class="docs-heading-anchor" href="#Choosing-an-initial-bound">Choosing an initial bound</a><a id="Choosing-an-initial-bound-1"></a><a class="docs-heading-anchor-permalink" href="#Choosing-an-initial-bound" title="Permalink"></a></h2><p>One of the important requirements when building a SDDP model is to choose an appropriate bound on the objective (lower if minimizing, upper if maximizing). However, it can be hard to choose a bound if you don&#39;t know the solution! (Which is very likely.)</p><p>The bound should not be as large as possible (since this will help with convergence and the numerical issues discussed above), but if chosen to small, it may cut of the feasible region and lead to a sub-optimal solution.</p><p>Consider the following simple model, where we first set <code>lower_bound</code> to <code>0.0</code>.</p><pre><code class="language-julia">using SDDP, GLPK
 
 model = SDDP.LinearPolicyGraph(
     stages = 3,
@@ -38,20 +38,20 @@ model = SDDP.LinearPolicyGraph(
     @stageobjective(subproblem, t * v)
 end
 
-SDDP.train(model, iteration_limit = 5, run_numerical_stability_report = false)</code></pre><pre><code class="language-none">--------------------------------------------------------------------------------
+SDDP.train(model, iteration_limit = 5, run_numerical_stability_report = false)</code></pre><pre class="documenter-example-output">--------------------------------------------------------------------------------
                       SDDP.jl (c) Oscar Dowson, 2017-20
 
 Solver: serial mode
 
  Iteration    Simulation       Bound         Time (s)    Proc. ID   # Solves
-        1    6.500000e+00   3.000000e+00   1.527786e-03          1          6
-        2    3.500000e+00   3.500000e+00   1.884937e-03          1         12
-        3    3.500000e+00   3.500000e+00   2.170801e-03          1         18
-        4    3.500000e+00   3.500000e+00   2.446890e-03          1         24
-        5    3.500000e+00   3.500000e+00   2.770901e-03          1         30
+        1    6.500000e+00   3.000000e+00   1.461029e-03          1          6
+        2    3.500000e+00   3.500000e+00   1.855135e-03          1         12
+        3    3.500000e+00   3.500000e+00   2.140045e-03          1         18
+        4    3.500000e+00   3.500000e+00   2.393007e-03          1         24
+        5    3.500000e+00   3.500000e+00   2.636909e-03          1         30
 
 Terminating training with status: iteration_limit
-------------------------------------------------------------------------------</code></pre><p>Now consider the case when we set the <code>lower_bound</code> to <code>10.0</code>:</p><pre><code class="language-julia">using SDDP, GLPK
+------------------------------------------------------------------------------</pre><p>Now consider the case when we set the <code>lower_bound</code> to <code>10.0</code>:</p><pre><code class="language-julia">using SDDP, GLPK
 
 model = SDDP.LinearPolicyGraph(
     stages = 3,
@@ -67,17 +67,17 @@ model = SDDP.LinearPolicyGraph(
     @stageobjective(subproblem, t * v)
 end
 
-SDDP.train(model, iteration_limit = 5, run_numerical_stability_report = false)</code></pre><pre><code class="language-none">--------------------------------------------------------------------------------
+SDDP.train(model, iteration_limit = 5, run_numerical_stability_report = false)</code></pre><pre class="documenter-example-output">--------------------------------------------------------------------------------
                       SDDP.jl (c) Oscar Dowson, 2017-20
 
 Solver: serial mode
 
  Iteration    Simulation       Bound         Time (s)    Proc. ID   # Solves
-        1    6.500000e+00   1.100000e+01   1.677990e-03          1          6
-        2    5.500000e+00   1.100000e+01   2.018929e-03          1         12
-        3    5.500000e+00   1.100000e+01   2.275944e-03          1         18
-        4    5.500000e+00   1.100000e+01   2.564907e-03          1         24
-        5    5.500000e+00   1.100000e+01   2.824068e-03          1         30
+        1    6.500000e+00   1.100000e+01   1.482010e-03          1          6
+        2    5.500000e+00   1.100000e+01   1.780987e-03          1         12
+        3    5.500000e+00   1.100000e+01   2.046108e-03          1         18
+        4    5.500000e+00   1.100000e+01   2.300024e-03          1         24
+        5    5.500000e+00   1.100000e+01   2.535105e-03          1         30
 
 Terminating training with status: iteration_limit
-------------------------------------------------------------------------------</code></pre><p>How do we tell which is more appropriate? There are a few clues that you should look out for.</p><ul><li><p>The bound converges to a value above (if minimizing) the simulated cost of the policy. In this case, the problem is deterministic, so it is easy to tell. But you can also check by performing a Monte Carlo simulation like we did in <a href="../02_adding_uncertainty/#Basic-II:-adding-uncertainty">Basic II: adding uncertainty</a>.</p></li><li><p>The bound converges to different values when we change the bound. This is another clear give-away. The bound provided by the user is only used in the initial iterations. <strong>It should not change the value of the converged policy.</strong> Thus, if you don&#39;t know an appropriate value for the bound, choose an initial value, and then increase (or decrease) the value of the bound to confirm that the value of the policy doesn&#39;t change.</p></li><li><p>The bound converges to a value <em>close</em> to the bound provided by the user. This varies between models, but notice that <code>11.0</code> is quite close to <code>10.0</code> compared with <code>3.5</code> and <code>0.0</code>.</p></li></ul><p>This concludes our sixth tutorial for <code>SDDP.jl</code>. You&#39;re now ready to start solving multistage stochastic programs with <code>SDDP.jl</code>!</p><hr/><p><em>This page was generated using <a href="https://github.com/fredrikekre/Literate.jl">Literate.jl</a>.</em></p></article><nav class="docs-footer"><a class="docs-footer-prevpage" href="../05_plotting/">« Basic V: plotting</a><a class="docs-footer-nextpage" href="../11_objective_states/">Advanced I: objective states »</a></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> on <span class="colophon-date" title="Monday 20 July 2020 20:12">Monday 20 July 2020</span>. Using Julia version 1.0.5.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>
+------------------------------------------------------------------------------</pre><p>How do we tell which is more appropriate? There are a few clues that you should look out for.</p><ul><li><p>The bound converges to a value above (if minimizing) the simulated cost of the policy. In this case, the problem is deterministic, so it is easy to tell. But you can also check by performing a Monte Carlo simulation like we did in <a href="../02_adding_uncertainty/#Basic-II:-adding-uncertainty">Basic II: adding uncertainty</a>.</p></li><li><p>The bound converges to different values when we change the bound. This is another clear give-away. The bound provided by the user is only used in the initial iterations. <strong>It should not change the value of the converged policy.</strong> Thus, if you don&#39;t know an appropriate value for the bound, choose an initial value, and then increase (or decrease) the value of the bound to confirm that the value of the policy doesn&#39;t change.</p></li><li><p>The bound converges to a value <em>close</em> to the bound provided by the user. This varies between models, but notice that <code>11.0</code> is quite close to <code>10.0</code> compared with <code>3.5</code> and <code>0.0</code>.</p></li></ul><p>This concludes our sixth tutorial for <code>SDDP.jl</code>. You&#39;re now ready to start solving multistage stochastic programs with <code>SDDP.jl</code>!</p><hr/><p><em>This page was generated using <a href="https://github.com/fredrikekre/Literate.jl">Literate.jl</a>.</em></p></article><nav class="docs-footer"><a class="docs-footer-prevpage" href="../05_plotting/">« Basic V: plotting</a><a class="docs-footer-nextpage" href="../11_objective_states/">Advanced I: objective states »</a><div class="flexbox-break"></div><p class="footer-message">Powered by <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> and the <a href="https://julialang.org/">Julia Programming Language</a>.</p></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> on <span class="colophon-date" title="Tuesday 21 July 2020 15:53">Tuesday 21 July 2020</span>. Using Julia version 1.0.5.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>
