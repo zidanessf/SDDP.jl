@@ -150,4 +150,23 @@ round.(risk_adjusted_probability, digits = 1)
  0.1
  0.1
  0.8
- 0.0</code></pre></article><nav class="docs-footer"><a class="docs-footer-prevpage" href="../add_a_multidimensional_state_variable/">« Add a multi-dimensional state variable</a><a class="docs-footer-nextpage" href="../add_multidimensional_noise_Terms/">Add multi-dimensional noise terms »</a><div class="flexbox-break"></div><p class="footer-message">Powered by <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> and the <a href="https://julialang.org/">Julia Programming Language</a>.</p></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> on <span class="colophon-date" title="Tuesday 28 July 2020 23:05">Tuesday 28 July 2020</span>. Using Julia version 1.0.5.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>
+ 0.0</code></pre><h3 id="Entropic"><a class="docs-heading-anchor" href="#Entropic">Entropic</a><a id="Entropic-1"></a><a class="docs-heading-anchor-permalink" href="#Entropic" title="Permalink"></a></h3><article class="docstring"><header><a class="docstring-binding" id="SDDP.Entropic" href="#SDDP.Entropic"><code>SDDP.Entropic</code></a> — <span class="docstring-category">Type</span></header><section><div><pre><code class="language-julia">Entropic(γ::Float64)</code></pre><p>The entropic risk measure as described by Dowson, Morton, and Pagnoncelli (2020). Multistage stochastic programs with the entropic risk measure. http://www.optimization-online.org/DB_HTML/2020/08/7984.html</p></div></section></article><pre><code class="language-julia">risk_measure = SDDP.Entropic(0.1)
+
+SDDP.adjust_probability(
+    risk_measure,
+    risk_adjusted_probability,
+    nominal_probability,
+    noise_supports,
+    cost_realizations,
+    is_minimization
+)
+
+round.(risk_adjusted_probability, digits = 4)
+
+# output
+
+4-element Array{Float64,1}:
+ 0.11
+ 0.1991
+ 0.3648
+ 0.326</code></pre></article><nav class="docs-footer"><a class="docs-footer-prevpage" href="../add_a_multidimensional_state_variable/">« Add a multi-dimensional state variable</a><a class="docs-footer-nextpage" href="../add_multidimensional_noise_Terms/">Add multi-dimensional noise terms »</a><div class="flexbox-break"></div><p class="footer-message">Powered by <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> and the <a href="https://julialang.org/">Julia Programming Language</a>.</p></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> on <span class="colophon-date" title="Tuesday 25 August 2020 01:00">Tuesday 25 August 2020</span>. Using Julia version 1.0.5.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>
