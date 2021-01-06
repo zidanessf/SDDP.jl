@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/><title>Expert I: Pedagogical SDDP · SDDP.jl</title><link href="https://fonts.googleapis.com/css?family=Lato|Roboto+Mono" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.0/css/fontawesome.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.0/css/solid.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.0/css/brands.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.11.1/katex.min.css" rel="stylesheet" type="text/css"/><script>documenterBaseURL="../.."</script><script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js" data-main="../../assets/documenter.js"></script><script src="../../siteinfo.js"></script><script src="../../../versions.js"></script><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../../assets/themes/documenter-dark.css" data-theme-name="documenter-dark" data-theme-primary-dark/><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../../assets/themes/documenter-light.css" data-theme-name="documenter-light" data-theme-primary/><script src="../../assets/themeswap.js"></script></head><body><div id="documenter"><nav class="docs-sidebar"><a class="docs-logo" href="../../"><img src="../../assets/logo.png" alt="SDDP.jl logo"/></a><div class="docs-package-name"><span class="docs-autofit">SDDP.jl</span></div><form class="docs-search" action="../../search/"><input class="docs-search-query" id="documenter-search-query" name="q" type="text" placeholder="Search docs"/></form><ul class="docs-menu"><li><a class="tocitem" href="../../">Home</a></li><li><input class="collapse-toggle" id="menuitem-2" type="checkbox" checked/><label class="tocitem" for="menuitem-2"><span class="docs-label">Tutorials</span><i class="docs-chevron"></i></label><ul class="collapsed"><li><a class="tocitem" href="../01_first_steps/">Basic I: first steps</a></li><li><a class="tocitem" href="../02_adding_uncertainty/">Basic II: adding uncertainty</a></li><li><a class="tocitem" href="../03_objective_uncertainty/">Basic III: objective uncertainty</a></li><li><a class="tocitem" href="../04_markov_uncertainty/">Basic IV: Markov uncertainty</a></li><li><a class="tocitem" href="../05_plotting/">Basic V: plotting</a></li><li><a class="tocitem" href="../06_warnings/">Basic VI: words of warning</a></li><li><a class="tocitem" href="../11_objective_states/">Advanced I: objective states</a></li><li><a class="tocitem" href="../12_belief_states/">Advanced II: belief states</a></li><li><a class="tocitem" href="../13_integrality/">Advanced III: integrality</a></li><li class="is-active"><a class="tocitem" href>Expert I: Pedagogical SDDP</a><ul class="internal"><li><a class="tocitem" href="#Theory"><span>Theory</span></a></li><li><a class="tocitem" href="#Implementation"><span>Implementation</span></a></li></ul></li></ul></li><li><input class="collapse-toggle" id="menuitem-3" type="checkbox"/><label class="tocitem" for="menuitem-3"><span class="docs-label">How-to guides</span><i class="docs-chevron"></i></label><ul class="collapsed"><li><a class="tocitem" href="../../guides/add_a_multidimensional_state_variable/">Add a multi-dimensional state variable</a></li><li><a class="tocitem" href="../../guides/add_a_risk_measure/">Add a risk measure</a></li><li><a class="tocitem" href="../../guides/add_multidimensional_noise_Terms/">Add multi-dimensional noise terms</a></li><li><a class="tocitem" href="../../guides/add_noise_in_the_constraint_matrix/">Add noise in the constraint matrix</a></li><li><a class="tocitem" href="../../guides/choose_a_stopping_rule/">Choose a stopping rule</a></li><li><a class="tocitem" href="../../guides/create_a_general_policy_graph/">Create a general policy graph</a></li><li><a class="tocitem" href="../../guides/debug_a_model/">Debug a model</a></li><li><a class="tocitem" href="../../guides/improve_computational_performance/">Improve computational performance</a></li><li><a class="tocitem" href="../../guides/simulate_using_a_different_sampling_scheme/">Simulate using a different sampling scheme</a></li><li><a class="tocitem" href="../../guides/upgrade_from_the_old_sddp/">Upgrade from the old SDDP.jl</a></li></ul></li><li><input class="collapse-toggle" id="menuitem-4" type="checkbox"/><label class="tocitem" for="menuitem-4"><span class="docs-label">Examples</span><i class="docs-chevron"></i></label><ul class="collapsed"><li><a class="tocitem" href="../../examples/simple_hydro_thermal/">Hydro-thermal scheduling</a></li><li><a class="tocitem" href="../../examples/the_farmers_problem/">The farmer&#39;s problem</a></li></ul></li><li><a class="tocitem" href="../../apireference/">API Reference</a></li></ul><div class="docs-version-selector field has-addons"><div class="control"><span class="docs-label button is-static is-size-7">Version</span></div><div class="docs-selector control is-expanded"><div class="select is-fullwidth is-size-7"><select id="documenter-version-selector"></select></div></div></div></nav><div class="docs-main"><header class="docs-navbar"><nav class="breadcrumb"><ul class="is-hidden-mobile"><li><a class="is-disabled">Tutorials</a></li><li class="is-active"><a href>Expert I: Pedagogical SDDP</a></li></ul><ul class="is-hidden-tablet"><li class="is-active"><a href>Expert I: Pedagogical SDDP</a></li></ul></nav><div class="docs-right"><a class="docs-edit-link" href="https://github.com/odow/SDDP.jl/blob/master/docs/src/tutorial/22_pedagogical_sddp.jl" title="Edit on GitHub"><span class="docs-icon fab"></span><span class="docs-label is-hidden-touch">Edit on GitHub</span></a><a class="docs-settings-button fas fa-cog" id="documenter-settings-button" href="#" title="Settings"></a><a class="docs-sidebar-button fa fa-bars is-hidden-desktop" id="documenter-sidebar-button" href="#"></a></div></header><article class="content" id="documenter-page"><h1 id="Expert-I:-Pedagogical-SDDP"><a class="docs-heading-anchor" href="#Expert-I:-Pedagogical-SDDP">Expert I: Pedagogical SDDP</a><a id="Expert-I:-Pedagogical-SDDP-1"></a><a class="docs-heading-anchor-permalink" href="#Expert-I:-Pedagogical-SDDP" title="Permalink"></a></h1><p>In this tutorial we walk through a simplified implementation of stochastic dual dynamic programming to explain the key concepts.</p><h2 id="Theory"><a class="docs-heading-anchor" href="#Theory">Theory</a><a id="Theory-1"></a><a class="docs-heading-anchor-permalink" href="#Theory" title="Permalink"></a></h2><p>Still to write</p><h2 id="Implementation"><a class="docs-heading-anchor" href="#Implementation">Implementation</a><a id="Implementation-1"></a><a class="docs-heading-anchor-permalink" href="#Implementation" title="Permalink"></a></h2><p>For this implementation of SDDP, we&#39;re only going to use JuMP, GLPK, and Statistics. For clarity, we call <code>import</code> so that we must prefix <code>JuMP.</code>, <code>GLPK.</code> and <code>Statistics.</code> to all functions and structs provided by those packages. Everything not prefixed is either part of base Julia, or we wrote it.</p><pre><code class="language-julia">import GLPK
+import JuMP
+import Statistics</code></pre><p>In addition, we&#39;re going to try and keep things as simple as possible. This is very much a &quot;vanilla&quot; version of SDDP; it doesn&#39;t have (m)any fancy computational tricks that you need to code a performant or stable version that will work on realistic instances.</p><p>In the interests of brevity, we will also include minimal error checking. Think about all the different ways you could break this code!</p><h3 id="Structs"><a class="docs-heading-anchor" href="#Structs">Structs</a><a id="Structs-1"></a><a class="docs-heading-anchor-permalink" href="#Structs" title="Permalink"></a></h3><p>The first struct we are going to use is a <code>State</code> struct that will wrap an incoming and outgoing state variable.</p><pre><code class="language-julia">struct State
+    in::JuMP.VariableRef
+    out::JuMP.VariableRef
+end</code></pre><p>Next, we need a struct to wrap all of the uncertainty within a node.</p><pre><code class="language-julia">struct Uncertainty
+    parameterize::Function
+    Ω::Vector{Any}
+    P::Vector{Float64}
+end</code></pre><p>It&#39;s also going to be useful to have a function that samples a realization of the random variable defined by <code>Ω</code> and <code>P</code>:</p><pre><code class="language-julia">function sample_uncertainty(uncertainty::Uncertainty)
+    r = rand()
+    for (p, ω) in zip(uncertainty.P, uncertainty.Ω)
+        if r &lt;= p
+            return ω
+        end
+        r -= p
+    end
+    error(&quot;We should never get here because P should sum to 1.0.&quot;)
+end</code></pre><pre class="documenter-example-output">sample_uncertainty (generic function with 1 method)</pre><p>Now we have two building blocks, we can declare the structure of each node.</p><pre><code class="language-julia">struct Node
+    subproblem::JuMP.Model
+    states::Dict{Symbol, State}
+    uncertainty::Uncertainty
+    cost_to_go::JuMP.VariableRef
+end</code></pre><p>Finally, out simplified policy graph is just a vector of nodes.</p><pre><code class="language-julia">struct LinearPolicyGraph
+    nodes::Vector{Node}
+end</code></pre><p>We also define a nice <code>show</code> method so that we don&#39;t accidentally print a large amount of information to the screen.</p><pre><code class="language-julia">function Base.show(io::IO, model::LinearPolicyGraph)
+    return print(io, &quot;A policy graph with $(length(model.nodes)) nodes&quot;)
+end</code></pre><h3 id="Interface-functions"><a class="docs-heading-anchor" href="#Interface-functions">Interface functions</a><a id="Interface-functions-1"></a><a class="docs-heading-anchor-permalink" href="#Interface-functions" title="Permalink"></a></h3><p>Now we have some basic types, let&#39;s implment some functions so that the user can create a model.</p><div class="admonition is-success"><header class="admonition-header">Tip</header><div class="admonition-body"><p>If you haven&#39;t already, go read <a href="../02_adding_uncertainty/#Basic-II:-adding-uncertainty">Basic II: adding uncertainty</a>, since what follows is basically the same model.</p></div></div><p>First, we need an exmaple of a function that the user will provide. Like SDDP.jl, this takes an empty <code>subproblem</code>, and a node index, in this case <code>t::Int</code>. You could change this function to change the model, or define a new one later in the code.</p><pre><code class="language-julia">function subproblem_builder(subproblem::JuMP.Model, t::Int)
+    # Define the state variables. Note how we fix the incoming state to the
+    # initial state variable regardless of `t`! This isn&#39;t strictly necessary;
+    # it only matters that we do it for the first node.
+    JuMP.@variable(subproblem, volume_in == 200)
+    JuMP.@variable(subproblem, 0 &lt;= volume_out &lt;= 200)
+    states = Dict(:volume =&gt; State(volume_in, volume_out))
+    # Define the control variables.
+    JuMP.@variables(subproblem, begin
+        thermal_generation &gt;= 0
+        hydro_generation   &gt;= 0
+        hydro_spill        &gt;= 0
+        inflow
+    end)
+    # Define the constraints
+    JuMP.@constraints(subproblem, begin
+        volume_out == volume_in + inflow - hydro_generation - hydro_spill
+        demand_constraint, thermal_generation + hydro_generation == 150.0
+    end)
+    # Define the objective for each stage `t`. Note that we can use `t` as an
+    # index for t = 1, 2, 3.
+    fuel_cost = [50.0, 100.0, 150.0]
+    JuMP.@objective(subproblem, Min, fuel_cost[t] * thermal_generation)
+    # Finally, we define the uncertainty object. Because this is a simplified
+    # implementation of SDDP, we shall politely ask the user to only modify the
+    # constraints, and not the objective function! (Not that it changes the
+    # algorithm, we just have to add more information to keep track of things.)
+    uncertainty = Uncertainty([0.0, 50.0, 100.0], [1 / 3, 1 / 3, 1 / 3]) do ω
+        JuMP.fix(inflow, ω)
+    end
+    return states, uncertainty
+end</code></pre><pre class="documenter-example-output">subproblem_builder (generic function with 1 method)</pre><p>If you&#39;ve read <a href="../02_adding_uncertainty/#Basic-II:-adding-uncertainty">Basic II: adding uncertainty</a>, this example should be familiar. You can probably see how some of the SDDP.jl functionality like <a href="../../apireference/#SDDP.@stageobjective"><code>@stageobjective</code></a> and <a href="../../apireference/#SDDP.parameterize"><code>SDDP.parameterize</code></a> help smooth some of the usability issues like needing to construct both the incoming and outgoing state variables, or needing to explicitly <code>return states, uncertainty</code>.</p><p>The next function we need to define is the analog of <a href="../../apireference/#SDDP.LinearPolicyGraph"><code>SDDP.LinearPolicyGraph</code></a>. It should be pretty readable.</p><pre><code class="language-julia">function LinearPolicyGraph(
+    subproblem_builder::Function;
+    stages::Int,
+    lower_bound::Float64,
+    optimizer,
+)
+    nodes = Node[]
+    for t = 1:stages
+        # Create a model.
+        model = JuMP.Model(optimizer)
+        # Use the provided function to build out each subproblem. The user&#39;s
+        # function returns a dictionary mapping `Symbol`s to `State` objects,
+        # and an `Uncertainty` object.
+        states, uncertainty = subproblem_builder(model, t)
+        # Now add the cost-to-go terms:
+        JuMP.@variable(model, cost_to_go &gt;= lower_bound)
+        obj = JuMP.objective_function(model)
+        JuMP.@objective(model, Min, obj + cost_to_go)
+        # In the final stage, the cost-to-go is 0.0.
+        if t == stages
+            JuMP.fix(cost_to_go, 0.0; force = true)
+        end
+        push!(nodes, Node(model, states, uncertainty, cost_to_go))
+    end
+    return LinearPolicyGraph(nodes)
+end</code></pre><pre class="documenter-example-output">Main.ex-22_pedagogical_sddp.LinearPolicyGraph</pre><h3 id="The-forward-pass"><a class="docs-heading-anchor" href="#The-forward-pass">The forward pass</a><a id="The-forward-pass-1"></a><a class="docs-heading-anchor-permalink" href="#The-forward-pass" title="Permalink"></a></h3><p>Now we&#39;re ready to code the forward pass. It takes a <code>::LinearPolicyGraph</code>, and returns a tuple of two things: a vector of the outgoing state variables visited, and a <code>Float64</code> of the cumulative stage costs that were incurred along the forward pass.</p><pre><code class="language-julia">function forward_pass(model::LinearPolicyGraph, io::IO = stdout)
+    println(io, &quot;| Forward Pass&quot;)
+    # First, get the value of the state at the root node (e.g., x_R).
+    incoming_state = Dict(
+        k =&gt; JuMP.fix_value(v.in) for (k, v) in model.nodes[1].states
+    )
+    # `simulation_cost` is an accumlator that is going to sum the stage-costs
+    # incurred over the forward pass.
+    simulation_cost = 0.0
+    # We also need to record the outgoing state variables so we can pass them
+    # to the backward pass.
+    outgoing_states = Dict{Symbol, Float64}[]
+    # Now&#39;s the meat of the forward pass: loop through each of the nodes
+    for (t, node) in enumerate(model.nodes)
+        println(io, &quot;| | Visiting node $(t)&quot;)
+        # Sample the uncertainty:
+        ω = sample_uncertainty(node.uncertainty)
+        println(io, &quot;| |  ω = &quot;, ω)
+        # Before parameterizing the subproblem using the user-provided
+        # function:
+        node.uncertainty.parameterize(ω)
+        println(io, &quot;| |  x = &quot;, incoming_state)
+        # Update the incoming state variable:
+        for (k, v) in incoming_state
+            JuMP.fix(node.states[k].in, v; force = true)
+        end
+        # Now solve the subproblem and check we found an optimal solution:
+        JuMP.optimize!(node.subproblem)
+        if JuMP.termination_status(node.subproblem) != JuMP.MOI.OPTIMAL
+            error(&quot;Something went terribly wrong!&quot;)
+        end
+        # Compute the outgoing state variables, and save them in
+        # `outgoing_states`:
+        outgoing_state = Dict(k =&gt; JuMP.value(v.out) for (k, v) in node.states)
+        push!(outgoing_states, outgoing_state)
+        println(io, &quot;| |  x′ = &quot;, outgoing_state)
+        # We also need to compute the stage cost to add to our
+        # `simulation_cost` accumulator:
+        stage_cost = JuMP.objective_value(node.subproblem) - JuMP.value(node.cost_to_go)
+        simulation_cost += stage_cost
+        println(io, &quot;| |  C(x, u, ω) = &quot;, stage_cost)
+        # As a final step, set the outgoing state of stage t and the incoming
+        # state of stage t + 1:
+        incoming_state = outgoing_state
+    end
+    return outgoing_states, simulation_cost
+end</code></pre><pre class="documenter-example-output">forward_pass (generic function with 2 methods)</pre><h3 id="The-backward-pass"><a class="docs-heading-anchor" href="#The-backward-pass">The backward pass</a><a id="The-backward-pass-1"></a><a class="docs-heading-anchor-permalink" href="#The-backward-pass" title="Permalink"></a></h3><p>We&#39;re now ready to code the backward pass. This is going to take a <code>::LinearPolicyGraph</code> object, and a vector of outgoing states from the forward pass. It returns a <code>Float64</code> that is a valid lower bound for the objective of the multistage stochastic program.</p><pre><code class="language-julia">function backward_pass(
+    model::LinearPolicyGraph,
+    outgoing_states::Vector{Dict{Symbol, Float64}},
+)
+    println(&quot;| Backward pass&quot;)
+    # For the backward pass, we walk back up the nodes, from the final
+    # node to the second (we will solve the first node after this loop).
+    for t = length(outgoing_states):-1:2
+        println(&quot;| | Visiting node $(t)&quot;)
+        # At each step in the backward pass, we are going to solve problems in
+        # stage t, but add cuts to stage t - 1. Thus, we need:
+        node_t = model.nodes[t]
+        node_t1 = model.nodes[t - 1]
+        # First, fix the incoming state variables of stage t to the value of
+        # the outgoing state variables in stage t - 1.
+        for (k, v) in outgoing_states[t - 1]
+            JuMP.fix(node_t.states[k].in, v; force = true)
+        end
+        # Then, create an empty affine expression that we will use to build
+        # up the cut expression.
+        cut_expression = JuMP.AffExpr(0.0)
+        # Now for each possible realization of the uncertainty, solve the
+        # stage t subproblem, and add `p * [y + λᵀ(x - x_k)]` to the cut
+        # expression. (See the Theory section above is this isn&#39;t obvious why.)
+        for (p, ω) in zip(node_t.uncertainty.P, node_t.uncertainty.Ω)
+            println(&quot;| | | Solving ω = &quot;, ω)
+            node_t.uncertainty.parameterize(ω)
+            JuMP.optimize!(node_t.subproblem)
+            y = JuMP.objective_value(node_t.subproblem)
+            println(&quot;| | |  y = &quot;, y)
+            λ = Dict(k =&gt; JuMP.reduced_cost(v.in) for (k, v) in node_t.states)
+            println(&quot;| | |  λ = &quot;, λ)
+            cut_expression += p * JuMP.@expression(
+                node_t1.subproblem,
+                y + sum(
+                    λ[k] * (x.out - outgoing_states[t - 1][k])
+                    for (k, x) in node_t1.states
+                ),
+            )
+        end
+        # And then refine the cost-to-go variable by adding a cut that is the
+        # expectation of the cuts computed in the step above.
+        c = JuMP.@constraint(
+            node_t1.subproblem, node_t1.cost_to_go &gt;= cut_expression
+        )
+        println(&quot;| | | Adding cut : &quot;, c)
+    end
+    # Finally, compute a lower bound for the problem by evaluating the
+    # first-stage subproblem.
+    first_node = model.nodes[1]
+    lower_bound = 0.0
+    for (p, ω) in zip(first_node.uncertainty.P, first_node.uncertainty.Ω)
+        first_node.uncertainty.parameterize(ω)
+        JuMP.optimize!(first_node.subproblem)
+        lower_bound += p * JuMP.objective_value(first_node.subproblem)
+    end
+    return lower_bound
+end</code></pre><pre class="documenter-example-output">backward_pass (generic function with 1 method)</pre><p>Thirdly, we need a function to simulate the policy. This is going be very simple. It doesn&#39;t have an bells and whistles like being able to record the control variables.</p><pre><code class="language-julia">function simulate(model::LinearPolicyGraph; replications::Int)
+    # Pipe the output to `devnull` so we don&#39;t print too much!
+    simulations = [forward_pass(model, devnull) for _ = 1:replications]
+    z = [s[2] for s in simulations]
+    μ  = Statistics.mean(z)
+    tσ = 1.96 * Statistics.std(z) / sqrt(replications)
+    println(&quot;Upper bound = $(μ) ± $(tσ)&quot;)
+    return simulations
+end</code></pre><pre class="documenter-example-output">simulate (generic function with 1 method)</pre><p>Finally, the <code>train</code> loop of SDDP just applies the forward and backward passes iteratively, followed by a final simulation to compute the upper bound confidence interval.</p><pre><code class="language-julia">function train(
+    model::LinearPolicyGraph;
+    iteration_limit::Int,
+    replications::Int,
+)
+    for i = 1:iteration_limit
+        println(&quot;Starting iteration $(i)&quot;)
+        outgoing_states, simulation = forward_pass(model)
+        lower_bound = backward_pass(model, outgoing_states)
+        println(&quot;| Finished iteration&quot;)
+        println(&quot;| | simulation = &quot;, simulation)
+        println(&quot;| | lower_bound = &quot;, lower_bound)
+    end
+    simulate(model; replications = replications)
+    return
+end</code></pre><pre class="documenter-example-output">train (generic function with 1 method)</pre><h3 id="Example"><a class="docs-heading-anchor" href="#Example">Example</a><a id="Example-1"></a><a class="docs-heading-anchor-permalink" href="#Example" title="Permalink"></a></h3><p>First, create the model using the <code>subproblem_builder</code> function we defined earlier:</p><pre><code class="language-julia">model = LinearPolicyGraph(
+    subproblem_builder;
+    stages = 3,
+    lower_bound = 0.0,
+    optimizer = GLPK.Optimizer,
+)</code></pre><pre class="documenter-example-output">A policy graph with 3 nodes</pre><p>Then, train a policy:</p><pre><code class="language-julia">train(model; iteration_limit = 3, replications = 100)</code></pre><pre class="documenter-example-output">Starting iteration 1
+| Forward Pass
+| | Visiting node 1
+| |  ω = 100.0
+| |  x = Dict(:volume=&gt;200.0)
+| |  x′ = Dict(:volume=&gt;150.0)
+| |  C(x, u, ω) = 0.0
+| | Visiting node 2
+| |  ω = 50.0
+| |  x = Dict(:volume=&gt;150.0)
+| |  x′ = Dict(:volume=&gt;50.0)
+| |  C(x, u, ω) = 0.0
+| | Visiting node 3
+| |  ω = 100.0
+| |  x = Dict(:volume=&gt;50.0)
+| |  x′ = Dict(:volume=&gt;0.0)
+| |  C(x, u, ω) = 0.0
+| Backward pass
+| | Visiting node 3
+| | | Solving ω = 0.0
+| | |  y = 15000.0
+| | |  λ = Dict(:volume=&gt;-150.0)
+| | | Solving ω = 50.0
+| | |  y = 7500.0
+| | |  λ = Dict(:volume=&gt;-150.0)
+| | | Solving ω = 100.0
+| | |  y = 0.0
+| | |  λ = Dict(:volume=&gt;-150.0)
+| | | Adding cut : 150 volume_out + cost_to_go ≥ 15000.0
+| | Visiting node 2
+| | | Solving ω = 0.0
+| | |  y = 10000.0
+| | |  λ = Dict(:volume=&gt;-100.0)
+| | | Solving ω = 50.0
+| | |  y = 5000.0
+| | |  λ = Dict(:volume=&gt;-100.0)
+| | | Solving ω = 100.0
+| | |  y = 0.0
+| | |  λ = Dict(:volume=&gt;-100.0)
+| | | Adding cut : 99.99999999999999 volume_out + cost_to_go ≥ 20000.0
+| Finished iteration
+| | simulation = 0.0
+| | lower_bound = 5000.000000000002
+Starting iteration 2
+| Forward Pass
+| | Visiting node 1
+| |  ω = 0.0
+| |  x = Dict(:volume=&gt;200.0)
+| |  x′ = Dict(:volume=&gt;200.0)
+| |  C(x, u, ω) = 7500.000000000002
+| | Visiting node 2
+| |  ω = 100.0
+| |  x = Dict(:volume=&gt;200.0)
+| |  x′ = Dict(:volume=&gt;100.0)
+| |  C(x, u, ω) = 0.0
+| | Visiting node 3
+| |  ω = 0.0
+| |  x = Dict(:volume=&gt;100.0)
+| |  x′ = Dict(:volume=&gt;0.0)
+| |  C(x, u, ω) = 7500.0
+| Backward pass
+| | Visiting node 3
+| | | Solving ω = 0.0
+| | |  y = 7500.0
+| | |  λ = Dict(:volume=&gt;-150.0)
+| | | Solving ω = 50.0
+| | |  y = 0.0
+| | |  λ = Dict(:volume=&gt;-150.0)
+| | | Solving ω = 100.0
+| | |  y = 0.0
+| | |  λ = Dict(:volume=&gt;0.0)
+| | | Adding cut : 100 volume_out + cost_to_go ≥ 12500.0
+| | Visiting node 2
+| | | Solving ω = 0.0
+| | |  y = 7499.999999999997
+| | |  λ = Dict(:volume=&gt;-100.0)
+| | | Solving ω = 50.0
+| | |  y = 2499.9999999999973
+| | |  λ = Dict(:volume=&gt;-100.0)
+| | | Solving ω = 100.0
+| | |  y = 0.0
+| | |  λ = Dict(:volume=&gt;0.0)
+| | | Adding cut : 66.66666666666666 volume_out + cost_to_go ≥ 16666.666666666664
+| Finished iteration
+| | simulation = 15000.000000000002
+| | lower_bound = 8333.333333333332
+Starting iteration 3
+| Forward Pass
+| | Visiting node 1
+| |  ω = 100.0
+| |  x = Dict(:volume=&gt;200.0)
+| |  x′ = Dict(:volume=&gt;200.0)
+| |  C(x, u, ω) = 2500.0
+| | Visiting node 2
+| |  ω = 100.0
+| |  x = Dict(:volume=&gt;200.0)
+| |  x′ = Dict(:volume=&gt;125.0)
+| |  C(x, u, ω) = 0.0
+| | Visiting node 3
+| |  ω = 0.0
+| |  x = Dict(:volume=&gt;125.0)
+| |  x′ = Dict(:volume=&gt;0.0)
+| |  C(x, u, ω) = 3750.0
+| Backward pass
+| | Visiting node 3
+| | | Solving ω = 0.0
+| | |  y = 3750.0
+| | |  λ = Dict(:volume=&gt;-150.0)
+| | | Solving ω = 50.0
+| | |  y = 0.0
+| | |  λ = Dict(:volume=&gt;0.0)
+| | | Solving ω = 100.0
+| | |  y = 0.0
+| | |  λ = Dict(:volume=&gt;0.0)
+| | | Adding cut : 50 volume_out + cost_to_go ≥ 7500.0
+| | Visiting node 2
+| | | Solving ω = 0.0
+| | |  y = 7500.0
+| | |  λ = Dict(:volume=&gt;-100.0)
+| | | Solving ω = 50.0
+| | |  y = 2500.0
+| | |  λ = Dict(:volume=&gt;-100.0)
+| | | Solving ω = 100.0
+| | |  y = 0.0
+| | |  λ = Dict(:volume=&gt;0.0)
+| | | Adding cut : 66.66666666666666 volume_out + cost_to_go ≥ 16666.666666666664
+| Finished iteration
+| | simulation = 6250.0
+| | lower_bound = 8333.333333333332
+Upper bound = 8800.0 ± 927.8295297971694</pre><p>Success! We solved a multistage stochastic program using stochastic dual dynamic programming.</p><hr/><p><em>This page was generated using <a href="https://github.com/fredrikekre/Literate.jl">Literate.jl</a>.</em></p></article><nav class="docs-footer"><a class="docs-footer-prevpage" href="../13_integrality/">« Advanced III: integrality</a><a class="docs-footer-nextpage" href="../../guides/add_a_multidimensional_state_variable/">Add a multi-dimensional state variable »</a><div class="flexbox-break"></div><p class="footer-message">Powered by <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> and the <a href="https://julialang.org/">Julia Programming Language</a>.</p></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> on <span class="colophon-date" title="Wednesday 6 January 2021 08:11">Wednesday 6 January 2021</span>. Using Julia version 1.0.5.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>
