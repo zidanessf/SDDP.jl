@@ -44,16 +44,16 @@ No problems detected
 Solver: serial mode
 
  Iteration    Simulation       Bound         Time (s)    Proc. ID   # Solves
-        1    7.500000e+03   5.000000e+03   1.074901e-01          1         12
-        2    5.000000e+03   8.333333e+03   1.082442e-01          1         24
-        3    1.500000e+04   8.333333e+03   1.087680e-01          1         36
-        4    2.000000e+04   8.333333e+03   1.093411e-01          1         48
-        5    7.500000e+03   8.333333e+03   1.098471e-01          1         60
-        6    1.000000e+04   8.333333e+03   1.103141e-01          1         72
-        7    1.750000e+04   8.333333e+03   1.107602e-01          1         84
-        8    1.000000e+04   8.333333e+03   1.112270e-01          1         96
-        9    7.500000e+03   8.333333e+03   1.117191e-01          1        108
-       10    7.500000e+03   8.333333e+03   1.121840e-01          1        120
+        1    1.500000e+04   5.000000e+03   6.534410e-02          1         12
+        2    1.500000e+04   8.333333e+03   6.569195e-02          1         24
+        3    1.250000e+04   8.333333e+03   6.598997e-02          1         36
+        4    1.250000e+04   8.333333e+03   6.627202e-02          1         48
+        5    7.500000e+03   8.333333e+03   6.654692e-02          1         60
+        6    1.750000e+04   8.333333e+03   6.682801e-02          1         72
+        7    7.500000e+03   8.333333e+03   6.711102e-02          1         84
+        8    1.250000e+04   8.333333e+03   6.739306e-02          1         96
+        9    7.500000e+03   8.333333e+03   6.767297e-02          1        108
+       10    1.000000e+04   8.333333e+03   6.795597e-02          1        120
 
 Terminating training with status: iteration_limit
 ------------------------------------------------------------------------------</pre><p>We can also simulate the policy. Note that this time, the simulation is stochastic. One common approach to quantify the quality of the policy is to perform  a Monte Carlo simulation and then form a confidence interval for the expected cost. This confidence interval is an estimate for the upper bound.</p><p>In addition to the confidence interval, we can calculate the lower bound using <a href="../../apireference/#SDDP.calculate_bound"><code>SDDP.calculate_bound</code></a>.</p><pre><code class="language-julia">using Statistics
@@ -69,7 +69,7 @@ objective_values = [
 ci = round(1.96 * std(objective_values) / sqrt(500), digits = 2)
 
 println(&quot;Confidence interval: &quot;, μ, &quot; ± &quot;, ci)
-println(&quot;Lower bound: &quot;, round(SDDP.calculate_bound(model), digits = 2))</code></pre><pre class="documenter-example-output">Confidence interval: 8515.0 ± 409.27
+println(&quot;Lower bound: &quot;, round(SDDP.calculate_bound(model), digits = 2))</code></pre><pre class="documenter-example-output">Confidence interval: 8415.0 ± 422.39
 Lower bound: 8333.33</pre><p>In addition to simulating the primal values of variables, we can also pass <code>SDDP.jl</code> custom recorder functions. Each of these functions takes one argument, the JuMP subproblem, and returns anything you can compute. For example, the dual of the demand constraint (which we named <code>demand_constraint</code>) corresponds to the price we should charge for electricity, since it represents the cost of each additional unit of demand. To calculate this, we can go</p><pre><code class="language-julia">simulations = SDDP.simulate(
     model,
     1,
@@ -81,4 +81,4 @@ Lower bound: 8333.33</pre><p>In addition to simulating the primal values of vari
 prices = [stage[:price] for stage in simulations[1]]</code></pre><pre class="documenter-example-output">3-element Array{Float64,1}:
   50.0
  100.0
-  -0.0</pre><p>This concludes our second tutorial for <code>SDDP.jl</code>. In the next tutorial, <a href="../03_objective_uncertainty/#Basic-III:-objective-uncertainty">Basic III: objective uncertainty</a>, we extend the uncertainty to the fuel cost.</p><hr/><p><em>This page was generated using <a href="https://github.com/fredrikekre/Literate.jl">Literate.jl</a>.</em></p></article><nav class="docs-footer"><a class="docs-footer-prevpage" href="../01_first_steps/">« Basic I: first steps</a><a class="docs-footer-nextpage" href="../03_objective_uncertainty/">Basic III: objective uncertainty »</a><div class="flexbox-break"></div><p class="footer-message">Powered by <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> and the <a href="https://julialang.org/">Julia Programming Language</a>.</p></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> on <span class="colophon-date" title="Thursday 7 January 2021 03:28">Thursday 7 January 2021</span>. Using Julia version 1.0.5.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>
+  -0.0</pre><p>This concludes our second tutorial for <code>SDDP.jl</code>. In the next tutorial, <a href="../03_objective_uncertainty/#Basic-III:-objective-uncertainty">Basic III: objective uncertainty</a>, we extend the uncertainty to the fuel cost.</p><hr/><p><em>This page was generated using <a href="https://github.com/fredrikekre/Literate.jl">Literate.jl</a>.</em></p></article><nav class="docs-footer"><a class="docs-footer-prevpage" href="../01_first_steps/">« Basic I: first steps</a><a class="docs-footer-nextpage" href="../03_objective_uncertainty/">Basic III: objective uncertainty »</a><div class="flexbox-break"></div><p class="footer-message">Powered by <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> and the <a href="https://julialang.org/">Julia Programming Language</a>.</p></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> on <span class="colophon-date" title="Thursday 7 January 2021 03:51">Thursday 7 January 2021</span>. Using Julia version 1.0.5.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>
