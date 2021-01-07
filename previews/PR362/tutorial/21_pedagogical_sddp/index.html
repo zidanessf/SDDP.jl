@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en"><head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/><title>Expert I: pedagogical SDDP · SDDP.jl</title><link href="https://fonts.googleapis.com/css?family=Lato|Roboto+Mono" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.0/css/fontawesome.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.0/css/solid.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.0/css/brands.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.11.1/katex.min.css" rel="stylesheet" type="text/css"/><script>documenterBaseURL="../.."</script><script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js" data-main="../../assets/documenter.js"></script><script src="../../siteinfo.js"></script><script src="../../../versions.js"></script><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../../assets/themes/documenter-dark.css" data-theme-name="documenter-dark" data-theme-primary-dark/><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../../assets/themes/documenter-light.css" data-theme-name="documenter-light" data-theme-primary/><script src="../../assets/themeswap.js"></script></head><body><div id="documenter"><nav class="docs-sidebar"><a class="docs-logo" href="../../"><img src="../../assets/logo.png" alt="SDDP.jl logo"/></a><div class="docs-package-name"><span class="docs-autofit">SDDP.jl</span></div><form class="docs-search" action="../../search/"><input class="docs-search-query" id="documenter-search-query" name="q" type="text" placeholder="Search docs"/></form><ul class="docs-menu"><li><a class="tocitem" href="../../">Home</a></li><li><input class="collapse-toggle" id="menuitem-2" type="checkbox" checked/><label class="tocitem" for="menuitem-2"><span class="docs-label">Tutorials</span><i class="docs-chevron"></i></label><ul class="collapsed"><li><a class="tocitem" href="../01_first_steps/">Basic I: first steps</a></li><li><a class="tocitem" href="../02_adding_uncertainty/">Basic II: adding uncertainty</a></li><li><a class="tocitem" href="../03_objective_uncertainty/">Basic III: objective uncertainty</a></li><li><a class="tocitem" href="../04_markov_uncertainty/">Basic IV: Markov uncertainty</a></li><li><a class="tocitem" href="../05_plotting/">Basic V: plotting</a></li><li><a class="tocitem" href="../06_warnings/">Basic VI: words of warning</a></li><li><a class="tocitem" href="../11_objective_states/">Advanced I: objective states</a></li><li><a class="tocitem" href="../12_belief_states/">Advanced II: belief states</a></li><li><a class="tocitem" href="../13_integrality/">Advanced III: integrality</a></li><li class="is-active"><a class="tocitem" href>Expert I: pedagogical SDDP</a><ul class="internal"><li><a class="tocitem" href="#Preliminaries:-background-theory"><span>Preliminaries: background theory</span></a></li><li><a class="tocitem" href="#Preliminaries:-Kelley&#39;s-cutting-plane-algorithm"><span>Preliminaries: Kelley&#39;s cutting plane algorithm</span></a></li><li><a class="tocitem" href="#Preliminaries:-approximating-the-cost-to-go-term"><span>Preliminaries: approximating the cost-to-go term</span></a></li><li><a class="tocitem" href="#Implementation:-modeling"><span>Implementation: modeling</span></a></li><li><a class="tocitem" href="#Implementation:-helpful-samplers"><span>Implementation: helpful samplers</span></a></li><li><a class="tocitem" href="#Implementation:-the-forward-pass"><span>Implementation: the forward pass</span></a></li><li><a class="tocitem" href="#Implementation:-the-backward-pass"><span>Implementation: the backward pass</span></a></li><li><a class="tocitem" href="#Implementation:-the-training-loop"><span>Implementation: the training loop</span></a></li><li><a class="tocitem" href="#Implementation:-evaluating-the-policy"><span>Implementation: evaluating the policy</span></a></li><li><a class="tocitem" href="#Example:-infinite-horizon"><span>Example: infinite horizon</span></a></li></ul></li></ul></li><li><input class="collapse-toggle" id="menuitem-3" type="checkbox"/><label class="tocitem" for="menuitem-3"><span class="docs-label">How-to guides</span><i class="docs-chevron"></i></label><ul class="collapsed"><li><a class="tocitem" href="../../guides/add_a_multidimensional_state_variable/">Add a multi-dimensional state variable</a></li><li><a class="tocitem" href="../../guides/add_a_risk_measure/">Add a risk measure</a></li><li><a class="tocitem" href="../../guides/add_multidimensional_noise_Terms/">Add multi-dimensional noise terms</a></li><li><a class="tocitem" href="../../guides/add_noise_in_the_constraint_matrix/">Add noise in the constraint matrix</a></li><li><a class="tocitem" href="../../guides/choose_a_stopping_rule/">Choose a stopping rule</a></li><li><a class="tocitem" href="../../guides/create_a_general_policy_graph/">Create a general policy graph</a></li><li><a class="tocitem" href="../../guides/debug_a_model/">Debug a model</a></li><li><a class="tocitem" href="../../guides/improve_computational_performance/">Improve computational performance</a></li><li><a class="tocitem" href="../../guides/simulate_using_a_different_sampling_scheme/">Simulate using a different sampling scheme</a></li><li><a class="tocitem" href="../../guides/upgrade_from_the_old_sddp/">Upgrade from the old SDDP.jl</a></li></ul></li><li><input class="collapse-toggle" id="menuitem-4" type="checkbox"/><label class="tocitem" for="menuitem-4"><span class="docs-label">Examples</span><i class="docs-chevron"></i></label><ul class="collapsed"><li><a class="tocitem" href="../../examples/simple_hydro_thermal/">Hydro-thermal scheduling</a></li><li><a class="tocitem" href="../../examples/the_farmers_problem/">The farmer&#39;s problem</a></li></ul></li><li><a class="tocitem" href="../../apireference/">API Reference</a></li></ul><div class="docs-version-selector field has-addons"><div class="control"><span class="docs-label button is-static is-size-7">Version</span></div><div class="docs-selector control is-expanded"><div class="select is-fullwidth is-size-7"><select id="documenter-version-selector"></select></div></div></div></nav><div class="docs-main"><header class="docs-navbar"><nav class="breadcrumb"><ul class="is-hidden-mobile"><li><a class="is-disabled">Tutorials</a></li><li class="is-active"><a href>Expert I: pedagogical SDDP</a></li></ul><ul class="is-hidden-tablet"><li class="is-active"><a href>Expert I: pedagogical SDDP</a></li></ul></nav><div class="docs-right"><a class="docs-edit-link" href="https://github.com/odow/SDDP.jl/blob/master/docs/src/tutorial/21_pedagogical_sddp.jl" title="Edit on GitHub"><span class="docs-icon fab"></span><span class="docs-label is-hidden-touch">Edit on GitHub</span></a><a class="docs-settings-button fas fa-cog" id="documenter-settings-button" href="#" title="Settings"></a><a class="docs-sidebar-button fa fa-bars is-hidden-desktop" id="documenter-sidebar-button" href="#"></a></div></header><article class="content" id="documenter-page"><h1 id="Expert-I:-pedagogical-SDDP"><a class="docs-heading-anchor" href="#Expert-I:-pedagogical-SDDP">Expert I: pedagogical SDDP</a><a id="Expert-I:-pedagogical-SDDP-1"></a><a class="docs-heading-anchor-permalink" href="#Expert-I:-pedagogical-SDDP" title="Permalink"></a></h1><p>In this tutorial we walk through a simplified implementation of stochastic dual dynamic programming to explain the key concepts.</p><p>For this implementation of SDDP, we&#39;re going to try and keep things simple. This is very much a &quot;vanilla&quot; version of SDDP; it doesn&#39;t have (m)any fancy computational tricks that you need to code a performant or stable version that will work on realistic instances. However, it will work on arbitrary policy graphs, including those with cycles such as infinite horizon problems!</p><div class="admonition is-warning"><header class="admonition-header">Warning</header><div class="admonition-body"><p>In the interests of brevity, there is minimal error checking. Think about all the different ways you could break the code!</p></div></div><p>This tutorial uses the following packages. For clarity, we call <code>import PackageName</code> so that we must prefix <code>PackageName.</code> to all functions and structs provided by that package. Everything not prefixed is either part of base Julia, or we wrote it.</p><pre><code class="language-julia">import ForwardDiff
+<html lang="en"><head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/><title>Expert I: pedagogical SDDP · SDDP.jl</title><link href="https://fonts.googleapis.com/css?family=Lato|Roboto+Mono" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.0/css/fontawesome.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.0/css/solid.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.0/css/brands.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.11.1/katex.min.css" rel="stylesheet" type="text/css"/><script>documenterBaseURL="../.."</script><script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js" data-main="../../assets/documenter.js"></script><script src="../../siteinfo.js"></script><script src="../../../versions.js"></script><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../../assets/themes/documenter-dark.css" data-theme-name="documenter-dark" data-theme-primary-dark/><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../../assets/themes/documenter-light.css" data-theme-name="documenter-light" data-theme-primary/><script src="../../assets/themeswap.js"></script></head><body><div id="documenter"><nav class="docs-sidebar"><a class="docs-logo" href="../../"><img src="../../assets/logo.png" alt="SDDP.jl logo"/></a><div class="docs-package-name"><span class="docs-autofit">SDDP.jl</span></div><form class="docs-search" action="../../search/"><input class="docs-search-query" id="documenter-search-query" name="q" type="text" placeholder="Search docs"/></form><ul class="docs-menu"><li><a class="tocitem" href="../../">Home</a></li><li><input class="collapse-toggle" id="menuitem-2" type="checkbox" checked/><label class="tocitem" for="menuitem-2"><span class="docs-label">Tutorials</span><i class="docs-chevron"></i></label><ul class="collapsed"><li><a class="tocitem" href="../01_first_steps/">Basic I: first steps</a></li><li><a class="tocitem" href="../02_adding_uncertainty/">Basic II: adding uncertainty</a></li><li><a class="tocitem" href="../03_objective_uncertainty/">Basic III: objective uncertainty</a></li><li><a class="tocitem" href="../04_markov_uncertainty/">Basic IV: Markov uncertainty</a></li><li><a class="tocitem" href="../05_plotting/">Basic V: plotting</a></li><li><a class="tocitem" href="../06_warnings/">Basic VI: words of warning</a></li><li><a class="tocitem" href="../11_objective_states/">Advanced I: objective states</a></li><li><a class="tocitem" href="../12_belief_states/">Advanced II: belief states</a></li><li><a class="tocitem" href="../13_integrality/">Advanced III: integrality</a></li><li class="is-active"><a class="tocitem" href>Expert I: pedagogical SDDP</a><ul class="internal"><li><a class="tocitem" href="#Preliminaries:-background-theory"><span>Preliminaries: background theory</span></a></li><li><a class="tocitem" href="#Preliminaries:-Kelley&#39;s-cutting-plane-algorithm"><span>Preliminaries: Kelley&#39;s cutting plane algorithm</span></a></li><li><a class="tocitem" href="#Preliminaries:-approximating-the-cost-to-go-term"><span>Preliminaries: approximating the cost-to-go term</span></a></li><li><a class="tocitem" href="#Implementation:-modeling"><span>Implementation: modeling</span></a></li><li><a class="tocitem" href="#Implementation:-helpful-samplers"><span>Implementation: helpful samplers</span></a></li><li><a class="tocitem" href="#Implementation:-the-forward-pass"><span>Implementation: the forward pass</span></a></li><li><a class="tocitem" href="#Implementation:-the-backward-pass"><span>Implementation: the backward pass</span></a></li><li><a class="tocitem" href="#Implementation:-bounds"><span>Implementation: bounds</span></a></li><li><a class="tocitem" href="#Implementation:-the-training-loop"><span>Implementation: the training loop</span></a></li><li><a class="tocitem" href="#Implementation:-evaluating-the-policy"><span>Implementation: evaluating the policy</span></a></li><li><a class="tocitem" href="#Example:-infinite-horizon"><span>Example: infinite horizon</span></a></li></ul></li></ul></li><li><input class="collapse-toggle" id="menuitem-3" type="checkbox"/><label class="tocitem" for="menuitem-3"><span class="docs-label">How-to guides</span><i class="docs-chevron"></i></label><ul class="collapsed"><li><a class="tocitem" href="../../guides/add_a_multidimensional_state_variable/">Add a multi-dimensional state variable</a></li><li><a class="tocitem" href="../../guides/add_a_risk_measure/">Add a risk measure</a></li><li><a class="tocitem" href="../../guides/add_multidimensional_noise_Terms/">Add multi-dimensional noise terms</a></li><li><a class="tocitem" href="../../guides/add_noise_in_the_constraint_matrix/">Add noise in the constraint matrix</a></li><li><a class="tocitem" href="../../guides/choose_a_stopping_rule/">Choose a stopping rule</a></li><li><a class="tocitem" href="../../guides/create_a_general_policy_graph/">Create a general policy graph</a></li><li><a class="tocitem" href="../../guides/debug_a_model/">Debug a model</a></li><li><a class="tocitem" href="../../guides/improve_computational_performance/">Improve computational performance</a></li><li><a class="tocitem" href="../../guides/simulate_using_a_different_sampling_scheme/">Simulate using a different sampling scheme</a></li><li><a class="tocitem" href="../../guides/upgrade_from_the_old_sddp/">Upgrade from the old SDDP.jl</a></li></ul></li><li><input class="collapse-toggle" id="menuitem-4" type="checkbox"/><label class="tocitem" for="menuitem-4"><span class="docs-label">Examples</span><i class="docs-chevron"></i></label><ul class="collapsed"><li><a class="tocitem" href="../../examples/simple_hydro_thermal/">Hydro-thermal scheduling</a></li><li><a class="tocitem" href="../../examples/the_farmers_problem/">The farmer&#39;s problem</a></li></ul></li><li><a class="tocitem" href="../../apireference/">API Reference</a></li></ul><div class="docs-version-selector field has-addons"><div class="control"><span class="docs-label button is-static is-size-7">Version</span></div><div class="docs-selector control is-expanded"><div class="select is-fullwidth is-size-7"><select id="documenter-version-selector"></select></div></div></div></nav><div class="docs-main"><header class="docs-navbar"><nav class="breadcrumb"><ul class="is-hidden-mobile"><li><a class="is-disabled">Tutorials</a></li><li class="is-active"><a href>Expert I: pedagogical SDDP</a></li></ul><ul class="is-hidden-tablet"><li class="is-active"><a href>Expert I: pedagogical SDDP</a></li></ul></nav><div class="docs-right"><a class="docs-edit-link" href="https://github.com/odow/SDDP.jl/blob/master/docs/src/tutorial/21_pedagogical_sddp.jl" title="Edit on GitHub"><span class="docs-icon fab"></span><span class="docs-label is-hidden-touch">Edit on GitHub</span></a><a class="docs-settings-button fas fa-cog" id="documenter-settings-button" href="#" title="Settings"></a><a class="docs-sidebar-button fa fa-bars is-hidden-desktop" id="documenter-sidebar-button" href="#"></a></div></header><article class="content" id="documenter-page"><h1 id="Expert-I:-pedagogical-SDDP"><a class="docs-heading-anchor" href="#Expert-I:-pedagogical-SDDP">Expert I: pedagogical SDDP</a><a id="Expert-I:-pedagogical-SDDP-1"></a><a class="docs-heading-anchor-permalink" href="#Expert-I:-pedagogical-SDDP" title="Permalink"></a></h1><p>In this tutorial we walk through a simplified implementation of stochastic dual dynamic programming to explain the key concepts.</p><p>For this implementation of SDDP, we&#39;re going to try and keep things simple. This is very much a &quot;vanilla&quot; version of SDDP; it doesn&#39;t have (m)any fancy computational tricks that you need to code a performant or stable version that will work on realistic instances. However, it will work on arbitrary policy graphs, including those with cycles such as infinite horizon problems!</p><div class="admonition is-warning"><header class="admonition-header">Warning</header><div class="admonition-body"><p>In the interests of brevity, there is minimal error checking. Think about all the different ways you could break the code!</p></div></div><p>This tutorial uses the following packages. For clarity, we call <code>import PackageName</code> so that we must prefix <code>PackageName.</code> to all functions and structs provided by that package. Everything not prefixed is either part of base Julia, or we wrote it.</p><pre><code class="language-julia">import ForwardDiff
 import GLPK
 import JuMP
 import Statistics</code></pre><h2 id="Preliminaries:-background-theory"><a class="docs-heading-anchor" href="#Preliminaries:-background-theory">Preliminaries: background theory</a><a id="Preliminaries:-background-theory-1"></a><a class="docs-heading-anchor-permalink" href="#Preliminaries:-background-theory" title="Permalink"></a></h2><div class="admonition is-success"><header class="admonition-header">Tip</header><div class="admonition-body"><p>This section is copied verbatim from <a href="../01_first_steps/#Basic-I:-first-steps">Basic I: first steps</a>. If it&#39;s familiar, skip to <a href="#Preliminaries:-Kelley&#39;s-cutting-plane-algorithm">Preliminaries: Kelley&#39;s cutting plane algorithm</a>.</p></div></div><p>Multistage stochastic programming is complicated, and the literature has not settled upon standard naming conventions, so we must begin with some unavoidable theory and notation.</p><p>A multistage stochastic program can be modeled by a <strong>policy graph</strong>. A policy graph is a graph with nodes and arcs. The simplest type of policy graph is a linear graph. Here&#39;s a linear graph with three nodes:</p><p><img src="../../assets/stochastic_linear_policy_graph.png" alt="Linear policy graph"/></p><p>In addition to nodes 1, 2, and 3, there is also a root node (0), and three arcs. Each arc has an origin node and a destination node, like <code>0 =&gt; 1</code>, and a corresponding probability of transitioning from the origin to the destination. For now, we can forget about the arc probabilities, because they are all 1.0. The squiggly lines coming into each node represent random variables; we&#39;ll talk about them below.</p><p>We denote the set of nodes by <span>$\mathcal{N}$</span>, the root node by <span>$R$</span>, and the probability of transitioning from node <span>$i$</span> to node <span>$j$</span> by <span>$p_{ij}$</span>. (If no arc exists, then <span>$p_{ij} = 0$</span>). We define the set of successors of node <span>$i$</span> as <span>$i^+ = \{j \in N | P(i =&gt; j) &gt; 0\}$</span>.</p><p>Each square node in the graph corresponds to a place at which the agent makes a decision, and we call moments in time at which the agent makes a decision <strong>stages</strong>. By convention, we try to draw policy graphs from left-to-right, with the stages as columns. There can be more than one node in a stage! Here&#39;s an example, taken from the paper <a href="https://doi.org/10.1002/net.21932">Dowson (2020)</a>:</p><p><img src="../../assets/powder_policy_graph.png" alt="Markovian policy graph"/></p><p>The columns represent time, and the rows represent different states of the world. In this case, the rows represent different prices that milk can be sold for at the end of each year. You can think of the nodes as forming a Markov chain, therefore, we call problems with a structure like this <strong>Markovian</strong> <strong>policy graphs</strong>. Moreover, note that policy graphs can have cycles! This allows them to model infinite horizon problems.</p><p>A common feature of multistage stochastic optimization problems is that they model an agent controlling a system over time. This system can be described by three types of variables.</p><ol><li><p><strong>State</strong> variables track a property of the system over time.</p><p>Each node has an associated <em>incoming</em> state variable (the value of the state at the start of the node), and an <em>outgoing</em> state variable (the value of the state at the end of the node).</p><p>Examples of state variables include the volume of water in a reservoir, the number of units of inventory in a warehouse, or the spatial position of a moving vehicle.</p><p>Because state variables track the system over time, each node must have the same set of state variables.</p><p>We denote state variables by the letter <span>$x$</span> for the incoming state variable and <span>$x^\prime$</span> for the outgoing state variable.</p></li><li><p><strong>Control</strong> variables are actions taken (implicitly or explicitly) by the agent within a node which modify the state variables.</p><p>Examples of control variables include releases of water from the reservoir, sales or purchasing decisions, and acceleration or braking of the vehicle.</p><p>Control variables are local to a node <span>$i$</span>, and they can differ between nodes. For example, some control variables may be available within certain nodes.</p><p>We denote control variables by the letter <span>$u$</span>.</p></li><li><p><strong>Random</strong> variables are finite, discrete, exogenous random variables that the agent observes at the start of a node, before the control variables are decided.</p><p>Examples of random variables include rainfall inflow into a reservoir, probalistic perishing of inventory, and steering errors in a vehicle.</p><p>Random variables are local to a node <span>$i$</span>, and they can differ between nodes. For example, some nodes may have random variables, and some nodes may not.</p><p>We denote random variables by the Greek letter <span>$\omega$</span> and the sample space from which they are drawn by <span>$\Omega_i$</span>. The probability of sampling <span>$\omega$</span> is denoted <span>$p_{\omega}$</span> for simplicity.</p></li></ol><p>In a node <span>$i$</span>, the three variables are related by a <strong>transition function</strong>, which maps the incoming state, the controls, and the random variables to the outgoing state as follows: <span>$x^\prime = T_i(x, u, \omega)$</span>.</p><p>As a result of entering a node <span>$i$</span> with the incoming state <span>$x$</span>, observing random variable <span>$\omega$</span>, and choosing control <span>$u$</span>, the agent incurs a cost <span>$C_i(x, u, \omega)$</span>. (If the agent is a maximizer, this can be a profit, or a negative cost.) We call <span>$C_i$</span> the <strong>stage objective</strong>.</p><p>To choose their control variables in node <span>$i$</span>, the agent uses a <strong>decision</strong> <strong>rule</strong> <span>$u = \pi_i(x, \omega)$</span>, which is a function that maps the incoming state variable and observation of the random variable to a control <span>$u$</span>. This control must satisfy some feasibilty requirements <span>$u \in U_i(x, \omega)$</span>.</p><p>The set of decision rules, with one element for each node in the policy graph, is called a <strong>policy</strong>.</p><p>The goal of the agent is to find a policy that minimizes the expected cost of starting at the root node with some initial condition <span>$x_R$</span>, and proceeding from node to node along the probabilistic arcs until they reach a node with no outgoing arcs.</p><p class="math-container">\[\min_{\pi} \mathbb{E}_{i \in R^+, \omega \in \Omega_i}[V_i^\pi(x_R, \omega)]\]</p><p>where</p><p class="math-container">\[V_i^\pi(x, \omega) = C_i(x, u, \omega) + \mathbb{E}_{j \in i^+, \varphi \in \Omega_j}[V_j(x^\prime, \varphi)]\]</p><p>where <span>$u = \pi_i(x, \omega) \in U_i(x, \omega)$</span>, and <span>$x^\prime = T_i(x, u, \omega)$</span>.</p><p>The expectations are a bit complicated, but they are equivalent to:</p><p class="math-container">\[\mathbb{E}_{j \in i^+, \varphi \in \Omega_j}[V_j(x^\prime, \varphi)] = \sum\limits_{j \in i^+} p_{ij} \left[\sum\limits_{\varphi \in \Omega_j} p_{\varphi}\left[V_j(x^\prime, \varphi)\right]\right]\]</p><p>An optimal policy is the set of decision rules that the agent can use to make these decisions and achieve the smallest expected cost.</p><p>Often, computing the cost of a policy is intractable due to the large number of nodes or possible realizations of the random variables. Instead, we can evaluate the policy using a Monte Carlo simulation. Each replicate of the simulation starts at the root node and probabilistically walks along the arcs of the policy graph until it reaches a node with not outgoing arcs. The cost of a replicate is the sum of the costs incurred at each node that was visited.</p><h3 id="Dynamic-programming-and-subproblems"><a class="docs-heading-anchor" href="#Dynamic-programming-and-subproblems">Dynamic programming and subproblems</a><a id="Dynamic-programming-and-subproblems-1"></a><a class="docs-heading-anchor-permalink" href="#Dynamic-programming-and-subproblems" title="Permalink"></a></h3><p>Now that we have formulated our problem, we need some ways of computing optimal decision rules. One way is to just use a heuristic like &quot;choose a control randomly from the set of feasible controls.&quot; However, such a policy is unlikely to be optimal.</p><p>One way of obtaining an optimal policy is to use Bellman&#39;s principle of optimality, a.k.a Dynamic Programming, and define a recursive <strong>subproblem</strong> as follows:</p><p class="math-container">\[\begin{aligned}
@@ -199,9 +199,9 @@ Arcs:
     error(&quot;We should never get here because P should sum to 1.0.&quot;)
 end</code></pre><pre class="documenter-example-output">sample_uncertainty (generic function with 1 method)</pre><p>You should be able to work out what is going on. <code>rand()</code> samples a uniform random variable in <code>[0, 1)</code>. For example:</p><pre><code class="language-julia">for _ = 1:3
     println(&quot;ω = &quot;, sample_uncertainty(model.nodes[1].uncertainty))
-end</code></pre><pre class="documenter-example-output">ω = 100.0
-ω = 100.0
-ω = 0.0</pre><p>It&#39;s also going to be useful to define a function that generates a random walk through the nodes of the graph:</p><pre><code class="language-julia">function sample_next_node(model::PolicyGraph, current::Int)
+end</code></pre><pre class="documenter-example-output">ω = 50.0
+ω = 0.0
+ω = 50.0</pre><p>It&#39;s also going to be useful to define a function that generates a random walk through the nodes of the graph:</p><pre><code class="language-julia">function sample_next_node(model::PolicyGraph, current::Int)
     r = rand()
     for (to, probability) in model.arcs[current]
         r -= probability
@@ -277,10 +277,10 @@ end</code></pre><pre class="documenter-example-output">forward_pass (generic fun
 | | | x′ = Dict(:volume=&gt;50.0)
 | | | C(x, u, ω) = 0.0
 | | Visiting node 2
-| | | ω = 100.0
+| | | ω = 50.0
 | | | x = Dict(:volume=&gt;50.0)
 | | | x′ = Dict(:volume=&gt;0.0)
-| | | C(x, u, ω) = 0.0
+| | | C(x, u, ω) = 5000.0
 | | Visiting node 3
 | | | ω = 100.0
 | | | x = Dict(:volume=&gt;0.0)
@@ -325,24 +325,23 @@ end</code></pre><pre class="documenter-example-output">forward_pass (generic fun
                     k =&gt; JuMP.reduced_cost(v.in) for (k, v) in next_node.states
                 )
                 println(io, &quot;| | | | dVdx′ = &quot;, dVdx)
-                cut_expression += P_ij * pφ * JuMP.@expression(
+                cut_expression += JuMP.@expression(
                     node.subproblem,
-                    V + sum(
-                        dVdx[k] * (x.out - outgoing_states[k])
-                        for (k, x) in node.states
+                    P_ij * pφ * (
+                        V + sum(
+                            dVdx[k] * (x.out - outgoing_states[k])
+                            for (k, x) in node.states
+                        )
                     ),
                 )
             end
         end
-        # And then refine the cost-to-go variable by adding a cut that is the
-        # expectation of the cuts computed in the step above.
-        c = JuMP.@constraint(
-            node.subproblem, node.cost_to_go &gt;= cut_expression
-        )
+        # And then refine the cost-to-go variable by adding the cut:
+        c = JuMP.@constraint(node.subproblem, node.cost_to_go &gt;= cut_expression)
         println(io, &quot;| | | Adding cut : &quot;, c)
     end
     return nothing
-end</code></pre><pre class="documenter-example-output">backward_pass (generic function with 2 methods)</pre><h2 id="Implementation:-the-training-loop"><a class="docs-heading-anchor" href="#Implementation:-the-training-loop">Implementation: the training loop</a><a id="Implementation:-the-training-loop-1"></a><a class="docs-heading-anchor-permalink" href="#Implementation:-the-training-loop" title="Permalink"></a></h2><h3 id="Lower-bounds"><a class="docs-heading-anchor" href="#Lower-bounds">Lower bounds</a><a id="Lower-bounds-1"></a><a class="docs-heading-anchor-permalink" href="#Lower-bounds" title="Permalink"></a></h3><p>Recall from Kelley&#39;s that we can obtain a lower bound for <span>$f(x^*)$</span> be evaluating <span>$f^K$</span>. The analagous lower bound for a multistage stochastic program is:</p><p class="math-container">\[\mathbb{E}_{i \in R^+, \omega \in \Omega_i}[V_i^K(x_R, \omega)] \le \min_{\pi} \mathbb{E}_{i \in R^+, \omega \in \Omega_i}[V_i^\pi(x_R, \omega)]\]</p><p>Here&#39;s how we compute the lower bound:</p><pre><code class="language-julia">function lower_bound(model::PolicyGraph)
+end</code></pre><pre class="documenter-example-output">backward_pass (generic function with 2 methods)</pre><h2 id="Implementation:-bounds"><a class="docs-heading-anchor" href="#Implementation:-bounds">Implementation: bounds</a><a id="Implementation:-bounds-1"></a><a class="docs-heading-anchor-permalink" href="#Implementation:-bounds" title="Permalink"></a></h2><h3 id="Lower-bounds"><a class="docs-heading-anchor" href="#Lower-bounds">Lower bounds</a><a id="Lower-bounds-1"></a><a class="docs-heading-anchor-permalink" href="#Lower-bounds" title="Permalink"></a></h3><p>Recall from Kelley&#39;s that we can obtain a lower bound for <span>$f(x^*)$</span> be evaluating <span>$f^K$</span>. The analagous lower bound for a multistage stochastic program is:</p><p class="math-container">\[\mathbb{E}_{i \in R^+, \omega \in \Omega_i}[V_i^K(x_R, \omega)] \le \min_{\pi} \mathbb{E}_{i \in R^+, \omega \in \Omega_i}[V_i^\pi(x_R, \omega)]\]</p><p>Here&#39;s how we compute the lower bound:</p><pre><code class="language-julia">function lower_bound(model::PolicyGraph)
     node = model.nodes[1]
     bound = 0.0
     for (p, ω) in zip(node.uncertainty.P, node.uncertainty.Ω)
@@ -358,7 +357,7 @@ end</code></pre><pre class="documenter-example-output">lower_bound (generic func
     μ  = Statistics.mean(z)
     tσ = 1.96 * Statistics.std(z) / sqrt(replications)
     return μ, tσ
-end</code></pre><pre class="documenter-example-output">upper_bound (generic function with 1 method)</pre><div class="admonition is-info"><header class="admonition-header">Note</header><div class="admonition-body"><p>The width of the confidence interval is incorrect if there are cycles in the graph, because the distribution of simulation costs <code>z</code> is not symmetric. The mean is correct, however.</p></div></div><h3 id="Training"><a class="docs-heading-anchor" href="#Training">Training</a><a id="Training-1"></a><a class="docs-heading-anchor-permalink" href="#Training" title="Permalink"></a></h3><p>The <code>train</code> loop of SDDP just applies the forward and backward passes iteratively, followed by a final simulation to compute the upper bound confidence interval:</p><pre><code class="language-julia">function train(
+end</code></pre><pre class="documenter-example-output">upper_bound (generic function with 1 method)</pre><div class="admonition is-info"><header class="admonition-header">Note</header><div class="admonition-body"><p>The width of the confidence interval is incorrect if there are cycles in the graph, because the distribution of simulation costs <code>z</code> is not symmetric. The mean is correct, however.</p></div></div><h2 id="Implementation:-the-training-loop"><a class="docs-heading-anchor" href="#Implementation:-the-training-loop">Implementation: the training loop</a><a id="Implementation:-the-training-loop-1"></a><a class="docs-heading-anchor-permalink" href="#Implementation:-the-training-loop" title="Permalink"></a></h2><p>The <code>train</code> loop of SDDP just applies the forward and backward passes iteratively, followed by a final simulation to compute the upper bound confidence interval:</p><pre><code class="language-julia">function train(
     model::PolicyGraph;
     iteration_limit::Int,
     replications::Int,
@@ -377,18 +376,18 @@ end</code></pre><pre class="documenter-example-output">upper_bound (generic func
 end</code></pre><pre class="documenter-example-output">train (generic function with 1 method)</pre><p>Using our <code>model</code> we defined earlier, we can go:</p><pre><code class="language-julia">train(model; iteration_limit = 3, replications = 100)</code></pre><pre class="documenter-example-output">Starting iteration 1
 | Forward Pass
 | | Visiting node 1
-| | | ω = 0.0
+| | | ω = 100.0
 | | | x = Dict(:volume=&gt;200.0)
-| | | x′ = Dict(:volume=&gt;50.0)
+| | | x′ = Dict(:volume=&gt;150.0)
 | | | C(x, u, ω) = 0.0
 | | Visiting node 2
-| | | ω = 100.0
-| | | x = Dict(:volume=&gt;50.0)
-| | | x′ = Dict(:volume=&gt;0.0)
+| | | ω = 50.0
+| | | x = Dict(:volume=&gt;150.0)
+| | | x′ = Dict(:volume=&gt;50.0)
 | | | C(x, u, ω) = 0.0
 | | Visiting node 3
-| | | ω = 100.0
-| | | x = Dict(:volume=&gt;0.0)
+| | | ω = 50.0
+| | | x = Dict(:volume=&gt;50.0)
 | | | x′ = Dict(:volume=&gt;0.0)
 | | | C(x, u, ω) = 7500.0
 | Backward pass
@@ -396,40 +395,40 @@ end</code></pre><pre class="documenter-example-output">train (generic function w
 | | | Skipping node because the cost-to-go is 0
 | | Visiting node 2
 | | | Solving φ = 0.0
-| | | | V = 22500.0
-| | | | dVdx′ = Dict(:volume=&gt;-150.0)
-| | | Solving φ = 50.0
 | | | | V = 15000.0
 | | | | dVdx′ = Dict(:volume=&gt;-150.0)
-| | | Solving φ = 100.0
+| | | Solving φ = 50.0
 | | | | V = 7500.0
+| | | | dVdx′ = Dict(:volume=&gt;-150.0)
+| | | Solving φ = 100.0
+| | | | V = 0.0
 | | | | dVdx′ = Dict(:volume=&gt;-150.0)
 | | | Adding cut : 150 volume_out + cost_to_go ≥ 15000.0
 | | Visiting node 1
 | | | Solving φ = 0.0
-| | | | V = 22500.0
-| | | | dVdx′ = Dict(:volume=&gt;-150.0)
-| | | Solving φ = 50.0
-| | | | V = 15000.0
-| | | | dVdx′ = Dict(:volume=&gt;-150.0)
-| | | Solving φ = 100.0
 | | | | V = 10000.0
 | | | | dVdx′ = Dict(:volume=&gt;-100.0)
-| | | Adding cut : 133.33333333333331 volume_out + cost_to_go ≥ 22500.0
+| | | Solving φ = 50.0
+| | | | V = 5000.0
+| | | | dVdx′ = Dict(:volume=&gt;-100.0)
+| | | Solving φ = 100.0
+| | | | V = 0.0
+| | | | dVdx′ = Dict(:volume=&gt;-100.0)
+| | | Adding cut : 99.99999999999999 volume_out + cost_to_go ≥ 19999.999999999996
 | Finished iteration
-| | lower_bound = 3437.500000000001
+| | lower_bound = 4999.999999999999
 Starting iteration 2
 | Forward Pass
 | | Visiting node 1
 | | | ω = 50.0
 | | | x = Dict(:volume=&gt;200.0)
-| | | x′ = Dict(:volume=&gt;168.75)
-| | | C(x, u, ω) = 3437.500000000001
+| | | x′ = Dict(:volume=&gt;200.0)
+| | | C(x, u, ω) = 5000.0
 | | Visiting node 2
 | | | ω = 0.0
-| | | x = Dict(:volume=&gt;168.75)
+| | | x = Dict(:volume=&gt;200.0)
 | | | x′ = Dict(:volume=&gt;100.0)
-| | | C(x, u, ω) = 8125.0
+| | | C(x, u, ω) = 5000.0
 | | Visiting node 3
 | | | ω = 100.0
 | | | x = Dict(:volume=&gt;100.0)
@@ -451,33 +450,33 @@ Starting iteration 2
 | | | Adding cut : 100 volume_out + cost_to_go ≥ 12500.0
 | | Visiting node 1
 | | | Solving φ = 0.0
-| | | | V = 10625.0
+| | | | V = 7500.0
 | | | | dVdx′ = Dict(:volume=&gt;-100.0)
 | | | Solving φ = 50.0
-| | | | V = 5625.0
+| | | | V = 2500.0
 | | | | dVdx′ = Dict(:volume=&gt;-100.0)
 | | | Solving φ = 100.0
-| | | | V = 625.0
-| | | | dVdx′ = Dict(:volume=&gt;-100.0)
-| | | Adding cut : 99.99999999999999 volume_out + cost_to_go ≥ 22499.999999999996
+| | | | V = 0.0
+| | | | dVdx′ = Dict(:volume=&gt;0.0)
+| | | Adding cut : 66.66666666666666 volume_out + cost_to_go ≥ 16666.666666666664
 | Finished iteration
-| | lower_bound = 7500.0
+| | lower_bound = 8333.333333333332
 Starting iteration 3
 | Forward Pass
 | | Visiting node 1
-| | | ω = 0.0
+| | | ω = 100.0
 | | | x = Dict(:volume=&gt;200.0)
 | | | x′ = Dict(:volume=&gt;200.0)
-| | | C(x, u, ω) = 7500.0
+| | | C(x, u, ω) = 2500.0
 | | Visiting node 2
-| | | ω = 50.0
+| | | ω = 0.0
 | | | x = Dict(:volume=&gt;200.0)
 | | | x′ = Dict(:volume=&gt;125.0)
-| | | C(x, u, ω) = 2500.0
+| | | C(x, u, ω) = 7500.0
 | | Visiting node 3
-| | | ω = 100.0
+| | | ω = 50.0
 | | | x = Dict(:volume=&gt;125.0)
-| | | x′ = Dict(:volume=&gt;75.0)
+| | | x′ = Dict(:volume=&gt;25.0)
 | | | C(x, u, ω) = 0.0
 | Backward pass
 | | Visiting node 3
@@ -506,7 +505,7 @@ Starting iteration 3
 | | | Adding cut : 66.66666666666666 volume_out + cost_to_go ≥ 16666.666666666664
 | Finished iteration
 | | lower_bound = 8333.333333333332
-Upper bound = 8525.0 ± 900.2750365383575</pre><p>Success! We trained a policy for a finite horizon multistage stochastic program using stochastic dual dynamic programming.</p><h2 id="Implementation:-evaluating-the-policy"><a class="docs-heading-anchor" href="#Implementation:-evaluating-the-policy">Implementation: evaluating the policy</a><a id="Implementation:-evaluating-the-policy-1"></a><a class="docs-heading-anchor-permalink" href="#Implementation:-evaluating-the-policy" title="Permalink"></a></h2><p>A final step is the ability to evaluate the policy at a given point.</p><pre><code class="language-julia">function evaluate_policy(
+Upper bound = 7825.0 ± 901.7823596868726</pre><p>Success! We trained a policy for a finite horizon multistage stochastic program using stochastic dual dynamic programming.</p><h2 id="Implementation:-evaluating-the-policy"><a class="docs-heading-anchor" href="#Implementation:-evaluating-the-policy">Implementation: evaluating the policy</a><a id="Implementation:-evaluating-the-policy-1"></a><a class="docs-heading-anchor-permalink" href="#Implementation:-evaluating-the-policy" title="Permalink"></a></h2><p>A final step is the ability to evaluate the policy at a given point.</p><pre><code class="language-julia">function evaluate_policy(
     model::PolicyGraph;
     node::Int,
     incoming_state::Dict{Symbol,Float64},
@@ -554,20 +553,20 @@ Arcs:
 </pre><p>Then, train a policy:</p><pre><code class="language-julia">train(model; iteration_limit = 3, replications = 100)</code></pre><pre class="documenter-example-output">Starting iteration 1
 | Forward Pass
 | | Visiting node 1
-| | | ω = 0.0
+| | | ω = 50.0
 | | | x = Dict(:volume=&gt;200.0)
-| | | x′ = Dict(:volume=&gt;50.0)
+| | | x′ = Dict(:volume=&gt;100.0)
 | | | C(x, u, ω) = 0.0
 | | Visiting node 2
-| | | ω = 100.0
-| | | x = Dict(:volume=&gt;50.0)
-| | | x′ = Dict(:volume=&gt;0.0)
-| | | C(x, u, ω) = 0.0
-| | Visiting node 3
 | | | ω = 0.0
+| | | x = Dict(:volume=&gt;100.0)
+| | | x′ = Dict(:volume=&gt;0.0)
+| | | C(x, u, ω) = 5000.0
+| | Visiting node 3
+| | | ω = 100.0
 | | | x = Dict(:volume=&gt;0.0)
 | | | x′ = Dict(:volume=&gt;0.0)
-| | | C(x, u, ω) = 22500.0
+| | | C(x, u, ω) = 7500.0
 | Backward pass
 | | Visiting node 3
 | | | Solving φ = 0.0
@@ -593,17 +592,17 @@ Arcs:
 | | | Adding cut : 150 volume_out + cost_to_go ≥ 20000.0
 | | Visiting node 1
 | | | Solving φ = 0.0
-| | | | V = 27500.0
-| | | | dVdx′ = Dict(:volume=&gt;-150.0)
-| | | Solving φ = 50.0
 | | | | V = 20000.0
 | | | | dVdx′ = Dict(:volume=&gt;-150.0)
-| | | Solving φ = 100.0
+| | | Solving φ = 50.0
 | | | | V = 13333.333333333334
 | | | | dVdx′ = Dict(:volume=&gt;-100.0)
-| | | Adding cut : 133.33333333333331 volume_out + cost_to_go ≥ 26944.444444444445
+| | | Solving φ = 100.0
+| | | | V = 8333.333333333332
+| | | | dVdx′ = Dict(:volume=&gt;-100.0)
+| | | Adding cut : 116.66666666666666 volume_out + cost_to_go ≥ 25555.555555555555
 | Finished iteration
-| | lower_bound = 5277.777777777781
+| | lower_bound = 7222.222222222222
 Starting iteration 2
 | Forward Pass
 | | Visiting node 1
@@ -643,16 +642,16 @@ Starting iteration 2
 | | | Solving φ = 100.0
 | | | | V = 7500.0
 | | | | dVdx′ = Dict(:volume=&gt;-75.0)
-| | | Adding cut : 100 volume_out + cost_to_go ≥ 24999.999999999996
+| | | Adding cut : 100 volume_out + cost_to_go ≥ 25000.0
 | | Visiting node 1
 | | | Solving φ = 0.0
-| | | | V = 19999.999999999996
+| | | | V = 20000.0
 | | | | dVdx′ = Dict(:volume=&gt;-100.0)
 | | | Solving φ = 50.0
-| | | | V = 14999.999999999996
+| | | | V = 15000.000000000002
 | | | | dVdx′ = Dict(:volume=&gt;-100.0)
 | | | Solving φ = 100.0
-| | | | V = 9999.999999999998
+| | | | V = 10000.0
 | | | | dVdx′ = Dict(:volume=&gt;-100.0)
 | | | Adding cut : 99.99999999999999 volume_out + cost_to_go ≥ 35000.0
 | Finished iteration
@@ -660,18 +659,18 @@ Starting iteration 2
 Starting iteration 3
 | Forward Pass
 | | Visiting node 1
-| | | ω = 50.0
-| | | x = Dict(:volume=&gt;200.0)
-| | | x′ = Dict(:volume=&gt;200.0)
-| | | C(x, u, ω) = 5000.0
-| | Visiting node 2
 | | | ω = 0.0
 | | | x = Dict(:volume=&gt;200.0)
-| | | x′ = Dict(:volume=&gt;50.0)
+| | | x′ = Dict(:volume=&gt;200.0)
+| | | C(x, u, ω) = 7500.0
+| | Visiting node 2
+| | | ω = 100.0
+| | | x = Dict(:volume=&gt;200.0)
+| | | x′ = Dict(:volume=&gt;150.0)
 | | | C(x, u, ω) = 0.0
 | | Visiting node 3
-| | | ω = 100.0
-| | | x = Dict(:volume=&gt;50.0)
+| | | ω = 0.0
+| | | x = Dict(:volume=&gt;150.0)
 | | | x′ = Dict(:volume=&gt;0.0)
 | | | C(x, u, ω) = 0.0
 | Backward pass
@@ -680,37 +679,37 @@ Starting iteration 3
 | | | | V = 40000.0
 | | | | dVdx′ = Dict(:volume=&gt;-100.0)
 | | | Solving φ = 50.0
-| | | | V = 34999.99999999999
+| | | | V = 35000.0
 | | | | dVdx′ = Dict(:volume=&gt;-100.0)
 | | | Solving φ = 100.0
-| | | | V = 29999.999999999996
+| | | | V = 30000.0
 | | | | dVdx′ = Dict(:volume=&gt;-100.0)
-| | | Adding cut : 49.99999999999999 volume_out + cost_to_go ≥ 17499.999999999996
+| | | Adding cut : 49.99999999999999 volume_out + cost_to_go ≥ 17500.0
 | | Visiting node 2
 | | | Solving φ = 0.0
-| | | | V = 32500.0
-| | | | dVdx′ = Dict(:volume=&gt;-150.0)
+| | | | V = 17500.0
+| | | | dVdx′ = Dict(:volume=&gt;-50.0)
 | | | Solving φ = 50.0
-| | | | V = 25000.0
-| | | | dVdx′ = Dict(:volume=&gt;-150.0)
+| | | | V = 15000.0
+| | | | dVdx′ = Dict(:volume=&gt;-50.0)
 | | | Solving φ = 100.0
-| | | | V = 17499.999999999996
-| | | | dVdx′ = Dict(:volume=&gt;-150.0)
-| | | Adding cut : 150 volume_out + cost_to_go ≥ 32499.999999999993
+| | | | V = 12500.0
+| | | | dVdx′ = Dict(:volume=&gt;-50.0)
+| | | Adding cut : 49.99999999999999 volume_out + cost_to_go ≥ 22500.0
 | | Visiting node 1
 | | | Solving φ = 0.0
-| | | | V = 19999.999999999993
+| | | | V = 20000.0
 | | | | dVdx′ = Dict(:volume=&gt;-100.0)
 | | | Solving φ = 50.0
-| | | | V = 14999.999999999995
-| | | | dVdx′ = Dict(:volume=&gt;-100.0)
+| | | | V = 17500.0
+| | | | dVdx′ = Dict(:volume=&gt;-50.0)
 | | | Solving φ = 100.0
-| | | | V = 9999.999999999998
-| | | | dVdx′ = Dict(:volume=&gt;-100.0)
-| | | Adding cut : 99.99999999999999 volume_out + cost_to_go ≥ 34999.99999999999
+| | | | V = 15000.0
+| | | | dVdx′ = Dict(:volume=&gt;-50.0)
+| | | Adding cut : 66.66666666666666 volume_out + cost_to_go ≥ 30833.333333333332
 | Finished iteration
-| | lower_bound = 20000.0
-Upper bound = 30750.0 ± 7159.110392790547</pre><p>Success! We trained a policy for an infinite horizon multistage stochastic program using stochastic dual dynamic programming. Note how some of the forward passes are different lengths!</p><pre><code class="language-julia">evaluate_policy(
+| | lower_bound = 22500.0
+Upper bound = 29300.0 ± 5292.1833114528645</pre><p>Success! We trained a policy for an infinite horizon multistage stochastic program using stochastic dual dynamic programming. Note how some of the forward passes are different lengths!</p><pre><code class="language-julia">evaluate_policy(
     model;
     node = 3,
     incoming_state = Dict(:volume =&gt; 100.0),
@@ -723,4 +722,4 @@ Upper bound = 30750.0 ± 7159.110392790547</pre><p>Success! We trained a policy 
   :volume_in          =&gt; 100.0
   :thermal_generation =&gt; 40.0
   :hydro_generation   =&gt; 110.0
-  :cost_to_go         =&gt; 17500.0</pre><hr/><p><em>This page was generated using <a href="https://github.com/fredrikekre/Literate.jl">Literate.jl</a>.</em></p></article><nav class="docs-footer"><a class="docs-footer-prevpage" href="../13_integrality/">« Advanced III: integrality</a><a class="docs-footer-nextpage" href="../../guides/add_a_multidimensional_state_variable/">Add a multi-dimensional state variable »</a><div class="flexbox-break"></div><p class="footer-message">Powered by <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> and the <a href="https://julialang.org/">Julia Programming Language</a>.</p></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> on <span class="colophon-date" title="Thursday 7 January 2021 04:19">Thursday 7 January 2021</span>. Using Julia version 1.0.5.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>
+  :cost_to_go         =&gt; 17500.0</pre><hr/><p><em>This page was generated using <a href="https://github.com/fredrikekre/Literate.jl">Literate.jl</a>.</em></p></article><nav class="docs-footer"><a class="docs-footer-prevpage" href="../13_integrality/">« Advanced III: integrality</a><a class="docs-footer-nextpage" href="../../guides/add_a_multidimensional_state_variable/">Add a multi-dimensional state variable »</a><div class="flexbox-break"></div><p class="footer-message">Powered by <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> and the <a href="https://julialang.org/">Julia Programming Language</a>.</p></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> on <span class="colophon-date" title="Thursday 7 January 2021 04:22">Thursday 7 January 2021</span>. Using Julia version 1.0.5.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>
