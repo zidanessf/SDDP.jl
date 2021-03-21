@@ -102,6 +102,11 @@ for integrality_handler in [SDDP.SDDiP(), SDDP.ContinuousRelaxation()]
 end</code></pre><pre><code class="language-none">------------------------------------------------------------------------------
                       SDDP.jl (c) Oscar Dowson, 2017-21
 
+Problem
+  Nodes           : 5
+  State variables : 2
+  Solver          : serial mode
+
 Numerical stability report
   Non-zero Matrix range     [1e+00, 1e+00]
   Non-zero Objective range  [1e+00, 6e+00]
@@ -109,16 +114,19 @@ Numerical stability report
   Non-zero RHS range        [1e+00, 1e+00]
 No problems detected
 
-Solver: serial mode
-
  Iteration    Simulation       Bound         Time (s)    Proc. ID   # Solves
-        5    6.000000e+00   7.250000e+00   3.659620e-01          1         75
-       10    1.000000e+01   7.250000e+00   4.106731e-01          1        150
+        5    6.000000e+00   7.250000e+00   3.859251e-01          1         75
+       10    1.000000e+01   7.250000e+00   4.127572e-01          1        150
 
 Terminating training with status: iteration_limit
 ------------------------------------------------------------------------------
 ------------------------------------------------------------------------------
                       SDDP.jl (c) Oscar Dowson, 2017-21
+
+Problem
+  Nodes           : 3
+  State variables : 4
+  Solver          : serial mode
 
 Numerical stability report
   Non-zero Matrix range     [1e+00, 1e+00]
@@ -126,8 +134,6 @@ Numerical stability report
   Non-zero Bounds range     [1e+00, 2e+01]
   Non-zero RHS range        [1e+00, 1e+00]
 No problems detected
-
-Solver: serial mode
 
  Iteration    Simulation       Bound         Time (s)    Proc. ID   # Solves
 ┌ Warning: Found a cut with a mix of small and large coefficients.
@@ -142,16 +148,21 @@ Solver: serial mode
 │ you haven&#39;t already). For example, it probably doesn&#39;t make sense to measure the
 │ inflow into a reservoir to 10 decimal places.
 └ @ SDDP /home/runner/work/SDDP.jl/SDDP.jl/src/plugins/bellman_functions.jl:68
-       10    4.000000e+00   6.310185e+00   2.040908e-01          1        210
-       20    5.000000e+00   6.143519e+00   3.287158e-01          1        420
-       30    6.000000e+00   6.143519e+00   4.386690e-01          1        630
-       40    1.200000e+01   6.143519e+00   5.768960e-01          1        840
-       50    2.000000e+00   6.143519e+00   7.024050e-01          1       1050
+       10    4.000000e+00   6.310185e+00   2.045200e-01          1        210
+       20    5.000000e+00   6.143519e+00   3.222120e-01          1        420
+       30    6.000000e+00   6.143519e+00   4.259441e-01          1        630
+       40    1.200000e+01   6.143519e+00   5.478911e-01          1        840
+       50    2.000000e+00   6.143519e+00   6.681421e-01          1       1050
 
 Terminating training with status: iteration_limit
 ------------------------------------------------------------------------------
 ------------------------------------------------------------------------------
                       SDDP.jl (c) Oscar Dowson, 2017-21
+
+Problem
+  Nodes           : 5
+  State variables : 2
+  Solver          : serial mode
 
 Numerical stability report
   Non-zero Matrix range     [1e+00, 1e+00]
@@ -160,16 +171,19 @@ Numerical stability report
   Non-zero RHS range        [1e+00, 1e+00]
 No problems detected
 
-Solver: serial mode
-
  Iteration    Simulation       Bound         Time (s)    Proc. ID   # Solves
-        5    9.956790e+00   7.500000e+00   6.728888e-03          1         75
-       10    1.000000e+01   7.250000e+00   1.076007e-02          1        150
+        5    9.956790e+00   7.500000e+00   6.294966e-03          1         75
+       10    1.000000e+01   7.250000e+00   9.771824e-03          1        150
 
 Terminating training with status: iteration_limit
 ------------------------------------------------------------------------------
 ------------------------------------------------------------------------------
                       SDDP.jl (c) Oscar Dowson, 2017-21
+
+Problem
+  Nodes           : 3
+  State variables : 4
+  Solver          : serial mode
 
 Numerical stability report
   Non-zero Matrix range     [1e+00, 1e+00]
@@ -178,15 +192,13 @@ Numerical stability report
   Non-zero RHS range        [1e+00, 1e+00]
 No problems detected
 
-Solver: serial mode
-
  Iteration    Simulation       Bound         Time (s)    Proc. ID   # Solves
-       10    6.000000e+00   6.870675e+00   1.343584e-02          1        210
-       20    5.686275e+00   6.262097e+00   2.883291e-02          1        420
-       30    6.000000e+00   6.232831e+00   4.643488e-02          1        630
-       40    8.333333e+00   6.180109e+00   7.981992e-02          1        840
-       50    6.000000e+00   6.176311e+00   1.011908e-01          1       1050
+       10    6.000000e+00   6.870675e+00   1.343608e-02          1        210
+       20    5.686275e+00   6.262097e+00   4.177999e-02          1        420
+       30    6.000000e+00   6.232831e+00   5.838418e-02          1        630
+       40    8.333333e+00   6.180109e+00   7.725596e-02          1        840
+       50    6.000000e+00   6.176311e+00   9.846711e-02          1       1050
 
 Terminating training with status: iteration_limit
 ------------------------------------------------------------------------------
-</code></pre><hr/><p><em>This page was generated using <a href="https://github.com/fredrikekre/Literate.jl">Literate.jl</a>.</em></p></article><nav class="docs-footer"><a class="docs-footer-prevpage" href="../biobjective_hydro/">« Biobjective hydro-thermal</a><a class="docs-footer-nextpage" href="../generation_expansion/">Generation expansion »</a><div class="flexbox-break"></div><p class="footer-message">Powered by <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> and the <a href="https://julialang.org/">Julia Programming Language</a>.</p></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> on <span class="colophon-date" title="Sunday 21 March 2021 18:26">Sunday 21 March 2021</span>. Using Julia version 1.0.5.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>
+</code></pre><hr/><p><em>This page was generated using <a href="https://github.com/fredrikekre/Literate.jl">Literate.jl</a>.</em></p></article><nav class="docs-footer"><a class="docs-footer-prevpage" href="../biobjective_hydro/">« Biobjective hydro-thermal</a><a class="docs-footer-nextpage" href="../generation_expansion/">Generation expansion »</a><div class="flexbox-break"></div><p class="footer-message">Powered by <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> and the <a href="https://julialang.org/">Julia Programming Language</a>.</p></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> on <span class="colophon-date" title="Sunday 21 March 2021 20:11">Sunday 21 March 2021</span>. Using Julia version 1.0.5.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>
