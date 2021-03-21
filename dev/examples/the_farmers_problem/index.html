@@ -136,27 +136,27 @@ can cause numerical stability issues. Consider
 reformulating the model.
 
  Iteration    Simulation       Bound         Time (s)    Proc. ID   # Solves
-        1   -9.800000e+04   1.320000e+05   1.554966e-03          1          6
-        2    4.800000e+04   1.290000e+05   1.949072e-03          1         12
-        3    1.086000e+05   1.268139e+05   2.306938e-03          1         18
-        4    8.163785e+04   1.219636e+05   2.645969e-03          1         24
-        5    1.550000e+05   1.121210e+05   2.992868e-03          1         30
-        6    1.121210e+05   1.104195e+05   3.362894e-03          1         36
-        7    1.047405e+05   1.095042e+05   3.701925e-03          1         42
-        8    5.125161e+04   1.088611e+05   4.050970e-03          1         48
-        9    1.088611e+05   1.088021e+05   4.457951e-03          1         54
-       10    1.093355e+05   1.084962e+05   4.865885e-03          1         60
-       11    4.823846e+04   1.083900e+05   5.281925e-03          1         66
-       12    1.093500e+05   1.083900e+05   5.635977e-03          1         72
-       13    1.093500e+05   1.083900e+05   5.976915e-03          1         78
-       14    1.670000e+05   1.083900e+05   6.312847e-03          1         84
-       15    1.093500e+05   1.083900e+05   6.643057e-03          1         90
-       16    4.882000e+04   1.083900e+05   6.976843e-03          1         96
-       17    4.882000e+04   1.083900e+05   7.305861e-03          1        102
-       18    1.093500e+05   1.083900e+05   7.644892e-03          1        108
-       19    1.093500e+05   1.083900e+05   7.977962e-03          1        114
-       20    4.882000e+04   1.083900e+05   8.347034e-03          1        120
+        1   -9.800000e+04   1.320000e+05   1.555920e-03          1          6
+        2    4.800000e+04   1.290000e+05   1.941919e-03          1         12
+        3    1.086000e+05   1.268139e+05   2.313852e-03          1         18
+        4    8.163785e+04   1.219636e+05   2.659798e-03          1         24
+        5    1.550000e+05   1.121210e+05   3.013849e-03          1         30
+        6    1.121210e+05   1.104195e+05   3.383875e-03          1         36
+        7    1.047405e+05   1.095042e+05   3.735781e-03          1         42
+        8    5.125161e+04   1.088611e+05   4.112959e-03          1         48
+        9    1.088611e+05   1.088021e+05   4.606009e-03          1         54
+       10    1.093355e+05   1.084962e+05   4.997969e-03          1         60
+       11    4.823846e+04   1.083900e+05   5.532980e-03          1         66
+       12    1.093500e+05   1.083900e+05   6.072998e-03          1         72
+       13    1.093500e+05   1.083900e+05   6.433964e-03          1         78
+       14    1.670000e+05   1.083900e+05   6.772995e-03          1         84
+       15    1.093500e+05   1.083900e+05   7.105827e-03          1         90
+       16    4.882000e+04   1.083900e+05   7.442951e-03          1         96
+       17    4.882000e+04   1.083900e+05   7.781982e-03          1        102
+       18    1.093500e+05   1.083900e+05   8.138895e-03          1        108
+       19    1.093500e+05   1.083900e+05   8.630991e-03          1        114
+       20    4.882000e+04   1.083900e+05   8.970976e-03          1        120
 
 Terminating training with status: iteration_limit
 ------------------------------------------------------------------------------
-</code></pre><h2 id="Checking-the-policy"><a class="docs-heading-anchor" href="#Checking-the-policy">Checking the policy</a><a id="Checking-the-policy-1"></a><a class="docs-heading-anchor-permalink" href="#Checking-the-policy" title="Permalink"></a></h2><p>Birge and Louveaux report that the optimal objective value is \$108,390. Check that we got the correct solution using <a href="../../apireference/#SDDP.calculate_bound"><code>SDDP.calculate_bound</code></a>:</p><pre><code class="language-julia">@assert SDDP.calculate_bound(model) == 108_390.0</code></pre><hr/><p><em>This page was generated using <a href="https://github.com/fredrikekre/Literate.jl">Literate.jl</a>.</em></p></article><nav class="docs-footer"><a class="docs-footer-prevpage" href="../stochastic_all_blacks/">« Stochastic All Blacks</a><a class="docs-footer-nextpage" href="../vehicle_location/">Vehicle location »</a><div class="flexbox-break"></div><p class="footer-message">Powered by <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> and the <a href="https://julialang.org/">Julia Programming Language</a>.</p></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> on <span class="colophon-date" title="Sunday 21 March 2021 20:11">Sunday 21 March 2021</span>. Using Julia version 1.0.5.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>
+</code></pre><h2 id="Checking-the-policy"><a class="docs-heading-anchor" href="#Checking-the-policy">Checking the policy</a><a id="Checking-the-policy-1"></a><a class="docs-heading-anchor-permalink" href="#Checking-the-policy" title="Permalink"></a></h2><p>Birge and Louveaux report that the optimal objective value is \$108,390. Check that we got the correct solution using <a href="../../apireference/#SDDP.calculate_bound"><code>SDDP.calculate_bound</code></a>:</p><pre><code class="language-julia">@assert SDDP.calculate_bound(model) == 108_390.0</code></pre><hr/><p><em>This page was generated using <a href="https://github.com/fredrikekre/Literate.jl">Literate.jl</a>.</em></p></article><nav class="docs-footer"><a class="docs-footer-prevpage" href="../stochastic_all_blacks/">« Stochastic All Blacks</a><a class="docs-footer-nextpage" href="../vehicle_location/">Vehicle location »</a><div class="flexbox-break"></div><p class="footer-message">Powered by <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> and the <a href="https://julialang.org/">Julia Programming Language</a>.</p></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> on <span class="colophon-date" title="Sunday 21 March 2021 20:38">Sunday 21 March 2021</span>. Using Julia version 1.0.5.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>
