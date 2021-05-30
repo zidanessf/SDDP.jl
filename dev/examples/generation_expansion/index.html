@@ -24,8 +24,13 @@ function generation_expansion(integrality_handler)
         optimizer = GLPK.Optimizer,
         integrality_handler = integrality_handler,
     ) do sp, stage
-
-        @variable(sp, 0 &lt;= invested[1:num_units] &lt;= 1, SDDP.State, Int, initial_value = 0)
+        @variable(
+            sp,
+            0 &lt;= invested[1:num_units] &lt;= 1,
+            SDDP.State,
+            Int,
+            initial_value = 0
+        )
         @variables(sp, begin
             generation &gt;= 0
             unmet &gt;= 0
@@ -38,7 +43,8 @@ function generation_expansion(integrality_handler)
                 # Can&#39;t un-invest
                 investment[i in 1:num_units], invested[i].out &gt;= invested[i].in
                 # Generation capacity
-                sum(capacities[i] * invested[i].out for i = 1:num_units) &gt;= generation
+                sum(capacities[i] * invested[i].out for i in 1:num_units) &gt;=
+                generation
                 # Meet demand or pay a penalty
                 unmet &gt;= demand - sum(generation)
                 # For fewer iterations order the units to break symmetry, units are identical (tougher numerically)
@@ -51,11 +57,13 @@ function generation_expansion(integrality_handler)
         @expression(
             sp,
             investment_cost,
-            build_cost * sum(invested[i].out - invested[i].in for i = 1:num_units)
+            build_cost *
+            sum(invested[i].out - invested[i].in for i in 1:num_units)
         )
         @stageobjective(
             sp,
-            (investment_cost + generation * use_cost) * rho^(stage - 1) + penalty * unmet
+            (investment_cost + generation * use_cost) * rho^(stage - 1) +
+            penalty * unmet
         )
     end
     SDDP.train(model, iteration_limit = 50, log_frequency = 10)
@@ -81,12 +89,12 @@ Numerical stability report
 No problems detected
 
  Iteration    Simulation       Bound         Time (s)    Proc. ID   # Solves
-       10    7.799834e+06   2.078398e+06   2.681708e-02          1        420
-       20    2.299771e+06   2.078649e+06   4.721212e-02          1        840
-       30    3.465095e+04   2.078649e+06   7.174611e-02          1       1260
-       40    3.299731e+06   2.078825e+06   1.117370e-01          1       1680
-       50    1.299312e+06   2.078825e+06   1.343040e-01          1       2100
+       10    7.799834e+06   2.078398e+06   3.283906e-02          1        420
+       20    2.299771e+06   2.078649e+06   5.615020e-02          1        840
+       30    3.465095e+04   2.078649e+06   9.210205e-02          1       1260
+       40    3.299731e+06   2.078825e+06   1.201770e-01          1       1680
+       50    1.299312e+06   2.078825e+06   1.649301e-01          1       2100
 
 Terminating training with status: iteration_limit
 ------------------------------------------------------------------------------
-</code></pre><hr/><p><em>This page was generated using <a href="https://github.com/fredrikekre/Literate.jl">Literate.jl</a>.</em></p></article><nav class="docs-footer"><a class="docs-footer-prevpage" href="../booking_management/">« Booking management</a><a class="docs-footer-nextpage" href="../hydro_valley/">Hydro valleys »</a><div class="flexbox-break"></div><p class="footer-message">Powered by <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> and the <a href="https://julialang.org/">Julia Programming Language</a>.</p></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> on <span class="colophon-date" title="Sunday 30 May 2021 21:11">Sunday 30 May 2021</span>. Using Julia version 1.0.5.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>
+</code></pre><hr/><p><em>This page was generated using <a href="https://github.com/fredrikekre/Literate.jl">Literate.jl</a>.</em></p></article><nav class="docs-footer"><a class="docs-footer-prevpage" href="../booking_management/">« Booking management</a><a class="docs-footer-nextpage" href="../hydro_valley/">Hydro valleys »</a><div class="flexbox-break"></div><p class="footer-message">Powered by <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> and the <a href="https://julialang.org/">Julia Programming Language</a>.</p></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> on <span class="colophon-date" title="Sunday 30 May 2021 22:07">Sunday 30 May 2021</span>. Using Julia version 1.0.5.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>

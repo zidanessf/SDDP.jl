@@ -3,12 +3,14 @@
 
 function asset_management_simple()
     model = SDDP.PolicyGraph(
-        SDDP.MarkovianGraph(Array{Float64,2}[
-            [1.0]&#39;,
-            [0.5 0.5],
-            [0.5 0.5; 0.5 0.5],
-            [0.5 0.5; 0.5 0.5],
-        ]),
+        SDDP.MarkovianGraph(
+            Array{Float64,2}[
+                [1.0]&#39;,
+                [0.5 0.5],
+                [0.5 0.5; 0.5 0.5],
+                [0.5 0.5; 0.5 0.5],
+            ],
+        ),
         bellman_function = SDDP.BellmanFunction(lower_bound = -1_000.0),
         optimizer = GLPK.Optimizer,
     ) do subproblem, index
@@ -23,8 +25,8 @@ function asset_management_simple()
         elseif 1 &lt; stage &lt; 4
             @constraint(
                 subproblem,
-                rstock[markov_state] * stocks.in + rbonds[markov_state] * bonds.in ==
-                stocks.out + bonds.out
+                rstock[markov_state] * stocks.in +
+                rbonds[markov_state] * bonds.in == stocks.out + bonds.out
             )
             @stageobjective(subproblem, 0)
         else
@@ -32,7 +34,8 @@ function asset_management_simple()
             @variable(subproblem, short &gt;= 0)
             @constraint(
                 subproblem,
-                rstock[markov_state] * stocks.in + rbonds[markov_state] * bonds.in - over + short == 80
+                rstock[markov_state] * stocks.in +
+                rbonds[markov_state] * bonds.in - over + short == 80
             )
             @stageobjective(subproblem, -over + 4 * short)
         end
@@ -60,12 +63,12 @@ Numerical stability report
 No problems detected
 
  Iteration    Simulation       Bound         Time (s)    Proc. ID   # Solves
-        5   -2.239977e-01   1.232831e+00   1.129413e-02          1         55
-       10   -2.496563e+01   1.514085e+00   1.377010e-02          1        110
-       15    1.534772e-12   1.514085e+00   1.646614e-02          1        165
-       20   -2.479988e+01   1.514085e+00   1.896811e-02          1        220
-       25    4.864000e+01   1.514085e+00   2.187800e-02          1        275
+        5   -2.239977e-01   1.232831e+00   1.257777e-02          1         55
+       10   -2.496563e+01   1.514085e+00   1.566696e-02          1        110
+       15    1.534772e-12   1.514085e+00   1.994491e-02          1        165
+       20   -2.479988e+01   1.514085e+00   2.300596e-02          1        220
+       25    4.864000e+01   1.514085e+00   2.627182e-02          1        275
 
 Terminating training with status: iteration_limit
 ------------------------------------------------------------------------------
-</code></pre><hr/><p><em>This page was generated using <a href="https://github.com/fredrikekre/Literate.jl">Literate.jl</a>.</em></p></article><nav class="docs-footer"><a class="docs-footer-prevpage" href="../all_blacks/">« Deterministic All Blacks</a><a class="docs-footer-nextpage" href="../asset_management_stagewise/">Asset management with modifications »</a><div class="flexbox-break"></div><p class="footer-message">Powered by <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> and the <a href="https://julialang.org/">Julia Programming Language</a>.</p></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> on <span class="colophon-date" title="Sunday 30 May 2021 21:11">Sunday 30 May 2021</span>. Using Julia version 1.0.5.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>
+</code></pre><hr/><p><em>This page was generated using <a href="https://github.com/fredrikekre/Literate.jl">Literate.jl</a>.</em></p></article><nav class="docs-footer"><a class="docs-footer-prevpage" href="../all_blacks/">« Deterministic All Blacks</a><a class="docs-footer-nextpage" href="../asset_management_stagewise/">Asset management with modifications »</a><div class="flexbox-break"></div><p class="footer-message">Powered by <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> and the <a href="https://julialang.org/">Julia Programming Language</a>.</p></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> on <span class="colophon-date" title="Sunday 30 May 2021 22:07">Sunday 30 May 2021</span>. Using Julia version 1.0.5.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>

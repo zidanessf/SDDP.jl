@@ -36,7 +36,7 @@ Use `F` to compute the risk of the random variable defined by a vector of costs
 function primal_risk end</code></pre><pre><code class="language-none">Main.##1492.primal_risk</code></pre><div class="admonition is-info"><header class="admonition-header">Note</header><div class="admonition-body"><p>We want <code>Vector{&lt;:Real}</code> instead of <code>Vector{Float64}</code> because we&#39;re going to automatically differentiate this function in the next section.</p></div></div><h3 id="Expectation"><a class="docs-heading-anchor" href="#Expectation">Expectation</a><a id="Expectation-1"></a><a class="docs-heading-anchor-permalink" href="#Expectation" title="Permalink"></a></h3><p>The expectation, <span>$\mathbb{E}$</span>, also called the mean or the average, is the most widely used convex risk measure. The expectation of a random variable is just the sum of <span>$Z$</span> weighted by the probability:</p><p class="math-container">\[\mathbb{F}[Z] = \mathbb{E}_p[Z] = \sum\limits_{\omega\in\Omega} p_\omega z_\omega.\]</p><pre><code class="language-julia">struct Expectation &lt;: AbstractRiskMeasure end
 
 function primal_risk(::Expectation, Z::Vector{&lt;:Real}, p::Vector{Float64})
-    return sum(p[i] * Z[i] for i = 1:length(p))
+    return sum(p[i] * Z[i] for i in 1:length(p))
 end</code></pre><pre><code class="language-none">primal_risk (generic function with 1 method)</code></pre><p>Let&#39;s try it out:</p><pre><code class="language-julia">primal_risk(Expectation(), Z, p)</code></pre><pre><code class="language-none">2.9000000000000004</code></pre><h3 id="WorstCase"><a class="docs-heading-anchor" href="#WorstCase">WorstCase</a><a id="WorstCase-1"></a><a class="docs-heading-anchor-permalink" href="#WorstCase" title="Permalink"></a></h3><p>The worst-case risk measure, also called the maximum, is another widely used convex risk measure. This risk measure doesn&#39;t care about the probability vector <code>p</code>, only the cost vector <code>Z</code>:</p><p class="math-container">\[\mathbb{F}[Z] = \max[Z] = \max\limits_{\omega\in\Omega} z_\omega.\]</p><pre><code class="language-julia">struct WorstCase &lt;: AbstractRiskMeasure end
 
 function primal_risk(::WorstCase, Z::Vector{&lt;:Real}, ::Vector{Float64})
@@ -52,7 +52,7 @@ end</code></pre><pre><code class="language-none">primal_risk (generic function w
 end
 
 function primal_risk(F::Entropic, Z::Vector{&lt;:Real}, p::Vector{Float64})
-    return 1 / F.γ * log(sum(p[i] * exp(F.γ * Z[i]) for i = 1:length(p)))
+    return 1 / F.γ * log(sum(p[i] * exp(F.γ * Z[i]) for i in 1:length(p)))
 end</code></pre><pre><code class="language-none">primal_risk (generic function with 3 methods)</code></pre><div class="admonition is-warning"><header class="admonition-header">Warning</header><div class="admonition-body"><p><code>exp(x)</code> overflows when <span>$x &gt; 709$</span>. Therefore, if we are passed a vector of <code>Float64</code>, use arbitrary precision arithmetic with <code>big.(Z)</code>.</p></div></div><pre><code class="language-julia">function primal_risk(F::Entropic, Z::Vector{Float64}, p::Vector{Float64})
     return Float64(primal_risk(F, big.(Z), p))
 end</code></pre><pre><code class="language-none">primal_risk (generic function with 4 methods)</code></pre><p>Let&#39;s try it out for different values of <span>$\gamma$</span>:</p><pre><code class="language-julia">for γ in [0.001, 0.01, 0.1, 1.0, 10.0, 100.0, 1_000.0]
@@ -78,7 +78,7 @@ function dual_risk_inner end</code></pre><pre><code class="language-none">Main.#
     p::Vector{Float64},
 )
     q, α = dual_risk_inner(F, Z, p)
-    return sum(q[i] * Z[i] for i = 1:length(q)) - α
+    return sum(q[i] * Z[i] for i in 1:length(q)) - α
 end</code></pre><pre><code class="language-none">dual_risk (generic function with 1 method)</code></pre><h3 id="Expectation-2"><a class="docs-heading-anchor" href="#Expectation-2">Expectation</a><a class="docs-heading-anchor-permalink" href="#Expectation-2" title="Permalink"></a></h3><p>For the expectation risk measure, <span>$\mathcal{M}(p) = \{p\}$</span>, and <span>$\alpha(\cdot, \cdot) = 0$</span>. Therefore:</p><pre><code class="language-julia">function dual_risk_inner(::Expectation, ::Vector{Float64}, p::Vector{Float64})
     return p, 0.0
 end</code></pre><pre><code class="language-none">dual_risk_inner (generic function with 1 method)</code></pre><p>We can check we get the same result as the primal version:</p><pre><code class="language-julia">dual_risk(Expectation(), Z, p) == primal_risk(Expectation(), Z, p)</code></pre><pre><code class="language-none">true</code></pre><h3 id="Worst-case"><a class="docs-heading-anchor" href="#Worst-case">Worst-case</a><a id="Worst-case-1"></a><a class="docs-heading-anchor-permalink" href="#Worst-case" title="Permalink"></a></h3><p>For the worst-case risk measure, <span>$\mathcal{M}(p) = \mathcal{P}$</span>, and <span>$\alpha(\cdot, \cdot) = 0$</span>. Therefore, the dual representation just puts all of the probability weight on the maximum outcome:</p><pre><code class="language-julia">function dual_risk_inner(::WorstCase, Z::Vector{Float64}, ::Vector{Float64})
@@ -98,9 +98,9 @@ end</code></pre><pre><code class="language-none">dual_risk_inner (generic functi
     JuMP.@NLexpression(
         model,
         α,
-        1 / F.γ * sum(q[i] * log(q[i] / p[i]) for i = 1:N),
+        1 / F.γ * sum(q[i] * log(q[i] / p[i]) for i in 1:N),
     )
-    JuMP.@NLobjective(model, Max, sum(q[i] * Z[i] for i = 1:N) - α)
+    JuMP.@NLobjective(model, Max, sum(q[i] * Z[i] for i in 1:N) - α)
     JuMP.optimize!(model)
     return JuMP.value.(q), JuMP.value(α)
 end</code></pre><pre><code class="language-none">dual_risk_inner (generic function with 3 methods)</code></pre><p>We can check we get the same result as the primal version:</p><pre><code class="language-julia">for γ in [0.001, 0.01, 0.1, 1.0, 10.0, 100.0]
@@ -116,7 +116,7 @@ This program contains Ipopt, a library for large-scale nonlinear optimization.
 ******************************************************************************
 
 ✓ γ = 0.001, primal = 2.9004449279791005, dual = 2.9004449279790396
-✓ γ = 0.01, primal = 2.9044427792027596, dual = 2.9044427792027667
+✓ γ = 0.01, primal = 2.9044427792027596, dual = 2.9044427792027503
 ✓ γ = 0.1, primal = 2.9437604953310674, dual = 2.9437604953310665
 ✓ γ = 1.0, primal = 3.264357634151263, dual = 3.264357634151263
 ✓ γ = 10.0, primal = 3.879608772845574, dual = 3.8796087723675954
@@ -125,7 +125,7 @@ This program contains Ipopt, a library for large-scale nonlinear optimization.
     q, α = zeros(length(p)), big(0.0)
     peγz = p .* exp.(F.γ .* big.(Z))
     sum_peγz = sum(peγz)
-    for i = 1:length(q)
+    for i in 1:length(q)
         big_q = peγz[i] / sum_peγz
         α += big_q * log(big_q / p[i])
         q[i] = Float64(big_q)
@@ -181,11 +181,14 @@ end</code></pre><pre><code class="language-none">primal_risk_averse_subgradient 
  12.0</code></pre><p>If <span>$\mathbb{F}$</span> is the worst-case risk measure, then:</p><p class="math-container">\[\mathbb{F}[V(x, \omega)] = 3 x^2.\]</p><p>The function evaluation at <span>$x=3$</span> is <span>$27$</span>, and the subgradient is <span>$18$</span>. Let&#39;s check we get it right with the dual form:</p><pre><code class="language-julia">dual_risk_averse_subgradient(V; F = WorstCase(), Ω = Ω, p = p, x̃ = x̃)</code></pre><pre><code class="language-none">1-element Array{Float64,1}:
  18.0</code></pre><p>and the primal form:</p><pre><code class="language-julia">primal_risk_averse_subgradient(V; F = WorstCase(), Ω = Ω, p = p, x̃ = x̃)</code></pre><pre><code class="language-none">1-element Array{Float64,1}:
  18.0</code></pre><p>If <span>$\mathbb{F}$</span> is the entropic risk measure, the math is a little more difficult to derive analytically. However, we can check against our primal version:</p><pre><code class="language-julia">for γ in [0.001, 0.01, 0.1, 1.0, 10.0, 100.0]
-    dual = dual_risk_averse_subgradient(
-        V; F = Entropic(γ), Ω = Ω, p = p, x̃ = x̃
-    )
+    dual =
+        dual_risk_averse_subgradient(V; F = Entropic(γ), Ω = Ω, p = p, x̃ = x̃)
     primal = primal_risk_averse_subgradient(
-        V; F = Entropic(γ), Ω = Ω, p = p, x̃ = x̃
+        V;
+        F = Entropic(γ),
+        Ω = Ω,
+        p = p,
+        x̃ = x̃,
     )
     success = primal ≈ dual ? &quot;✓&quot; : &quot;×&quot;
     println(&quot;$(success) γ = $(γ), primal = $(primal), dual = $(dual)&quot;)
@@ -244,7 +247,7 @@ function PolicyGraph(
     optimizer,
 )
     nodes = Node[]
-    for t = 1:length(graph)
+    for t in 1:length(graph)
         model = JuMP.Model(optimizer)
         states, uncertainty = subproblem_builder(model, t)
         JuMP.@variable(model, cost_to_go &gt;= lower_bound)
@@ -266,7 +269,7 @@ function sample_uncertainty(uncertainty::Uncertainty)
             return ω
         end
     end
-    error(&quot;We should never get here because P should sum to 1.0.&quot;)
+    return error(&quot;We should never get here because P should sum to 1.0.&quot;)
 end
 
 function sample_next_node(model::PolicyGraph, current::Int)
@@ -285,9 +288,8 @@ function sample_next_node(model::PolicyGraph, current::Int)
 end
 
 function forward_pass(model::PolicyGraph, io::IO = stdout)
-    incoming_state = Dict(
-        k =&gt; JuMP.fix_value(v.in) for (k, v) in model.nodes[1].states
-    )
+    incoming_state =
+        Dict(k =&gt; JuMP.fix_value(v.in) for (k, v) in model.nodes[1].states)
     simulation_cost = 0.0
     trajectory = Tuple{Int,Dict{Symbol,Float64}}[]
     t = 1
@@ -303,7 +305,8 @@ function forward_pass(model::PolicyGraph, io::IO = stdout)
             error(&quot;Something went terribly wrong!&quot;)
         end
         outgoing_state = Dict(k =&gt; JuMP.value(v.out) for (k, v) in node.states)
-        stage_cost = JuMP.objective_value(node.subproblem) - JuMP.value(node.cost_to_go)
+        stage_cost =
+            JuMP.objective_value(node.subproblem) - JuMP.value(node.cost_to_go)
         simulation_cost += stage_cost
         incoming_state = outgoing_state
         push!(trajectory, (t, outgoing_state))
@@ -313,9 +316,9 @@ function forward_pass(model::PolicyGraph, io::IO = stdout)
 end
 
 function upper_bound(model::PolicyGraph; replications::Int)
-    simulations = [forward_pass(model, devnull) for i = 1:replications]
+    simulations = [forward_pass(model, devnull) for i in 1:replications]
     z = [s[2] for s in simulations]
-    μ  = Statistics.mean(z)
+    μ = Statistics.mean(z)
     tσ = 1.96 * Statistics.std(z) / sqrt(replications)
     return μ, tσ
 end
@@ -344,8 +347,8 @@ function evaluate_policy(
     end
     JuMP.optimize!(the_node.subproblem)
     return Dict(
-        k =&gt; JuMP.value.(v)
-        for (k, v) in JuMP.object_dictionary(the_node.subproblem)
+        k =&gt; JuMP.value.(v) for
+        (k, v) in JuMP.object_dictionary(the_node.subproblem)
     )
 end</code></pre><pre><code class="language-none">evaluate_policy (generic function with 1 method)</code></pre></details></p><p>First, we need to modify the backward pass to compute the cuts using the risk-averse subgradient theorem:</p><pre><code class="language-julia">function backward_pass(
     model::PolicyGraph,
@@ -354,7 +357,7 @@ end</code></pre><pre><code class="language-none">evaluate_policy (generic functi
     risk_measure::AbstractRiskMeasure,
 )
     println(io, &quot;| Backward pass&quot;)
-    for i = reverse(1:length(trajectory))
+    for i in reverse(1:length(trajectory))
         index, outgoing_states = trajectory[i]
         node = model.nodes[index]
         println(io, &quot;| | Visiting node $(index)&quot;)
@@ -386,8 +389,8 @@ end</code></pre><pre><code class="language-none">evaluate_policy (generic functi
                     JuMP.@expression(
                         node.subproblem,
                         V + sum(
-                            dVdx[k] * (x.out - outgoing_states[k])
-                            for (k, x) in node.states
+                            dVdx[k] * (x.out - outgoing_states[k]) for
+                            (k, x) in node.states
                         ),
                     )
                 )
@@ -409,7 +412,7 @@ end</code></pre><pre><code class="language-none">evaluate_policy (generic functi
         c = JuMP.@constraint(
             node.subproblem,
             node.cost_to_go &gt;=
-                sum(q[i] * cut_expressions[i] for i = 1:length(q)) - α
+            sum(q[i] * cut_expressions[i] for i in 1:length(q)) - α
         )
         # =====================================================================
         println(io, &quot;| | | Adding cut : &quot;, c)
@@ -425,7 +428,7 @@ end</code></pre><pre><code class="language-none">backward_pass (generic function
     # =========================================================================
     io::IO = stdout,
 )
-    for i = 1:iteration_limit
+    for i in 1:iteration_limit
         println(io, &quot;Starting iteration $(i)&quot;)
         outgoing_states, _ = forward_pass(model, io)
         # =====================================================================
@@ -439,11 +442,7 @@ end</code></pre><pre><code class="language-none">backward_pass (generic function
     println(io, &quot;Upper bound = $(μ) ± $(tσ)&quot;)
     return
 end</code></pre><pre><code class="language-none">train (generic function with 1 method)</code></pre><h3 id="Risk-averse-bounds"><a class="docs-heading-anchor" href="#Risk-averse-bounds">Risk-averse bounds</a><a id="Risk-averse-bounds-1"></a><a class="docs-heading-anchor-permalink" href="#Risk-averse-bounds" title="Permalink"></a></h3><div class="admonition is-warning"><header class="admonition-header">Warning</header><div class="admonition-body"><p>This section is important.</p></div></div><p>When we had a risk-neutral policy (i.e., we only used the expectation risk measure), we discussed how we could form valid lower and upper bounds.</p><p>The upper bound is still valid as a Monte Carlo simulation of the expected cost of the policy. (Although this upper bound doesn&#39;t capture the change in the policy we wanted to achieve, namely that the impact of the worst outcomes were reduced.)</p><p>However, if we use a different risk measure, the lower bound is no longer valid!</p><p>We can still calculate a &quot;lower bound&quot; as the objective of the first-stage approximated subproblem, and this will converge to a finite value. However, we can&#39;t meaningfully interpret it as a bound with respect to the optimal policy. Therefore, it&#39;s best to just ignore the lower bound when training a risk-averse policy.</p><h2 id="Example:-risk-averse-hydro-thermal-scheduling"><a class="docs-heading-anchor" href="#Example:-risk-averse-hydro-thermal-scheduling">Example: risk-averse hydro-thermal scheduling</a><a id="Example:-risk-averse-hydro-thermal-scheduling-1"></a><a class="docs-heading-anchor-permalink" href="#Example:-risk-averse-hydro-thermal-scheduling" title="Permalink"></a></h2><p>Now it&#39;s time for an example. We create the same problem as <a href="../21_theory_intro/#Theory-I:-an-intro-to-SDDP">Theory I: an intro to SDDP</a>:</p><pre><code class="language-julia">model = PolicyGraph(
-    graph = [
-        Dict(2 =&gt; 1.0),
-        Dict(3 =&gt; 1.0),
-        Dict{Int,Float64}(),
-    ],
+    graph = [Dict(2 =&gt; 1.0), Dict(3 =&gt; 1.0), Dict{Int,Float64}()],
     lower_bound = 0.0,
     optimizer = GLPK.Optimizer,
 ) do subproblem, t
@@ -452,19 +451,23 @@ end</code></pre><pre><code class="language-none">train (generic function with 1 
     states = Dict(:volume =&gt; State(volume_in, volume_out))
     JuMP.@variables(subproblem, begin
         thermal_generation &gt;= 0
-        hydro_generation   &gt;= 0
-        hydro_spill        &gt;= 0
+        hydro_generation &gt;= 0
+        hydro_spill &gt;= 0
         inflow
     end)
-    JuMP.@constraints(subproblem, begin
-        volume_out == volume_in + inflow - hydro_generation - hydro_spill
-        demand_constraint, thermal_generation + hydro_generation == 150.0
-    end)
+    JuMP.@constraints(
+        subproblem,
+        begin
+            volume_out == volume_in + inflow - hydro_generation - hydro_spill
+            demand_constraint, thermal_generation + hydro_generation == 150.0
+        end
+    )
     fuel_cost = [50.0, 100.0, 150.0]
     JuMP.@objective(subproblem, Min, fuel_cost[t] * thermal_generation)
-    uncertainty = Uncertainty([0.0, 50.0, 100.0], [1 / 3, 1 / 3, 1 / 3]) do ω
-        JuMP.fix(inflow, ω)
-    end
+    uncertainty =
+        Uncertainty([0.0, 50.0, 100.0], [1 / 3, 1 / 3, 1 / 3]) do ω
+            return JuMP.fix(inflow, ω)
+        end
     return states, uncertainty
 end</code></pre><pre><code class="language-none">A policy graph with 3 nodes
 Arcs:
@@ -1010,4 +1013,4 @@ Upper bound = 10724.47892990112 ± 929.8897316014472
   :volume_in =&gt; 150.0
   :thermal_generation =&gt; 125.0
   :hydro_generation =&gt; 25.0
-  :cost_to_go =&gt; 9998.64</code></pre><div class="admonition is-info"><header class="admonition-header">Info</header><div class="admonition-body"><p>For this trivial example, the risk-averse policy isn&#39;t very different from the policy obtained using the expectation risk-measure. If you try it on some bigger/more interesting problems, you should see the expected cost increase, and the upper tail of the policy decrease.</p></div></div><hr/><p><em>This page was generated using <a href="https://github.com/fredrikekre/Literate.jl">Literate.jl</a>.</em></p></article><nav class="docs-footer"><a class="docs-footer-prevpage" href="../21_theory_intro/">« Theory I: an intro to SDDP</a><a class="docs-footer-nextpage" href="../../guides/acess_previous_variables/">Access variables from a previous stage »</a><div class="flexbox-break"></div><p class="footer-message">Powered by <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> and the <a href="https://julialang.org/">Julia Programming Language</a>.</p></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> on <span class="colophon-date" title="Sunday 30 May 2021 21:11">Sunday 30 May 2021</span>. Using Julia version 1.0.5.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>
+  :cost_to_go =&gt; 9998.64</code></pre><div class="admonition is-info"><header class="admonition-header">Info</header><div class="admonition-body"><p>For this trivial example, the risk-averse policy isn&#39;t very different from the policy obtained using the expectation risk-measure. If you try it on some bigger/more interesting problems, you should see the expected cost increase, and the upper tail of the policy decrease.</p></div></div><hr/><p><em>This page was generated using <a href="https://github.com/fredrikekre/Literate.jl">Literate.jl</a>.</em></p></article><nav class="docs-footer"><a class="docs-footer-prevpage" href="../21_theory_intro/">« Theory I: an intro to SDDP</a><a class="docs-footer-nextpage" href="../../guides/acess_previous_variables/">Access variables from a previous stage »</a><div class="flexbox-break"></div><p class="footer-message">Powered by <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> and the <a href="https://julialang.org/">Julia Programming Language</a>.</p></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> on <span class="colophon-date" title="Sunday 30 May 2021 22:07">Sunday 30 May 2021</span>. Using Julia version 1.0.5.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>

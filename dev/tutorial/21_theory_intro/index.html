@@ -185,15 +185,18 @@ end</code></pre><h3 id="Functions"><a class="docs-heading-anchor" href="#Functio
     # Define the control variables.
     JuMP.@variables(subproblem, begin
         thermal_generation &gt;= 0
-        hydro_generation   &gt;= 0
-        hydro_spill        &gt;= 0
+        hydro_generation &gt;= 0
+        hydro_spill &gt;= 0
         inflow
     end)
     # Define the constraints
-    JuMP.@constraints(subproblem, begin
-        volume_out == volume_in + inflow - hydro_generation - hydro_spill
-        demand_constraint, thermal_generation + hydro_generation == 150.0
-    end)
+    JuMP.@constraints(
+        subproblem,
+        begin
+            volume_out == volume_in + inflow - hydro_generation - hydro_spill
+            demand_constraint, thermal_generation + hydro_generation == 150.0
+        end
+    )
     # Define the objective for each stage `t`. Note that we can use `t` as an
     # index for t = 1, 2, 3.
     fuel_cost = [50.0, 100.0, 150.0]
@@ -203,7 +206,7 @@ end</code></pre><h3 id="Functions"><a class="docs-heading-anchor" href="#Functio
     # constraints, and not the objective function! (Not that it changes the
     # algorithm, we just have to add more information to keep track of things.)
     uncertainty = Uncertainty([0.0, 50.0, 100.0], [1 / 3, 1 / 3, 1 / 3]) do ω
-        JuMP.fix(inflow, ω)
+        return JuMP.fix(inflow, ω)
     end
     return states, uncertainty
 end</code></pre><pre><code class="language-none">subproblem_builder (generic function with 1 method)</code></pre><p>The next function we need to define is the analog of <a href="../../apireference/#SDDP.PolicyGraph"><code>SDDP.PolicyGraph</code></a>. It should be pretty readable.</p><pre><code class="language-julia">function PolicyGraph(
@@ -213,7 +216,7 @@ end</code></pre><pre><code class="language-none">subproblem_builder (generic fun
     optimizer,
 )
     nodes = Node[]
-    for t = 1:length(graph)
+    for t in 1:length(graph)
         # Create a model.
         model = JuMP.Model(optimizer)
         # Use the provided function to build out each subproblem. The user&#39;s
@@ -233,11 +236,7 @@ end</code></pre><pre><code class="language-none">subproblem_builder (generic fun
     return PolicyGraph(nodes, graph)
 end</code></pre><pre><code class="language-none">Main.##1433.PolicyGraph</code></pre><p>Then, we can create a model using the <code>subproblem_builder</code> function we defined earlier:</p><pre><code class="language-julia">model = PolicyGraph(
     subproblem_builder;
-    graph = [
-        Dict(2 =&gt; 1.0),
-        Dict(3 =&gt; 1.0),
-        Dict{Int,Float64}(),
-    ],
+    graph = [Dict(2 =&gt; 1.0), Dict(3 =&gt; 1.0), Dict{Int,Float64}()],
     lower_bound = 0.0,
     optimizer = GLPK.Optimizer,
 )</code></pre><pre><code class="language-none">A policy graph with 3 nodes
@@ -252,8 +251,8 @@ Arcs:
             return ω
         end
     end
-    error(&quot;We should never get here because P should sum to 1.0.&quot;)
-end</code></pre><pre><code class="language-none">sample_uncertainty (generic function with 1 method)</code></pre><div class="admonition is-info"><header class="admonition-header">Note</header><div class="admonition-body"><p><code>rand()</code> samples a uniform random variable in <code>[0, 1)</code>.</p></div></div><p>For example:</p><pre><code class="language-julia">for i = 1:3
+    return error(&quot;We should never get here because P should sum to 1.0.&quot;)
+end</code></pre><pre><code class="language-none">sample_uncertainty (generic function with 1 method)</code></pre><div class="admonition is-info"><header class="admonition-header">Note</header><div class="admonition-body"><p><code>rand()</code> samples a uniform random variable in <code>[0, 1)</code>.</p></div></div><p>For example:</p><pre><code class="language-julia">for i in 1:3
     println(&quot;ω = &quot;, sample_uncertainty(model.nodes[1].uncertainty))
 end</code></pre><pre><code class="language-none">ω = 50.0
 ω = 100.0
@@ -274,7 +273,7 @@ end</code></pre><pre><code class="language-none">ω = 50.0
         # over! This means we&#39;ve hit an implicit &quot;zero&quot; node.
         return nothing
     end
-end</code></pre><pre><code class="language-none">sample_next_node (generic function with 1 method)</code></pre><p>For example:</p><pre><code class="language-julia">for i = 1:3
+end</code></pre><pre><code class="language-none">sample_next_node (generic function with 1 method)</code></pre><p>For example:</p><pre><code class="language-julia">for i in 1:3
     # We use `repr` to print the next node, because `sample_next_node` can
     # return `nothing`.
     println(&quot;Next node from $(i) = &quot;, repr(sample_next_node(model, i)))
@@ -284,9 +283,8 @@ Next node from 3 = nothing
 </code></pre><p>This is a little boring, because our graph is simple. However, more complicated graphs will generate more interesting trajectories!</p><h2 id="Implementation:-the-forward-pass"><a class="docs-heading-anchor" href="#Implementation:-the-forward-pass">Implementation: the forward pass</a><a id="Implementation:-the-forward-pass-1"></a><a class="docs-heading-anchor-permalink" href="#Implementation:-the-forward-pass" title="Permalink"></a></h2><p>Recall that, after approximating the cost-to-go term, we need a way of generating the cuts. As the first step, we need a way of generating candidate solutions <span>$x_k^\prime$</span>. However, unlike the Kelley&#39;s example, our functions <span>$V_j^k(x^\prime, \varphi)$</span> need two inputs: an outgoing state variable and a realization of the random variable.</p><p>One way of getting these inputs is just to pick a random (feasible) value. However, in doing so, we might pick outgoing state variables that we will never see in practice, or we might infrequently pick outgoing state variables that we will often see in practice. Therefore, a better way of generating the inputs is to use a simulation of the policy, which we call the <strong>forward</strong> <strong>pass</strong>.</p><p>The forward pass walks the policy graph from start to end, transitioning randomly along the arcs. At each node, it observes a realization of the random variable and solves the approximated subproblem to generate a candidate outgoing state variable <span>$x_k^\prime$</span>. The outgoing state variable is passed as the incoming state variable to the next node in the trajectory.</p><pre><code class="language-julia">function forward_pass(model::PolicyGraph, io::IO = stdout)
     println(io, &quot;| Forward Pass&quot;)
     # First, get the value of the state at the root node (e.g., x_R).
-    incoming_state = Dict(
-        k =&gt; JuMP.fix_value(v.in) for (k, v) in model.nodes[1].states
-    )
+    incoming_state =
+        Dict(k =&gt; JuMP.fix_value(v.in) for (k, v) in model.nodes[1].states)
     # `simulation_cost` is an accumlator that is going to sum the stage-costs
     # incurred over the forward pass.
     simulation_cost = 0.0
@@ -318,7 +316,8 @@ Next node from 3 = nothing
         println(io, &quot;| | | x′ = &quot;, outgoing_state)
         # We also need to compute the stage cost to add to our
         # `simulation_cost` accumulator:
-        stage_cost = JuMP.objective_value(node.subproblem) - JuMP.value(node.cost_to_go)
+        stage_cost =
+            JuMP.objective_value(node.subproblem) - JuMP.value(node.cost_to_go)
         simulation_cost += stage_cost
         println(io, &quot;| | | C(x, u, ω) = &quot;, stage_cost)
         # As a penultimate step, set the outgoing state of stage t and the
@@ -361,7 +360,7 @@ end</code></pre><pre><code class="language-none">forward_pass (generic function 
 )
     println(io, &quot;| Backward pass&quot;)
     # For the backward pass, we walk back up the nodes.
-    for i = reverse(1:length(trajectory))
+    for i in reverse(1:length(trajectory))
         index, outgoing_states = trajectory[i]
         node = model.nodes[index]
         println(io, &quot;| | Visiting node $(index)&quot;)
@@ -396,10 +395,12 @@ end</code></pre><pre><code class="language-none">forward_pass (generic function 
                 println(io, &quot;| | | | dVdx′ = &quot;, dVdx)
                 cut_expression += JuMP.@expression(
                     node.subproblem,
-                    P_ij * pφ * (
+                    P_ij *
+                    pφ *
+                    (
                         V + sum(
-                            dVdx[k] * (x.out - outgoing_states[k])
-                            for (k, x) in node.states
+                            dVdx[k] * (x.out - outgoing_states[k]) for
+                            (k, x) in node.states
                         )
                     ),
                 )
@@ -421,9 +422,9 @@ end</code></pre><pre><code class="language-none">backward_pass (generic function
     return bound
 end</code></pre><pre><code class="language-none">lower_bound (generic function with 1 method)</code></pre><div class="admonition is-info"><header class="admonition-header">Note</header><div class="admonition-body"><p>The implementation is simplified because we assumed that there is only one arc from the root node, and that it pointed to the first node in the vector.</p></div></div><p>Because we haven&#39;t trained a policy yet, the lower bound is going to be very bad:</p><pre><code class="language-julia">lower_bound(model)</code></pre><pre><code class="language-none">0.0</code></pre><h3 id="Upper-bounds"><a class="docs-heading-anchor" href="#Upper-bounds">Upper bounds</a><a id="Upper-bounds-1"></a><a class="docs-heading-anchor-permalink" href="#Upper-bounds" title="Permalink"></a></h3><p>With Kelley&#39;s algorithm, we could easily construct an upper bound by evaluating <span>$f(x_K)$</span>. However, it is almost always intractable to evaluate an upper bound for multistage stochastic programs due to the large number of nodes and the nested expectations. Instead, we can perform a Monte Carlo simulation of the policy to build a statistical estimate for the value of <span>$\mathbb{E}_{i \in R^+, \omega \in \Omega_i}[V_i^\pi(x_R, \omega)]$</span>, where <span>$\pi$</span> is the policy defined by the current approximations <span>$V^K_i$</span>.</p><pre><code class="language-julia">function upper_bound(model::PolicyGraph; replications::Int)
     # Pipe the output to `devnull` so we don&#39;t print too much!
-    simulations = [forward_pass(model, devnull) for i = 1:replications]
+    simulations = [forward_pass(model, devnull) for i in 1:replications]
     z = [s[2] for s in simulations]
-    μ  = Statistics.mean(z)
+    μ = Statistics.mean(z)
     tσ = 1.96 * Statistics.std(z) / sqrt(replications)
     return μ, tσ
 end</code></pre><pre><code class="language-none">upper_bound (generic function with 1 method)</code></pre><div class="admonition is-info"><header class="admonition-header">Note</header><div class="admonition-body"><p>The width of the confidence interval is incorrect if there are cycles in the graph, because the distribution of simulation costs <code>z</code> is not symmetric. The mean is correct, however.</p></div></div><h3 id="Termination-criteria"><a class="docs-heading-anchor" href="#Termination-criteria">Termination criteria</a><a id="Termination-criteria-1"></a><a class="docs-heading-anchor-permalink" href="#Termination-criteria" title="Permalink"></a></h3><p>In Kelley&#39;s algorithm, the upper bound was deterministic. Therefore, we could terminate the algorithm when the lower bound was sufficiently close to the upper bound. However, our upper bound for SDDP is not deterministic; it is a confidence interval!</p><p>Some people suggest terminating SDDP when the lower bound is contained within the confidence interval. However, this is a poor choice because it is too easy to generate a false positive. For example, if we use a small number of replications then the width of the confidence will be large, and we are more likely to terminate!</p><p>In a future tutorial (not yet written...) we will discuss termination criteria in more depth. For now, pick a large number of iterations and train for as long as possible.</p><div class="admonition is-success"><header class="admonition-header">Tip</header><div class="admonition-body"><p>For a rule of thumb, pick a large number of iterations to train the policy for (e.g., <span>$10 \times |\mathcal{N}| \times \max\limits_{i\in\mathcal{N}} |\Omega_i|$</span>)</p></div></div><h2 id="Implementation:-the-training-loop"><a class="docs-heading-anchor" href="#Implementation:-the-training-loop">Implementation: the training loop</a><a id="Implementation:-the-training-loop-1"></a><a class="docs-heading-anchor-permalink" href="#Implementation:-the-training-loop" title="Permalink"></a></h2><p>The <code>train</code> loop of SDDP just applies the forward and backward passes iteratively, followed by a final simulation to compute the upper bound confidence interval:</p><pre><code class="language-julia">function train(
@@ -432,7 +433,7 @@ end</code></pre><pre><code class="language-none">upper_bound (generic function w
     replications::Int,
     io::IO = stdout,
 )
-    for i = 1:iteration_limit
+    for i in 1:iteration_limit
         println(io, &quot;Starting iteration $(i)&quot;)
         outgoing_states, _ = forward_pass(model, io)
         backward_pass(model, outgoing_states, io)
@@ -1040,8 +1041,8 @@ Upper bound = 8475.0 ± 858.3515973343701
     end
     JuMP.optimize!(the_node.subproblem)
     return Dict(
-        k =&gt; JuMP.value.(v)
-        for (k, v) in JuMP.object_dictionary(the_node.subproblem)
+        k =&gt; JuMP.value.(v) for
+        (k, v) in JuMP.object_dictionary(the_node.subproblem)
     )
 end
 
@@ -1060,11 +1061,7 @@ evaluate_policy(
   :hydro_generation =&gt; 25.0
   :cost_to_go =&gt; 3333.33</code></pre><div class="admonition is-info"><header class="admonition-header">Note</header><div class="admonition-body"><p>The random variable can be <strong>out-of-sample</strong>, i.e., it doesn&#39;t have to be in the vector <span>$\Omega$</span> we created when defining the model! This is a notable difference to other multistage stochastic solution methods like progressive hedging or using the deterministic equivalent.</p></div></div><h2 id="Example:-infinite-horizon"><a class="docs-heading-anchor" href="#Example:-infinite-horizon">Example: infinite horizon</a><a id="Example:-infinite-horizon-1"></a><a class="docs-heading-anchor-permalink" href="#Example:-infinite-horizon" title="Permalink"></a></h2><p>As promised earlier, our implementation is actually pretty general. It can solve any multistage stochastic (linear) program defined by a policy graph, including infinite horizon problems!</p><p>Here&#39;s an example, where we have extended our earlier problem with an arc from node 3 to node 2 with probability 0.5. You can interpret the 0.5 as a discount factor.</p><pre><code class="language-julia">model = PolicyGraph(
     subproblem_builder;
-    graph = [
-        Dict(2 =&gt; 1.0),
-        Dict(3 =&gt; 1.0),
-        Dict(2 =&gt; 0.5),
-    ],
+    graph = [Dict(2 =&gt; 1.0), Dict(3 =&gt; 1.0), Dict(2 =&gt; 0.5)],
     lower_bound = 0.0,
     optimizer = GLPK.Optimizer,
 )</code></pre><pre><code class="language-none">A policy graph with 3 nodes
@@ -2068,4 +2065,4 @@ Upper bound = 26581.25 ± 4608.667643704225
   :volume_in =&gt; 100.0
   :thermal_generation =&gt; 40.0
   :hydro_generation =&gt; 110.0
-  :cost_to_go =&gt; 18750.0</code></pre><hr/><p><em>This page was generated using <a href="https://github.com/fredrikekre/Literate.jl">Literate.jl</a>.</em></p></article><nav class="docs-footer"><a class="docs-footer-prevpage" href="../13_integrality/">« Advanced III: integrality</a><a class="docs-footer-nextpage" href="../22_risk/">Theory II: risk aversion »</a><div class="flexbox-break"></div><p class="footer-message">Powered by <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> and the <a href="https://julialang.org/">Julia Programming Language</a>.</p></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> on <span class="colophon-date" title="Sunday 30 May 2021 21:11">Sunday 30 May 2021</span>. Using Julia version 1.0.5.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>
+  :cost_to_go =&gt; 18750.0</code></pre><hr/><p><em>This page was generated using <a href="https://github.com/fredrikekre/Literate.jl">Literate.jl</a>.</em></p></article><nav class="docs-footer"><a class="docs-footer-prevpage" href="../13_integrality/">« Advanced III: integrality</a><a class="docs-footer-nextpage" href="../22_risk/">Theory II: risk aversion »</a><div class="flexbox-break"></div><p class="footer-message">Powered by <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> and the <a href="https://julialang.org/">Julia Programming Language</a>.</p></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> on <span class="colophon-date" title="Sunday 30 May 2021 22:07">Sunday 30 May 2021</span>. Using Julia version 1.0.5.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>

@@ -37,7 +37,8 @@ function vehicle_location_model(integrality_handler)
         @expression(
             sp,
             base_balance[b in bases, v in vehicles],
-            location[b, v].in - dispatch[b, v] - sum(shift[b, :, v]) + sum(shift[:, b, v])
+            location[b, v].in - dispatch[b, v] - sum(shift[b, :, v]) +
+            sum(shift[:, b, v])
         )
         @constraints(
             sp,
@@ -45,11 +46,14 @@ function vehicle_location_model(integrality_handler)
                 # Only one vehicle dispatched to call.
                 sum(dispatch) == 1
                 # Can only dispatch vehicle from base if vehicle is at that base.
-                [b in bases, v in vehicles], dispatch[b, v] &lt;= location[b, v].in
+                [b in bases, v in vehicles],
+                dispatch[b, v] &lt;= location[b, v].in
                 # Can only shift vehicle if vehicle is at that src base.
-                [b in bases, v in vehicles], sum(shift[b, :, v]) &lt;= location[b, v].in
+                [b in bases, v in vehicles],
+                sum(shift[b, :, v]) &lt;= location[b, v].in
                 # Can only shift vehicle if vehicle is not being dispatched.
-                [b in bases, v in vehicles], sum(shift[b, :, v]) + dispatch[b, v] &lt;= 1
+                [b in bases, v in vehicles],
+                sum(shift[b, :, v]) + dispatch[b, v] &lt;= 1
                 # Can&#39;t shift to same base.
                 [b in bases, v in vehicles], shift[b, b, v] == 0
                 # Update states for non-home/non-hospital bases.
@@ -68,8 +72,10 @@ function vehicle_location_model(integrality_handler)
                     # Distance to travel from base to emergency and then to hospital.
                     dispatch[b, v] * dispatch_cost(b, request) +
                     # Distance travelled by vehicles relocating bases.
-                    sum(shift_cost(b, dest) * shift[b, dest, v] for dest in bases)
-                    for b in bases, v in vehicles
+                    sum(
+                        shift_cost(b, dest) * shift[b, dest, v] for
+                        dest in bases
+                    ) for b in bases, v in vehicles
                 )
             )
         end
@@ -96,12 +102,12 @@ Numerical stability report
 No problems detected
 
  Iteration    Simulation       Bound         Time (s)    Proc. ID   # Solves
-       10    1.442857e+03   1.555006e+03   1.962198e+00          1       5200
-       20    1.827844e+03   1.639138e+03   3.943460e+00          1      10400
-       30    1.950965e+03   1.675964e+03   6.000583e+00          1      15600
-       40    2.538518e+03   1.692907e+03   8.101348e+00          1      20800
-       50    1.176808e+03   1.698158e+03   1.020183e+01          1      26000
+       10    1.442857e+03   1.555006e+03   2.237675e+00          1       5200
+       20    1.827844e+03   1.639138e+03   4.676712e+00          1      10400
+       30    1.950965e+03   1.675964e+03   6.994228e+00          1      15600
+       40    2.538518e+03   1.692907e+03   9.387958e+00          1      20800
+       50    1.176808e+03   1.698158e+03   1.172752e+01          1      26000
 
 Terminating training with status: iteration_limit
 ------------------------------------------------------------------------------
-</code></pre><hr/><p><em>This page was generated using <a href="https://github.com/fredrikekre/Literate.jl">Literate.jl</a>.</em></p></article><nav class="docs-footer"><a class="docs-footer-prevpage" href="../the_farmers_problem/">« The farmer&#39;s problem</a><a class="docs-footer-nextpage" href="../../apireference/">API Reference »</a><div class="flexbox-break"></div><p class="footer-message">Powered by <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> and the <a href="https://julialang.org/">Julia Programming Language</a>.</p></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> on <span class="colophon-date" title="Sunday 30 May 2021 21:11">Sunday 30 May 2021</span>. Using Julia version 1.0.5.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>
+</code></pre><hr/><p><em>This page was generated using <a href="https://github.com/fredrikekre/Literate.jl">Literate.jl</a>.</em></p></article><nav class="docs-footer"><a class="docs-footer-prevpage" href="../the_farmers_problem/">« The farmer&#39;s problem</a><a class="docs-footer-nextpage" href="../../apireference/">API Reference »</a><div class="flexbox-break"></div><p class="footer-message">Powered by <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> and the <a href="https://julialang.org/">Julia Programming Language</a>.</p></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> on <span class="colophon-date" title="Sunday 30 May 2021 22:07">Sunday 30 May 2021</span>. Using Julia version 1.0.5.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>

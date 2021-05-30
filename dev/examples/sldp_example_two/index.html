@@ -18,11 +18,17 @@ function sldp_example_two(; first_stage_integer::Bool = true, N = 2)
             @variable(sp, 0 &lt;= y[1:4] &lt;= 1, Bin)
             @variable(sp, ω[1:2])
             @stageobjective(sp, -16 * y[1] - 19 * y[2] - 23 * y[3] - 28 * y[4])
-            @constraint(sp, 2 * y[1] + 3 * y[2] + 4 * y[3] + 5 * y[4] &lt;= ω[1] - x[1].in)
-            @constraint(sp, 6 * y[1] + 1 * y[2] + 3 * y[3] + 2 * y[4] &lt;= ω[2] - x[2].in)
+            @constraint(
+                sp,
+                2 * y[1] + 3 * y[2] + 4 * y[3] + 5 * y[4] &lt;= ω[1] - x[1].in
+            )
+            @constraint(
+                sp,
+                6 * y[1] + 1 * y[2] + 3 * y[3] + 2 * y[4] &lt;= ω[2] - x[2].in
+            )
             steps = range(5, stop = 15, length = N)
             SDDP.parameterize(sp, [[i, j] for i in steps for j in steps]) do φ
-                JuMP.fix.(ω, φ)
+                return JuMP.fix.(ω, φ)
             end
         end
     end
@@ -58,16 +64,16 @@ Numerical stability report
 No problems detected
 
  Iteration    Simulation       Bound         Time (s)    Proc. ID   # Solves
-       10   -4.500000e+01  -5.809615e+01   3.875971e-03          1         70
-       20   -9.800000e+01  -5.809615e+01   7.179976e-03          1        140
-       30   -4.500000e+01  -5.809615e+01   1.044703e-02          1        210
-       40   -4.500000e+01  -5.809615e+01   1.359797e-02          1        280
-       50   -4.500000e+01  -5.809615e+01   1.703691e-02          1        350
-       60   -4.700000e+01  -5.809615e+01   2.061105e-02          1        420
-       70   -4.700000e+01  -5.809615e+01   2.392197e-02          1        490
-       80   -4.700000e+01  -5.809615e+01   2.734089e-02          1        560
-       90   -9.800000e+01  -5.809615e+01   3.050399e-02          1        630
-      100   -4.700000e+01  -5.809615e+01   3.408599e-02          1        700
+       10   -4.500000e+01  -5.809615e+01   6.636858e-03          1         70
+       20   -9.800000e+01  -5.809615e+01   1.036096e-02          1        140
+       30   -4.500000e+01  -5.809615e+01   1.383495e-02          1        210
+       40   -4.500000e+01  -5.809615e+01   1.803088e-02          1        280
+       50   -4.500000e+01  -5.809615e+01   2.250886e-02          1        350
+       60   -4.700000e+01  -5.809615e+01   2.704096e-02          1        420
+       70   -4.700000e+01  -5.809615e+01   4.781985e-02          1        490
+       80   -4.700000e+01  -5.809615e+01   5.173397e-02          1        560
+       90   -9.800000e+01  -5.809615e+01   5.552697e-02          1        630
+      100   -4.700000e+01  -5.809615e+01   5.967593e-02          1        700
 
 Terminating training with status: iteration_limit
 ------------------------------------------------------------------------------
@@ -88,16 +94,16 @@ Numerical stability report
 No problems detected
 
  Iteration    Simulation       Bound         Time (s)    Proc. ID   # Solves
-       10   -4.700000e+01  -6.196125e+01   1.053405e-02          1        120
-       20   -4.238462e+01  -6.196125e+01   1.441598e-02          1        240
-       30   -4.238462e+01  -6.196125e+01   1.884294e-02          1        360
-       40   -4.500000e+01  -6.196125e+01   2.333498e-02          1        480
-       50   -7.560000e+01  -6.196125e+01   2.733397e-02          1        600
-       60   -9.800000e+01  -6.196125e+01   3.179002e-02          1        720
-       70   -9.800000e+01  -6.196125e+01   3.618693e-02          1        840
-       80   -4.500000e+01  -6.196125e+01   4.054403e-02          1        960
-       90   -4.700000e+01  -6.196125e+01   4.496908e-02          1       1080
-      100   -4.700000e+01  -6.196125e+01   4.955101e-02          1       1200
+       10   -4.700000e+01  -6.196125e+01   1.278400e-02          1        120
+       20   -4.238462e+01  -6.196125e+01   1.735997e-02          1        240
+       30   -4.238462e+01  -6.196125e+01   2.277684e-02          1        360
+       40   -4.500000e+01  -6.196125e+01   2.851391e-02          1        480
+       50   -7.560000e+01  -6.196125e+01   3.380084e-02          1        600
+       60   -9.800000e+01  -6.196125e+01   3.953385e-02          1        720
+       70   -9.800000e+01  -6.196125e+01   4.471183e-02          1        840
+       80   -4.500000e+01  -6.196125e+01   5.015182e-02          1        960
+       90   -4.700000e+01  -6.196125e+01   5.540204e-02          1       1080
+      100   -4.700000e+01  -6.196125e+01   6.150603e-02          1       1200
 
 Terminating training with status: iteration_limit
 ------------------------------------------------------------------------------
@@ -118,17 +124,17 @@ Numerical stability report
 No problems detected
 
  Iteration    Simulation       Bound         Time (s)    Proc. ID   # Solves
-       10   -6.946154e+01  -6.554113e+01   1.595402e-02          1        390
-       20   -7.760000e+01  -6.554113e+01   4.406810e-02          1        780
-       30   -5.530769e+01  -6.554113e+01   5.521417e-02          1       1170
-       40   -7.071429e+01  -6.554113e+01   6.595898e-02          1       1560
-       50   -8.760000e+01  -6.554113e+01   7.629395e-02          1       1950
-       60   -4.300000e+01  -6.554113e+01   8.630013e-02          1       2340
-       70   -6.946154e+01  -6.554113e+01   9.707499e-02          1       2730
-       80   -4.780000e+01  -6.554113e+01   1.080730e-01          1       3120
-       90   -4.484615e+01  -6.554113e+01   1.192491e-01          1       3510
-      100   -4.300000e+01  -6.554113e+01   1.442301e-01          1       3900
+       10   -6.946154e+01  -6.554113e+01   2.031493e-02          1        390
+       20   -7.760000e+01  -6.554113e+01   3.264308e-02          1        780
+       30   -5.530769e+01  -6.554113e+01   4.631591e-02          1       1170
+       40   -7.071429e+01  -6.554113e+01   7.664609e-02          1       1560
+       50   -8.760000e+01  -6.554113e+01   8.839488e-02          1       1950
+       60   -4.300000e+01  -6.554113e+01   1.021769e-01          1       2340
+       70   -6.946154e+01  -6.554113e+01   1.156869e-01          1       2730
+       80   -4.780000e+01  -6.554113e+01   1.280930e-01          1       3120
+       90   -4.484615e+01  -6.554113e+01   1.405110e-01          1       3510
+      100   -4.300000e+01  -6.554113e+01   1.535480e-01          1       3900
 
 Terminating training with status: iteration_limit
 ------------------------------------------------------------------------------
-</code></pre><hr/><p><em>This page was generated using <a href="https://github.com/fredrikekre/Literate.jl">Literate.jl</a>.</em></p></article><nav class="docs-footer"><a class="docs-footer-prevpage" href="../sldp_example_one/">« SLDP: example 1</a><a class="docs-footer-nextpage" href="../stochastic_all_blacks/">Stochastic All Blacks »</a><div class="flexbox-break"></div><p class="footer-message">Powered by <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> and the <a href="https://julialang.org/">Julia Programming Language</a>.</p></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> on <span class="colophon-date" title="Sunday 30 May 2021 21:11">Sunday 30 May 2021</span>. Using Julia version 1.0.5.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>
+</code></pre><hr/><p><em>This page was generated using <a href="https://github.com/fredrikekre/Literate.jl">Literate.jl</a>.</em></p></article><nav class="docs-footer"><a class="docs-footer-prevpage" href="../sldp_example_one/">« SLDP: example 1</a><a class="docs-footer-nextpage" href="../stochastic_all_blacks/">Stochastic All Blacks »</a><div class="flexbox-break"></div><p class="footer-message">Powered by <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> and the <a href="https://julialang.org/">Julia Programming Language</a>.</p></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> on <span class="colophon-date" title="Sunday 30 May 2021 22:07">Sunday 30 May 2021</span>. Using Julia version 1.0.5.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>

@@ -10,7 +10,11 @@ function stochastic_all_blacks()
     R = [3 3 6; 3 3 6]
     # Number of noises
     s = 3
-    offers = [[[1, 1], [0, 0], [1, 1]], [[1, 0], [0, 0], [0, 0]], [[0, 1], [1, 0], [1, 1]]]
+    offers = [
+        [[1, 1], [0, 0], [1, 1]],
+        [[1, 0], [0, 0], [0, 0]],
+        [[0, 1], [1, 0], [1, 1]],
+    ]
 
     model = SDDP.LinearPolicyGraph(
         stages = T,
@@ -26,10 +30,14 @@ function stochastic_all_blacks()
         @variable(sp, accept_offer[1:N], Bin)
         @variable(sp, offers_made[1:N])
         # Balance on seats
-        @constraint(sp, balance[i in 1:N], x[i].in - x[i].out == accept_offer[i])
-        @stageobjective(sp, sum(R[i, stage] * accept_offer[i] for i = 1:N))
+        @constraint(
+            sp,
+            balance[i in 1:N],
+            x[i].in - x[i].out == accept_offer[i]
+        )
+        @stageobjective(sp, sum(R[i, stage] * accept_offer[i] for i in 1:N))
         SDDP.parameterize(sp, offers[stage]) do o
-            JuMP.fix.(offers_made, o)
+            return JuMP.fix.(offers_made, o)
         end
         @constraint(sp, accept_offer .&lt;= offers_made)
     end
@@ -85,62 +93,62 @@ No problems detected
       3: obj =   4.000000000e+00 inf =   0.000e+00 (0)
 *     4: obj =   0.000000000e+00 inf =   0.000e+00 (0)
 *     4: obj =   0.000000000e+00 inf =   0.000e+00 (0)
-        1    6.000000e+00   8.000000e+00   2.099471e-01          1         11
+        1    6.000000e+00   8.000000e+00   2.306070e-01          1         11
 *     0: obj =   6.000000000e+00 inf =   0.000e+00 (0)
 *     0: obj =   6.000000000e+00 inf =   0.000e+00 (0)
 *     0: obj =   1.200000000e+01 inf =   0.000e+00 (0)
 *     0: obj =   8.000000000e+00 inf =   0.000e+00 (0)
 *     0: obj =   8.000000000e+00 inf =   0.000e+00 (0)
-        2    6.000000e+00   8.000000e+00   2.141371e-01          1         22
+        2    6.000000e+00   8.000000e+00   2.347550e-01          1         22
 *     0: obj =   6.000000000e+00 inf =   0.000e+00 (0)
 *     0: obj =   6.000000000e+00 inf =   0.000e+00 (0)
 *     0: obj =   1.200000000e+01 inf =   0.000e+00 (0)
 *     0: obj =   8.000000000e+00 inf =   0.000e+00 (0)
 *     0: obj =   8.000000000e+00 inf =   0.000e+00 (0)
-        3    6.000000e+00   8.000000e+00   2.177751e-01          1         33
+        3    6.000000e+00   8.000000e+00   2.385030e-01          1         33
 *     0: obj =   6.000000000e+00 inf =   0.000e+00 (0)
 *     0: obj =   6.000000000e+00 inf =   0.000e+00 (0)
 *     0: obj =   1.200000000e+01 inf =   0.000e+00 (0)
 *     0: obj =   8.000000000e+00 inf =   0.000e+00 (0)
 *     0: obj =   8.000000000e+00 inf =   0.000e+00 (0)
-        4    1.200000e+01   8.000000e+00   2.211940e-01          1         44
+        4    1.200000e+01   8.000000e+00   2.420211e-01          1         44
 *     0: obj =   6.000000000e+00 inf =   0.000e+00 (0)
 *     0: obj =   6.000000000e+00 inf =   0.000e+00 (0)
 *     0: obj =   1.200000000e+01 inf =   0.000e+00 (0)
 *     0: obj =   8.000000000e+00 inf =   0.000e+00 (0)
 *     0: obj =   8.000000000e+00 inf =   0.000e+00 (0)
-        5    1.200000e+01   8.000000e+00   2.247212e-01          1         55
+        5    1.200000e+01   8.000000e+00   2.461240e-01          1         55
 *     0: obj =   6.000000000e+00 inf =   0.000e+00 (0)
 *     0: obj =   6.000000000e+00 inf =   0.000e+00 (0)
 *     0: obj =   1.200000000e+01 inf =   0.000e+00 (0)
 *     0: obj =   8.000000000e+00 inf =   0.000e+00 (0)
 *     0: obj =   8.000000000e+00 inf =   0.000e+00 (0)
-        6    1.200000e+01   8.000000e+00   2.282240e-01          1         66
+        6    1.200000e+01   8.000000e+00   2.697871e-01          1         66
 *     0: obj =   6.000000000e+00 inf =   0.000e+00 (0)
 *     0: obj =   6.000000000e+00 inf =   0.000e+00 (0)
 *     0: obj =   1.200000000e+01 inf =   0.000e+00 (0)
 *     0: obj =   8.000000000e+00 inf =   0.000e+00 (0)
 *     0: obj =   8.000000000e+00 inf =   0.000e+00 (0)
-        7    6.000000e+00   8.000000e+00   2.317832e-01          1         77
+        7    6.000000e+00   8.000000e+00   2.738400e-01          1         77
 *     0: obj =   6.000000000e+00 inf =   0.000e+00 (0)
 *     0: obj =   6.000000000e+00 inf =   0.000e+00 (0)
 *     0: obj =   1.200000000e+01 inf =   0.000e+00 (0)
 *     0: obj =   8.000000000e+00 inf =   0.000e+00 (0)
 *     0: obj =   8.000000000e+00 inf =   0.000e+00 (0)
-        8    6.000000e+00   8.000000e+00   2.352631e-01          1         88
+        8    6.000000e+00   8.000000e+00   2.774620e-01          1         88
 *     0: obj =   6.000000000e+00 inf =   0.000e+00 (0)
 *     0: obj =   6.000000000e+00 inf =   0.000e+00 (0)
 *     0: obj =   1.200000000e+01 inf =   0.000e+00 (0)
 *     0: obj =   8.000000000e+00 inf =   0.000e+00 (0)
 *     0: obj =   8.000000000e+00 inf =   0.000e+00 (0)
-        9    6.000000e+00   8.000000e+00   2.399101e-01          1         99
+        9    6.000000e+00   8.000000e+00   2.809069e-01          1         99
 *     0: obj =   6.000000000e+00 inf =   0.000e+00 (0)
 *     0: obj =   6.000000000e+00 inf =   0.000e+00 (0)
 *     0: obj =   1.200000000e+01 inf =   0.000e+00 (0)
 *     0: obj =   8.000000000e+00 inf =   0.000e+00 (0)
 *     0: obj =   8.000000000e+00 inf =   0.000e+00 (0)
-       10    1.200000e+01   8.000000e+00   2.448180e-01          1        110
+       10    1.200000e+01   8.000000e+00   2.847159e-01          1        110
 
 Terminating training with status: iteration_limit
 ------------------------------------------------------------------------------
-</code></pre><hr/><p><em>This page was generated using <a href="https://github.com/fredrikekre/Literate.jl">Literate.jl</a>.</em></p></article><nav class="docs-footer"><a class="docs-footer-prevpage" href="../sldp_example_two/">« SLDP: example 2</a><a class="docs-footer-nextpage" href="../the_farmers_problem/">The farmer&#39;s problem »</a><div class="flexbox-break"></div><p class="footer-message">Powered by <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> and the <a href="https://julialang.org/">Julia Programming Language</a>.</p></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> on <span class="colophon-date" title="Sunday 30 May 2021 21:11">Sunday 30 May 2021</span>. Using Julia version 1.0.5.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>
+</code></pre><hr/><p><em>This page was generated using <a href="https://github.com/fredrikekre/Literate.jl">Literate.jl</a>.</em></p></article><nav class="docs-footer"><a class="docs-footer-prevpage" href="../sldp_example_two/">« SLDP: example 2</a><a class="docs-footer-nextpage" href="../the_farmers_problem/">The farmer&#39;s problem »</a><div class="flexbox-break"></div><p class="footer-message">Powered by <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> and the <a href="https://julialang.org/">Julia Programming Language</a>.</p></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> on <span class="colophon-date" title="Sunday 30 May 2021 22:07">Sunday 30 May 2021</span>. Using Julia version 1.0.5.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>

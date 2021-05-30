@@ -26,11 +26,14 @@ function test_prob52_2stages()
             rhs_noise[1:m]  # Dummy variable for RHS noise term.
         end)
         # ========== Constraints ==========
-        @constraints(subproblem, begin
-            [i = 1:n], x[i].out == x[i].in + v[i]
-            [i = 1:n], sum(y[i, :]) &lt;= x[i].in
-            [j = 1:m], sum(y[:, j]) + penalty &gt;= rhs_noise[j]
-        end)
+        @constraints(
+            subproblem,
+            begin
+                [i = 1:n], x[i].out == x[i].in + v[i]
+                [i = 1:n], sum(y[i, :]) &lt;= x[i].in
+                [j = 1:m], sum(y[:, j]) + penalty &gt;= rhs_noise[j]
+            end
+        )
         if stage == 2
             # No investment in last stage.
             @constraint(subproblem, sum(v) == 0)
@@ -38,7 +41,7 @@ function test_prob52_2stages()
         # ========== Uncertainty ==========
         if stage != 1 # no uncertainty in first stage
             SDDP.parameterize(subproblem, 1:size(D2, 2), p2) do ω
-                for j = 1:m
+                for j in 1:m
                     JuMP.fix(rhs_noise[j], D2[j, ω])
                 end
             end
@@ -69,12 +72,12 @@ Numerical stability report
 No problems detected
 
  Iteration    Simulation       Bound         Time (s)    Proc. ID   # Solves
-       10    3.719972e+05   3.092989e+05   5.309200e-02          1         50
-       20    3.403500e+05   3.392359e+05   5.651808e-02          1        100
-       30    3.336456e+05   3.402384e+05   6.040215e-02          1        150
-       40    3.337559e+05   3.403155e+05   6.394506e-02          1        200
-       50    3.337559e+05   3.403155e+05   6.649899e-02          1        250
+       10    3.719972e+05   3.092989e+05   5.805707e-02          1         50
+       20    3.403500e+05   3.392359e+05   6.238699e-02          1        100
+       30    3.336456e+05   3.402384e+05   6.689692e-02          1        150
+       40    3.337559e+05   3.403155e+05   7.077193e-02          1        200
+       50    3.337559e+05   3.403155e+05   7.374287e-02          1        250
 
 Terminating training with status: iteration_limit
 ------------------------------------------------------------------------------
-</code></pre><hr/><p><em>This page was generated using <a href="https://github.com/fredrikekre/Literate.jl">Literate.jl</a>.</em></p></article><nav class="docs-footer"><a class="docs-footer-prevpage" href="../StochDynamicProgramming.jl_stock/">« StochDynamicProgramming: the stock problem</a><a class="docs-footer-nextpage" href="../StructDualDynProg.jl_prob5.2_3stages/">StructDualDynProg: Problem 5.2, 3 stages »</a><div class="flexbox-break"></div><p class="footer-message">Powered by <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> and the <a href="https://julialang.org/">Julia Programming Language</a>.</p></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> on <span class="colophon-date" title="Sunday 30 May 2021 21:11">Sunday 30 May 2021</span>. Using Julia version 1.0.5.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>
+</code></pre><hr/><p><em>This page was generated using <a href="https://github.com/fredrikekre/Literate.jl">Literate.jl</a>.</em></p></article><nav class="docs-footer"><a class="docs-footer-prevpage" href="../StochDynamicProgramming.jl_stock/">« StochDynamicProgramming: the stock problem</a><a class="docs-footer-nextpage" href="../StructDualDynProg.jl_prob5.2_3stages/">StructDualDynProg: Problem 5.2, 3 stages »</a><div class="flexbox-break"></div><p class="footer-message">Powered by <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> and the <a href="https://julialang.org/">Julia Programming Language</a>.</p></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> on <span class="colophon-date" title="Sunday 30 May 2021 22:07">Sunday 30 May 2021</span>. Using Julia version 1.0.5.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>

@@ -4,16 +4,18 @@
 Ω = [
     (inflow = 0.0, fuel_multiplier = 1.5),
     (inflow = 50.0, fuel_multiplier = 1.0),
-    (inflow = 100.0, fuel_multiplier = 0.75)
+    (inflow = 100.0, fuel_multiplier = 0.75),
 ]
 
 model = SDDP.MarkovianPolicyGraph(
-    transition_matrices = Array{Float64, 2}[
-        [1.0]&#39;, [0.75 0.25], [0.75 0.25 ; 0.25 0.75]
+    transition_matrices = Array{Float64,2}[
+        [1.0]&#39;,
+        [0.75 0.25],
+        [0.75 0.25; 0.25 0.75],
     ],
     sense = :Min,
     lower_bound = 0.0,
-    optimizer = GLPK.Optimizer
+    optimizer = GLPK.Optimizer,
 ) do subproblem, node
     t, markov_state = node
     @variable(subproblem, 0 &lt;= volume &lt;= 200, SDDP.State, initial_value = 200)
@@ -23,15 +25,20 @@ model = SDDP.MarkovianPolicyGraph(
         hydro_spill &gt;= 0
         inflow
     end)
-    @constraints(subproblem, begin
-        volume.out == volume.in + inflow - hydro_generation - hydro_spill
-        thermal_generation + hydro_generation == 150.0
-    end)
-    probability = markov_state == 1 ? [1/6, 1/3, 1/2] : [1/2, 1/3, 1/6]
+    @constraints(
+        subproblem,
+        begin
+            volume.out == volume.in + inflow - hydro_generation - hydro_spill
+            thermal_generation + hydro_generation == 150.0
+        end
+    )
+    probability =
+        markov_state == 1 ? [1 / 6, 1 / 3, 1 / 2] : [1 / 2, 1 / 3, 1 / 6]
     fuel_cost = [50.0, 100.0, 150.0]
     SDDP.parameterize(subproblem, Ω, probability) do ω
         JuMP.fix(inflow, ω.inflow)
-        @stageobjective(subproblem,
+        @stageobjective(
+            subproblem,
             ω.fuel_multiplier * fuel_cost[t] * thermal_generation
         )
     end
@@ -42,7 +49,8 @@ SDDP.train(model, iteration_limit = 20, run_numerical_stability_report = false)
 simulations = SDDP.simulate(
     model,
     100,
-    [:volume, :thermal_generation, :hydro_generation, :hydro_spill])
+    [:volume, :thermal_generation, :hydro_generation, :hydro_spill],
+)
 
 println(&quot;Completed $(length(simulations)) simulations.&quot;)</code></pre><pre><code class="language-none">------------------------------------------------------------------------------
                       SDDP.jl (c) Oscar Dowson, 2017-21
@@ -54,35 +62,33 @@ Problem
   Solver          : serial mode
 
  Iteration    Simulation       Bound         Time (s)    Proc. ID   # Solves
-        1    2.250000e+04   5.588397e+03   1.007104e-02          1         18
-        2    1.315909e+04   7.975336e+03   1.093102e-02          1         36
-        3    1.875000e+03   7.975336e+03   1.167893e-02          1         54
-        4    1.125000e+04   7.975336e+03   1.241183e-02          1         72
-        5    1.875000e+03   8.072917e+03   1.319289e-02          1         90
-        6    1.875000e+03   8.072917e+03   1.391292e-02          1        108
-        7    1.875000e+03   8.072917e+03   1.464605e-02          1        126
-        8    2.750000e+04   8.072917e+03   1.536798e-02          1        144
-        9    5.000000e+03   8.072917e+03   1.614499e-02          1        162
-       10    5.000000e+03   8.072917e+03   1.691389e-02          1        180
-       11    1.875000e+03   8.072917e+03   1.767802e-02          1        198
-       12    1.625000e+04   8.072917e+03   1.850700e-02          1        216
-       13    1.875000e+03   8.072917e+03   1.928902e-02          1        234
-       14    5.000000e+03   8.072917e+03   3.690791e-02          1        252
-       15    1.875000e+03   8.072917e+03   3.780484e-02          1        270
-       16    1.125000e+04   8.072917e+03   3.866887e-02          1        288
-       17    1.875000e+03   8.072917e+03   3.949904e-02          1        306
-       18    1.125000e+04   8.072917e+03   4.037595e-02          1        324
-       19    2.437500e+04   8.072917e+03   4.122305e-02          1        342
-       20    1.875000e+03   8.072917e+03   4.205084e-02          1        360
+        1    2.250000e+04   5.588397e+03   1.134300e-02          1         18
+        2    1.315909e+04   7.975336e+03   1.250291e-02          1         36
+        3    1.875000e+03   7.975336e+03   1.356483e-02          1         54
+        4    1.125000e+04   7.975336e+03   1.468897e-02          1         72
+        5    1.875000e+03   8.072917e+03   1.569581e-02          1         90
+        6    1.875000e+03   8.072917e+03   1.668382e-02          1        108
+        7    1.875000e+03   8.072917e+03   1.780796e-02          1        126
+        8    2.750000e+04   8.072917e+03   1.886702e-02          1        144
+        9    5.000000e+03   8.072917e+03   1.989293e-02          1        162
+       10    5.000000e+03   8.072917e+03   2.092099e-02          1        180
+       11    1.875000e+03   8.072917e+03   2.189994e-02          1        198
+       12    1.625000e+04   8.072917e+03   2.303600e-02          1        216
+       13    1.875000e+03   8.072917e+03   2.402282e-02          1        234
+       14    5.000000e+03   8.072917e+03   2.512193e-02          1        252
+       15    1.875000e+03   8.072917e+03   2.616787e-02          1        270
+       16    1.125000e+04   8.072917e+03   2.725887e-02          1        288
+       17    1.875000e+03   8.072917e+03   2.847099e-02          1        306
+       18    1.125000e+04   8.072917e+03   2.960086e-02          1        324
+       19    2.437500e+04   8.072917e+03   3.077984e-02          1        342
+       20    1.875000e+03   8.072917e+03   3.206682e-02          1        360
 
 Terminating training with status: iteration_limit
 ------------------------------------------------------------------------------
 Completed 100 simulations.
 </code></pre><p>Great! Now we have some data in <code>simulations</code> to visualize.</p><h2 id="Spaghetti-plots"><a class="docs-heading-anchor" href="#Spaghetti-plots">Spaghetti plots</a><a id="Spaghetti-plots-1"></a><a class="docs-heading-anchor-permalink" href="#Spaghetti-plots" title="Permalink"></a></h2><p>The first plotting utility we discuss is a <em>spaghetti</em> plot (you&#39;ll understand the name when you see the graph).</p><p>To create a spaghetti plot, begin by creating a new <a href="../../apireference/#SDDP.SpaghettiPlot"><code>SDDP.SpaghettiPlot</code></a> instance as follows:</p><pre><code class="language-julia">plt = SDDP.SpaghettiPlot(simulations)</code></pre><pre><code class="language-none">A spaghetti plot with 100 scenarios and 3 stages.</code></pre><p>We can add plots to <code>plt</code> using the <a href="../../apireference/#SDDP.add_spaghetti"><code>SDDP.add_spaghetti</code></a> function.</p><pre><code class="language-julia">SDDP.add_spaghetti(plt; title = &quot;Reservoir volume&quot;) do data
     return data[:volume].out
-end</code></pre><p>You don&#39;t have just return values from the simulation, you can compute things too.</p><pre><code class="language-julia">SDDP.add_spaghetti(
-    plt; title = &quot;Fuel cost&quot;, ymin = 0, ymax = 250
-) do data
+end</code></pre><p>You don&#39;t have just return values from the simulation, you can compute things too.</p><pre><code class="language-julia">SDDP.add_spaghetti(plt; title = &quot;Fuel cost&quot;, ymin = 0, ymax = 250) do data
     if data[:thermal_generation] &gt; 0
         return data[:stage_objective] / data[:thermal_generation]
     else  # No thermal generation, so return 0.0.
@@ -101,4 +107,4 @@ plot(
     layout = (1, 2),
     margin_bottom = 5,
     size = (1000, 300)
-)</code></pre><p>This should open a plot window with a plot that looks like:</p><p><img src="../../assets/publication_plot.png" alt="publication plot"/></p><p>You can save this plot as a PDF using the <code>Plots.jl</code> function <code>savefig</code>:</p><pre><code class="language-julia">Plots.savefig(&quot;my_picture.pdf&quot;)</code></pre><h2 id="Plotting-the-value-function"><a class="docs-heading-anchor" href="#Plotting-the-value-function">Plotting the value function</a><a id="Plotting-the-value-function-1"></a><a class="docs-heading-anchor-permalink" href="#Plotting-the-value-function" title="Permalink"></a></h2><p>You can obtain an object representing the value function of a node using <a href="../../apireference/#SDDP.ValueFunction"><code>SDDP.ValueFunction</code></a>.</p><pre><code class="language-julia">V = SDDP.ValueFunction(model[(1, 1)])</code></pre><pre><code class="language-none">A value function for node (1, 1)</code></pre><p>The value function can be evaluated using <a href="../../apireference/#SDDP.evaluate"><code>SDDP.evaluate</code></a>.</p><pre><code class="language-julia">SDDP.evaluate(V; volume = 1)</code></pre><pre><code class="language-none">(21423.813388991963, Dict(:volume=&gt;-102.083))</code></pre><p><code>evaluate</code> returns the heigh of the value function, and a subgradient with respect to the convex state variables.</p><p>You can also plot the value function using <a href="../../apireference/#SDDP.plot"><code>SDDP.plot</code></a></p><pre><code class="language-julia">SDDP.plot(V, volume = 0:200, filename = &quot;value_function.html&quot;)</code></pre><p>This should open a webpage that looks like <a href="../../assets/value_function.html">this one</a>.</p><h2 id="Convergence-dashboard"><a class="docs-heading-anchor" href="#Convergence-dashboard">Convergence dashboard</a><a id="Convergence-dashboard-1"></a><a class="docs-heading-anchor-permalink" href="#Convergence-dashboard" title="Permalink"></a></h2><p>If the text-based logging isn&#39;t to your liking, you can open a visualization of the training by passing  <code>dashboard = true</code> to <a href="../../apireference/#SDDP.train"><code>SDDP.train</code></a>.</p><pre><code class="language-julia">SDDP.train(model; dashboard = true)</code></pre><p>By default, <code>dashboard = false</code> because there is an initial overhead associated with opening and preparing the plot.</p><div class="admonition is-warning"><header class="admonition-header">Warning</header><div class="admonition-body"><p>The dashboard is experimental. There are known bugs associated with it, e.g., <a href="https://github.com/odow/SDDP.jl/issues/226">SDDP.jl#226</a>.</p></div></div><p>This concludes our fifth tutorial for <code>SDDP.jl</code>. In our next tutorial, <a href="../06_warnings/#Basic-VI:-words-of-warning">Basic VI: words of warning</a> we discuss some of the issues that you should be aware of when creating your own models.</p><hr/><p><em>This page was generated using <a href="https://github.com/fredrikekre/Literate.jl">Literate.jl</a>.</em></p></article><nav class="docs-footer"><a class="docs-footer-prevpage" href="../04_markov_uncertainty/">« Basic IV: Markov uncertainty</a><a class="docs-footer-nextpage" href="../06_warnings/">Basic VI: words of warning »</a><div class="flexbox-break"></div><p class="footer-message">Powered by <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> and the <a href="https://julialang.org/">Julia Programming Language</a>.</p></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> on <span class="colophon-date" title="Sunday 30 May 2021 21:11">Sunday 30 May 2021</span>. Using Julia version 1.0.5.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>
+)</code></pre><p>This should open a plot window with a plot that looks like:</p><p><img src="../../assets/publication_plot.png" alt="publication plot"/></p><p>You can save this plot as a PDF using the <code>Plots.jl</code> function <code>savefig</code>:</p><pre><code class="language-julia">Plots.savefig(&quot;my_picture.pdf&quot;)</code></pre><h2 id="Plotting-the-value-function"><a class="docs-heading-anchor" href="#Plotting-the-value-function">Plotting the value function</a><a id="Plotting-the-value-function-1"></a><a class="docs-heading-anchor-permalink" href="#Plotting-the-value-function" title="Permalink"></a></h2><p>You can obtain an object representing the value function of a node using <a href="../../apireference/#SDDP.ValueFunction"><code>SDDP.ValueFunction</code></a>.</p><pre><code class="language-julia">V = SDDP.ValueFunction(model[(1, 1)])</code></pre><pre><code class="language-none">A value function for node (1, 1)</code></pre><p>The value function can be evaluated using <a href="../../apireference/#SDDP.evaluate"><code>SDDP.evaluate</code></a>.</p><pre><code class="language-julia">SDDP.evaluate(V; volume = 1)</code></pre><pre><code class="language-none">(21423.813388991963, Dict(:volume=&gt;-102.083))</code></pre><p><code>evaluate</code> returns the heigh of the value function, and a subgradient with respect to the convex state variables.</p><p>You can also plot the value function using <a href="../../apireference/#SDDP.plot"><code>SDDP.plot</code></a></p><pre><code class="language-julia">SDDP.plot(V, volume = 0:200, filename = &quot;value_function.html&quot;)</code></pre><p>This should open a webpage that looks like <a href="../../assets/value_function.html">this one</a>.</p><h2 id="Convergence-dashboard"><a class="docs-heading-anchor" href="#Convergence-dashboard">Convergence dashboard</a><a id="Convergence-dashboard-1"></a><a class="docs-heading-anchor-permalink" href="#Convergence-dashboard" title="Permalink"></a></h2><p>If the text-based logging isn&#39;t to your liking, you can open a visualization of the training by passing  <code>dashboard = true</code> to <a href="../../apireference/#SDDP.train"><code>SDDP.train</code></a>.</p><pre><code class="language-julia">SDDP.train(model; dashboard = true)</code></pre><p>By default, <code>dashboard = false</code> because there is an initial overhead associated with opening and preparing the plot.</p><div class="admonition is-warning"><header class="admonition-header">Warning</header><div class="admonition-body"><p>The dashboard is experimental. There are known bugs associated with it, e.g., <a href="https://github.com/odow/SDDP.jl/issues/226">SDDP.jl#226</a>.</p></div></div><p>This concludes our fifth tutorial for <code>SDDP.jl</code>. In our next tutorial, <a href="../06_warnings/#Basic-VI:-words-of-warning">Basic VI: words of warning</a> we discuss some of the issues that you should be aware of when creating your own models.</p><hr/><p><em>This page was generated using <a href="https://github.com/fredrikekre/Literate.jl">Literate.jl</a>.</em></p></article><nav class="docs-footer"><a class="docs-footer-prevpage" href="../04_markov_uncertainty/">« Basic IV: Markov uncertainty</a><a class="docs-footer-nextpage" href="../06_warnings/">Basic VI: words of warning »</a><div class="flexbox-break"></div><p class="footer-message">Powered by <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> and the <a href="https://julialang.org/">Julia Programming Language</a>.</p></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> on <span class="colophon-date" title="Sunday 30 May 2021 22:07">Sunday 30 May 2021</span>. Using Julia version 1.0.5.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>
