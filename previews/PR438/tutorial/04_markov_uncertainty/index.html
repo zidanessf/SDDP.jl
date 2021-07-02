@@ -67,7 +67,7 @@ Problem
 Options
   Solver          : serial mode
   Risk measure    : SDDP.Expectation()
-  Sampling scheme : SDDP.InSampleMonteCarlo(0, false, true, SDDP.var&quot;#119#122&quot;{SDDP.var&quot;#120#123&quot;}(SDDP.var&quot;#120#123&quot;(), Core.Box(0)))
+  Sampling scheme : SDDP.InSampleMonteCarlo
 
 Numerical stability report
   Non-zero Matrix range     [1e+00, 1e+00]
@@ -77,20 +77,20 @@ Numerical stability report
 No problems detected
 
  Iteration    Simulation       Bound         Time (s)    Proc. ID   # Solves
-        1    2.250000e+04   5.588397e+03   1.323469e-01          1         18
-        2    1.315909e+04   7.975336e+03   1.332438e-01          1         36
-        3    1.875000e+03   7.975336e+03   1.342249e-01          1         54
-        4    1.125000e+04   7.975336e+03   1.351039e-01          1         72
-        5    1.875000e+03   8.064005e+03   1.359758e-01          1         90
-        6    1.875000e+03   8.064005e+03   1.371770e-01          1        108
-        7    1.875000e+03   8.064005e+03   1.381199e-01          1        126
-        8    2.750000e+04   8.072917e+03   1.393869e-01          1        144
-        9    5.000000e+03   8.072917e+03   1.403430e-01          1        162
-       10    5.000000e+03   8.072917e+03   1.414230e-01          1        180
+        1    2.250000e+04   5.588397e+03   1.257360e-01          1         18
+        2    1.315909e+04   7.975336e+03   1.265731e-01          1         36
+        3    1.875000e+03   7.975336e+03   1.273260e-01          1         54
+        4    1.125000e+04   7.975336e+03   1.281030e-01          1         72
+        5    1.875000e+03   8.064005e+03   1.290281e-01          1         90
+        6    1.875000e+03   8.064005e+03   1.301551e-01          1        108
+        7    1.875000e+03   8.064005e+03   1.309760e-01          1        126
+        8    2.750000e+04   8.072917e+03   1.318231e-01          1        144
+        9    5.000000e+03   8.072917e+03   1.328549e-01          1        162
+       10    5.000000e+03   8.072917e+03   1.338871e-01          1        180
 
 Terminating training
   Status       : iteration_limit
-  Total time   : 0.14142298698425293
+  Total time   : 0.13388705253601074
   Total solves : 180
 ------------------------------------------------------------------------------
 </code></pre><p>Instead of performing a Monte Carlo simulation like the previous tutorials, we may want to simulate one particular sequence of noise realizations. This <em>historical</em> simulation can also be conducted by passing a <a href="../../apireference/#SDDP.Historical"><code>SDDP.Historical</code></a> sampling scheme to the <code>sampling_scheme</code> keyword of the <a href="../../apireference/#SDDP.simulate"><code>SDDP.simulate</code></a> function.</p><p>We can confirm that the historical sequence of nodes was visited by querying the <code>:node_index</code> key of the simulation results.</p><pre><code class="language-julia">simulations = SDDP.simulate(
@@ -105,4 +105,4 @@ Terminating training
 [stage[:node_index] for stage in simulations[1]]</code></pre><pre><code class="nohighlight">3-element Vector{Tuple{Int64, Int64}}:
  (1, 1)
  (2, 2)
- (3, 1)</code></pre><p>This concludes our fourth tutorial for <code>SDDP.jl</code>. In the next tutorial, <a href="../05_plotting/#Basic-V:-plotting">Basic V: plotting</a> we discuss the plotting utilities included in <code>SDDP.jl</code>.</p><hr/><p><em>This page was generated using <a href="https://github.com/fredrikekre/Literate.jl">Literate.jl</a>.</em></p></article><nav class="docs-footer"><a class="docs-footer-prevpage" href="../03_objective_uncertainty/">« Basic III: objective uncertainty</a><a class="docs-footer-nextpage" href="../05_plotting/">Basic V: plotting »</a><div class="flexbox-break"></div><p class="footer-message">Powered by <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> and the <a href="https://julialang.org/">Julia Programming Language</a>.</p></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> version 0.27.3 on <span class="colophon-date" title="Friday 2 July 2021 09:33">Friday 2 July 2021</span>. Using Julia version 1.6.1.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>
+ (3, 1)</code></pre><p>This concludes our fourth tutorial for <code>SDDP.jl</code>. In the next tutorial, <a href="../05_plotting/#Basic-V:-plotting">Basic V: plotting</a> we discuss the plotting utilities included in <code>SDDP.jl</code>.</p><hr/><p><em>This page was generated using <a href="https://github.com/fredrikekre/Literate.jl">Literate.jl</a>.</em></p></article><nav class="docs-footer"><a class="docs-footer-prevpage" href="../03_objective_uncertainty/">« Basic III: objective uncertainty</a><a class="docs-footer-nextpage" href="../05_plotting/">Basic V: plotting »</a><div class="flexbox-break"></div><p class="footer-message">Powered by <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> and the <a href="https://julialang.org/">Julia Programming Language</a>.</p></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> version 0.27.3 on <span class="colophon-date" title="Friday 2 July 2021 09:59">Friday 2 July 2021</span>. Using Julia version 1.6.1.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>
