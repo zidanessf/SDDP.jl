@@ -37,7 +37,16 @@ Problem
   Nodes           : 3
   State variables : 1
   Scenarios       : Inf
+  Existing cuts   : false
+  Subproblem structure                      : (min, max)
+    Variables                               : (6, 6)
+    VariableRef in MOI.LessThan{Float64}    : (1, 1)
+    VariableRef in MOI.GreaterThan{Float64} : (5, 5)
+    AffExpr in MOI.EqualTo{Float64}         : (2, 2)
+Options
   Solver          : serial mode
+  Risk measure    : SDDP.Expectation()
+  Sampling scheme : SDDP.InSampleMonteCarlo
 
 Numerical stability report
   Non-zero Matrix range     [1e+00, 1e+00]
@@ -47,111 +56,116 @@ Numerical stability report
 No problems detected
 
  Iteration    Simulation       Bound         Time (s)    Proc. ID   # Solves
-        1    6.150000e+01   2.887652e+01   3.986890e-01          1         75
-        2    1.449669e+02   7.608300e+01   4.031289e-01          1        246
-        3    2.050000e+01   8.073466e+01   4.040630e-01          1        273
-        4    1.872207e+02   1.066419e+02   4.077361e-01          1        408
-        5    2.950000e+01   1.133084e+02   4.089091e-01          1        447
-        6    4.545914e+01   1.188873e+02   4.103739e-01          1        498
-        7    5.843433e+02   1.833509e+02   4.354229e-01          1       1329
-        8    1.576828e+02   1.900028e+02   4.429369e-01          1       1536
-        9    2.846617e+02   1.985914e+02   4.528670e-01          1       1803
-       10    4.799673e+01   2.003678e+02   4.550040e-01          1       1854
-       11    3.585548e+02   2.095325e+02   4.698589e-01          1       2229
-       12    7.923240e+01   2.113305e+02   4.735570e-01          1       2316
-       13    4.574087e+02   2.190355e+02   4.992359e-01          1       2883
-       14    1.677303e+02   2.217032e+02   5.080850e-01          1       3066
-       15    2.257704e+02   2.229001e+02   5.270340e-01          1       3261
-       16    4.488564e+02   2.254794e+02   5.460680e-01          1       3624
-       17    7.606693e+02   2.283348e+02   5.961089e-01          1       4515
-       18    6.577244e+02   2.309584e+02   6.373000e-01          1       5190
-       19    6.003918e+02   2.315732e+02   6.769660e-01          1       5793
-       20    1.007824e+03   2.332881e+02   7.346289e-01          1       6612
-       21    2.179058e+02   2.336243e+02   7.498200e-01          1       6819
-       22    8.946599e+01   2.336243e+02   7.562199e-01          1       6906
-       23    2.526157e+02   2.339302e+02   7.937310e-01          1       7233
-       24    1.350000e+01   2.339329e+02   7.958081e-01          1       7260
-       25    3.342227e+01   2.339329e+02   7.978821e-01          1       7287
-       26    2.229390e+01   2.340446e+02   7.999599e-01          1       7314
-       27    6.964429e+02   2.347029e+02   8.540449e-01          1       7965
-       28    1.291217e+02   2.349059e+02   8.688080e-01          1       8148
-       29    3.296336e+02   2.350345e+02   8.933449e-01          1       8427
-       30    7.773635e+01   2.350638e+02   8.975959e-01          1       8478
-       31    7.251843e+02   2.354592e+02   9.748471e-01          1       9273
-       32    3.757739e+01   2.354854e+02   9.825170e-01          1       9360
-       33    2.891399e+01   2.354905e+02   9.877040e-01          1       9411
-       34    4.936242e+02   2.356243e+02   1.033965e+00          1       9846
-       35    8.767806e+01   2.356689e+02   1.040703e+00          1       9921
-       36    6.984279e+01   2.357013e+02   1.050784e+00          1      10032
-       37    2.779357e+02   2.357740e+02   1.075413e+00          1      10287
-       38    7.764053e+02   2.358597e+02   1.164535e+00          1      11082
-       39    7.319628e+02   2.360150e+02   1.233454e+00          1      11769
-       40    2.323489e+01   2.360228e+02   1.237484e+00          1      11808
-       41    5.597978e+02   2.361129e+02   1.288607e+00          1      12315
-       42    4.190755e+02   2.361483e+02   1.324450e+00          1      12654
-       43    7.995642e+02   2.361996e+02   1.405650e+00          1      13401
-       44    7.621038e+02   2.362632e+02   1.550469e+00          1      14280
-       45    1.686389e+02   2.362755e+02   1.572806e+00          1      14463
-       46    8.297754e+01   2.362762e+02   1.580209e+00          1      14526
-       47    1.884426e+02   2.362933e+02   1.612781e+00          1      14781
-       48    2.938877e+02   2.363031e+02   1.651041e+00          1      15084
-       49    9.436302e+00   2.363080e+02   1.656169e+00          1      15123
-       50    1.400054e+01   2.363080e+02   1.659316e+00          1      15150
-       51    1.224534e+02   2.363136e+02   1.673205e+00          1      15261
-       52    5.940325e+02   2.363345e+02   1.753730e+00          1      15876
-       53    3.809286e+01   2.363345e+02   1.758616e+00          1      15915
-       54    1.320175e+02   2.363384e+02   1.769690e+00          1      16002
-       55    2.475680e+02   2.363414e+02   1.805037e+00          1      16269
-       56    1.464980e+02   2.363496e+02   1.830527e+00          1      16452
-       57    2.605985e+02   2.363537e+02   1.866421e+00          1      16719
-       58    5.484972e+02   2.363731e+02   1.954151e+00          1      17334
-       59    1.504028e+02   2.363751e+02   1.978273e+00          1      17505
-       60    3.590326e+02   2.363829e+02   2.026254e+00          1      17856
-       61    1.000000e+01   2.363830e+02   2.028176e+00          1      17871
-       62    6.441379e+01   2.363841e+02   2.033310e+00          1      17910
-       63    6.299928e+01   2.363847e+02   2.039017e+00          1      17949
-       64    2.845575e+02   2.363861e+02   2.083702e+00          1      18264
-       65    2.914766e+02   2.363932e+02   2.132645e+00          1      18603
-       66    1.028181e+02   2.363938e+02   2.148778e+00          1      18714
-       67    6.124868e+02   2.364019e+02   2.251259e+00          1      19401
-       68    5.947040e+01   2.364029e+02   2.258606e+00          1      19452
-       69    1.229988e+02   2.364034e+02   2.265656e+00          1      19503
-       70    1.675040e+02   2.364057e+02   2.292843e+00          1      19686
-       71    3.075450e+02   2.364082e+02   2.340925e+00          1      20013
-       72    7.648705e+01   2.364082e+02   2.354061e+00          1      20100
-       73    1.679902e+02   2.364112e+02   2.380816e+00          1      20271
-       74    2.019978e+02   2.364121e+02   2.414875e+00          1      20430
-       75    9.050268e+01   2.364133e+02   2.433500e+00          1      20541
-       76    2.500000e+00   2.364137e+02   2.435642e+00          1      20556
-       77    6.503006e+00   2.364137e+02   2.437753e+00          1      20571
-       78    1.650008e+02   2.364143e+02   2.455022e+00          1      20682
-       79    2.500000e+00   2.364143e+02   2.457158e+00          1      20697
-       80    1.575332e+02   2.364147e+02   2.494306e+00          1      20940
-       81    1.000000e+01   2.364148e+02   2.496394e+00          1      20955
-       82    1.184951e+02   2.364170e+02   2.517608e+00          1      21090
-       83    3.249437e+01   2.364170e+02   2.521644e+00          1      21117
-       84    5.539938e+02   2.364184e+02   2.593700e+00          1      21600
-       85    1.685165e+02   2.364196e+02   2.615228e+00          1      21747
-       86    1.875204e+02   2.364199e+02   2.646077e+00          1      21942
-       87    1.175043e+02   2.364211e+02   2.667247e+00          1      22077
-       88    1.129946e+02   2.364211e+02   2.674970e+00          1      22128
-       89    1.169508e+03   2.364264e+02   2.873511e+00          1      23271
-       90    6.457586e+01   2.364267e+02   2.889303e+00          1      23334
-       91    2.300045e+01   2.364270e+02   2.896414e+00          1      23373
-       92    4.520071e+02   2.364280e+02   2.984022e+00          1      23832
-       93    2.230041e+02   2.364286e+02   3.010692e+00          1      23979
-       94    3.920006e+02   2.364291e+02   3.071784e+00          1      24330
-       95    3.444957e+02   2.364301e+02   3.132880e+00          1      24681
-       96    2.650256e+02   2.364304e+02   3.193882e+00          1      25020
-       97    1.140023e+02   2.364308e+02   3.212941e+00          1      25119
-       98    1.564964e+02   2.364308e+02   3.251054e+00          1      25314
-       99    4.130029e+02   2.364317e+02   3.310990e+00          1      25641
-      100    3.154948e+02   2.364320e+02   3.373809e+00          1      25968
+        1    6.150000e+01   2.887652e+01   3.414969e-01          1         75
+        2    1.449669e+02   7.608300e+01   3.454349e-01          1        246
+        3    2.050000e+01   8.073466e+01   3.462501e-01          1        273
+        4    1.872207e+02   1.066419e+02   3.494160e-01          1        408
+        5    2.950000e+01   1.133084e+02   3.504319e-01          1        447
+        6    4.545914e+01   1.188873e+02   3.517790e-01          1        498
+        7    5.843433e+02   1.833509e+02   3.738711e-01          1       1329
+        8    1.576828e+02   1.900028e+02   3.803661e-01          1       1536
+        9    2.846617e+02   1.985914e+02   3.892391e-01          1       1803
+       10    4.799673e+01   2.003678e+02   3.911560e-01          1       1854
+       11    3.585548e+02   2.095325e+02   4.045010e-01          1       2229
+       12    7.923240e+01   2.113305e+02   4.079120e-01          1       2316
+       13    4.574087e+02   2.190355e+02   4.294670e-01          1       2883
+       14    1.677303e+02   2.217032e+02   4.372211e-01          1       3066
+       15    2.257704e+02   2.229001e+02   4.456081e-01          1       3261
+       16    4.488564e+02   2.254794e+02   4.617841e-01          1       3624
+       17    7.606693e+02   2.283348e+02   5.060780e-01          1       4515
+       18    6.577244e+02   2.309584e+02   5.421071e-01          1       5190
+       19    6.003918e+02   2.315732e+02   5.770969e-01          1       5793
+       20    1.007824e+03   2.332881e+02   6.287370e-01          1       6612
+       21    2.179058e+02   2.336243e+02   6.421480e-01          1       6819
+       22    8.946599e+01   2.336243e+02   6.480210e-01          1       6906
+       23    2.526157e+02   2.339302e+02   6.692450e-01          1       7233
+       24    1.350000e+01   2.339329e+02   6.711149e-01          1       7260
+       25    3.342227e+01   2.339329e+02   6.730220e-01          1       7287
+       26    2.229390e+01   2.340446e+02   6.748891e-01          1       7314
+       27    6.964429e+02   2.347029e+02   7.207179e-01          1       7965
+       28    1.291217e+02   2.349059e+02   7.340410e-01          1       8148
+       29    3.296336e+02   2.350345e+02   7.547910e-01          1       8427
+       30    7.773635e+01   2.350638e+02   7.587371e-01          1       8478
+       31    7.251843e+02   2.354592e+02   8.209810e-01          1       9273
+       32    3.757739e+01   2.354854e+02   8.279870e-01          1       9360
+       33    2.891399e+01   2.354905e+02   8.320191e-01          1       9411
+       34    4.936242e+02   2.356243e+02   8.674350e-01          1       9846
+       35    8.767806e+01   2.356689e+02   8.736560e-01          1       9921
+       36    6.984279e+01   2.357013e+02   8.829200e-01          1      10032
+       37    2.779357e+02   2.357740e+02   9.050531e-01          1      10287
+       38    7.764053e+02   2.358597e+02   1.010371e+00          1      11082
+       39    7.319628e+02   2.360150e+02   1.071723e+00          1      11769
+       40    2.323489e+01   2.360228e+02   1.075134e+00          1      11808
+       41    5.597978e+02   2.361129e+02   1.121659e+00          1      12315
+       42    4.190755e+02   2.361483e+02   1.154744e+00          1      12654
+       43    7.995642e+02   2.361996e+02   1.229014e+00          1      13401
+       44    7.621038e+02   2.362632e+02   1.320444e+00          1      14280
+       45    1.686389e+02   2.362755e+02   1.339248e+00          1      14463
+       46    8.297754e+01   2.362762e+02   1.345963e+00          1      14526
+       47    1.884426e+02   2.362933e+02   1.374044e+00          1      14781
+       48    2.938877e+02   2.363031e+02   1.407183e+00          1      15084
+       49    9.436302e+00   2.363080e+02   1.412022e+00          1      15123
+       50    1.400054e+01   2.363080e+02   1.415140e+00          1      15150
+       51    1.224534e+02   2.363136e+02   1.428373e+00          1      15261
+       52    5.940325e+02   2.363345e+02   1.501242e+00          1      15876
+       53    3.809286e+01   2.363345e+02   1.505651e+00          1      15915
+       54    1.320175e+02   2.363384e+02   1.515938e+00          1      16002
+       55    2.475680e+02   2.363414e+02   1.547354e+00          1      16269
+       56    1.464980e+02   2.363496e+02   1.570412e+00          1      16452
+       57    2.605985e+02   2.363537e+02   1.602782e+00          1      16719
+       58    5.484972e+02   2.363731e+02   1.680726e+00          1      17334
+       59    1.504028e+02   2.363751e+02   1.702569e+00          1      17505
+       60    3.590326e+02   2.363829e+02   1.752441e+00          1      17856
+       61    1.000000e+01   2.363830e+02   1.754573e+00          1      17871
+       62    6.441379e+01   2.363841e+02   1.760109e+00          1      17910
+       63    6.299928e+01   2.363847e+02   1.765494e+00          1      17949
+       64    2.845575e+02   2.363861e+02   1.809590e+00          1      18264
+       65    2.914766e+02   2.363932e+02   1.864457e+00          1      18603
+       66    1.028181e+02   2.363938e+02   1.879909e+00          1      18714
+       67    6.124868e+02   2.364019e+02   1.979933e+00          1      19401
+       68    5.947040e+01   2.364029e+02   1.987306e+00          1      19452
+       69    1.229988e+02   2.364034e+02   1.995222e+00          1      19503
+       70    1.675040e+02   2.364057e+02   2.023961e+00          1      19686
+       71    3.075450e+02   2.364082e+02   2.071354e+00          1      20013
+       72    7.648705e+01   2.364082e+02   2.084105e+00          1      20100
+       73    1.679902e+02   2.364112e+02   2.110993e+00          1      20271
+       74    2.019978e+02   2.364121e+02   2.134679e+00          1      20430
+       75    9.050268e+01   2.364133e+02   2.151584e+00          1      20541
+       76    2.500000e+00   2.364137e+02   2.153683e+00          1      20556
+       77    6.503006e+00   2.364137e+02   2.155904e+00          1      20571
+       78    1.650008e+02   2.364143e+02   2.173644e+00          1      20682
+       79    2.500000e+00   2.364143e+02   2.175921e+00          1      20697
+       80    1.575332e+02   2.364147e+02   2.214748e+00          1      20940
+       81    1.000000e+01   2.364148e+02   2.216949e+00          1      20955
+       82    1.184951e+02   2.364170e+02   2.237349e+00          1      21090
+       83    3.249437e+01   2.364170e+02   2.241597e+00          1      21117
+       84    5.539938e+02   2.364184e+02   2.321372e+00          1      21600
+       85    1.685165e+02   2.364196e+02   2.343969e+00          1      21747
+       86    1.875204e+02   2.364199e+02   2.377342e+00          1      21942
+       87    1.175043e+02   2.364211e+02   2.400594e+00          1      22077
+       88    1.129946e+02   2.364211e+02   2.409769e+00          1      22128
+       89    1.169508e+03   2.364264e+02   2.603721e+00          1      23271
+       90    6.457586e+01   2.364267e+02   2.614359e+00          1      23334
+       91    2.300045e+01   2.364270e+02   2.620555e+00          1      23373
+       92    4.520071e+02   2.364280e+02   2.735375e+00          1      23832
+       93    2.230041e+02   2.364286e+02   2.763247e+00          1      23979
+       94    3.920006e+02   2.364291e+02   2.827735e+00          1      24330
+       95    3.444957e+02   2.364301e+02   2.897095e+00          1      24681
+       96    2.650256e+02   2.364304e+02   2.969714e+00          1      25020
+       97    1.140023e+02   2.364308e+02   2.990662e+00          1      25119
+       98    1.564964e+02   2.364308e+02   3.042214e+00          1      25314
+       99    4.130029e+02   2.364317e+02   3.106833e+00          1      25641
+      100    3.154948e+02   2.364320e+02   3.173779e+00          1      25968
 
-Terminating training with status: iteration_limit
+Terminating training
+  Status         : iteration_limit
+  Total time (s) : 3.173779e+00
+  Total solves   : 25968
+  Best bound     :  2.364320e+02
+  Simulation CI  :  2.553103e+02 ± 4.875757e+01
 ------------------------------------------------------------------------------
 </code></pre><h2 id="Simulating-the-policy"><a class="docs-heading-anchor" href="#Simulating-the-policy">Simulating the policy</a><a id="Simulating-the-policy-1"></a><a class="docs-heading-anchor-permalink" href="#Simulating-the-policy" title="Permalink"></a></h2><p>After training, we can simulate the policy using <a href="../../apireference/#SDDP.simulate"><code>SDDP.simulate</code></a>.</p><pre><code class="language-julia">sims = SDDP.simulate(model, 100, [:g_t])
 mu = round(mean([s[1][:g_t] for s in sims]), digits = 2)
 println(&quot;On average, $(mu) units of thermal are used in the first stage.&quot;)</code></pre><pre><code class="nohighlight">On average, 2.31 units of thermal are used in the first stage.
 </code></pre><h2 id="Extracting-the-water-values"><a class="docs-heading-anchor" href="#Extracting-the-water-values">Extracting the water values</a><a id="Extracting-the-water-values-1"></a><a class="docs-heading-anchor-permalink" href="#Extracting-the-water-values" title="Permalink"></a></h2><p>Finally, we can use <a href="../../apireference/#SDDP.ValueFunction"><code>SDDP.ValueFunction</code></a> and <a href="../../apireference/#SDDP.evaluate"><code>SDDP.evaluate</code></a> to obtain and evaluate the value function at different points in the state-space. Note that since we are minimizing, the price has a negative sign: each additional unit of water leads to a decrease in the the expected long-run cost.</p><pre><code class="language-julia">V = SDDP.ValueFunction(model[1])
-cost, price = SDDP.evaluate(V, x = 10)</code></pre><pre><code class="nohighlight">(233.55642210730966, Dict(:x =&gt; -0.6600103149383989))</code></pre><hr/><p><em>This page was generated using <a href="https://github.com/fredrikekre/Literate.jl">Literate.jl</a>.</em></p></article><nav class="docs-footer"><a class="docs-footer-prevpage" href="../FAST_quickstart/">« FAST: the quickstart problem</a><a class="docs-footer-nextpage" href="../StochDynamicProgramming.jl_multistock/">StochDynamicProgramming: the multistock problem »</a><div class="flexbox-break"></div><p class="footer-message">Powered by <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> and the <a href="https://julialang.org/">Julia Programming Language</a>.</p></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> version 0.27.3 on <span class="colophon-date" title="Saturday 3 July 2021 00:31">Saturday 3 July 2021</span>. Using Julia version 1.6.1.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>
+cost, price = SDDP.evaluate(V, x = 10)</code></pre><pre><code class="nohighlight">(233.55642210730966, Dict(:x =&gt; -0.6600103149383989))</code></pre><hr/><p><em>This page was generated using <a href="https://github.com/fredrikekre/Literate.jl">Literate.jl</a>.</em></p></article><nav class="docs-footer"><a class="docs-footer-prevpage" href="../FAST_quickstart/">« FAST: the quickstart problem</a><a class="docs-footer-nextpage" href="../StochDynamicProgramming.jl_multistock/">StochDynamicProgramming: the multistock problem »</a><div class="flexbox-break"></div><p class="footer-message">Powered by <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> and the <a href="https://julialang.org/">Julia Programming Language</a>.</p></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> version 0.27.3 on <span class="colophon-date" title="Saturday 3 July 2021 03:31">Saturday 3 July 2021</span>. Using Julia version 1.6.1.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>

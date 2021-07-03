@@ -66,7 +66,17 @@ Problem
   Nodes           : 3
   State variables : 1
   Scenarios       : 5.32400e+03
+  Existing cuts   : false
+  Subproblem structure                      : (min, max)
+    Variables                               : (12, 12)
+    VariableRef in MOI.LessThan{Float64}    : (5, 6)
+    AffExpr in MOI.GreaterThan{Float64}     : (3, 5)
+    AffExpr in MOI.EqualTo{Float64}         : (4, 6)
+    VariableRef in MOI.GreaterThan{Float64} : (8, 8)
+Options
   Solver          : serial mode
+  Risk measure    : SDDP.Expectation()
+  Sampling scheme : SDDP.InSampleMonteCarlo
 
 Numerical stability report
   Non-zero Matrix range     [1e+00, 1e+01]
@@ -76,13 +86,18 @@ Numerical stability report
 No problems detected
 
  Iteration    Simulation       Bound         Time (s)    Proc. ID   # Solves
-       10    8.840000e+01   1.183555e+02   8.138020e-01          1        690
-       20    3.000000e+01   1.849490e+02   8.336751e-01          1       1380
-       30    1.302000e+02   1.851810e+02   8.566539e-01          1       2070
-       40    4.965964e+02   1.864233e+02   8.841121e-01          1       2760
-       50    1.136000e+02   1.864322e+02   9.143550e-01          1       3450
+       10    8.840000e+01   1.183555e+02   6.565661e-01          1        690
+       20    3.000000e+01   1.849490e+02   6.732900e-01          1       1380
+       30    1.302000e+02   1.851810e+02   6.922700e-01          1       2070
+       40    4.965964e+02   1.864233e+02   7.154610e-01          1       2760
+       50    1.136000e+02   1.864322e+02   7.401562e-01          1       3450
 
-Terminating training with status: iteration_limit
+Terminating training
+  Status         : iteration_limit
+  Total time (s) : 7.401562e-01
+  Total solves   : 3450
+  Best bound     :  1.864322e+02
+  Simulation CI  :  1.857300e+02 ± 4.715676e+01
 ------------------------------------------------------------------------------
 Confidence_interval = 189.59 ± 14.64
-</code></pre><hr/><p><em>This page was generated using <a href="https://github.com/fredrikekre/Literate.jl">Literate.jl</a>.</em></p></article><nav class="docs-footer"><a class="docs-footer-prevpage" href="../belief/">« Partially observable inventory management</a><a class="docs-footer-nextpage" href="../booking_management/">Booking management »</a><div class="flexbox-break"></div><p class="footer-message">Powered by <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> and the <a href="https://julialang.org/">Julia Programming Language</a>.</p></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> version 0.27.3 on <span class="colophon-date" title="Saturday 3 July 2021 00:31">Saturday 3 July 2021</span>. Using Julia version 1.6.1.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>
+</code></pre><hr/><p><em>This page was generated using <a href="https://github.com/fredrikekre/Literate.jl">Literate.jl</a>.</em></p></article><nav class="docs-footer"><a class="docs-footer-prevpage" href="../belief/">« Partially observable inventory management</a><a class="docs-footer-nextpage" href="../booking_management/">Booking management »</a><div class="flexbox-break"></div><p class="footer-message">Powered by <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> and the <a href="https://julialang.org/">Julia Programming Language</a>.</p></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> version 0.27.3 on <span class="colophon-date" title="Saturday 3 July 2021 03:31">Saturday 3 July 2021</span>. Using Julia version 1.6.1.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>

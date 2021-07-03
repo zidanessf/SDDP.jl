@@ -54,7 +54,19 @@ Problem
   Nodes           : 2
   State variables : 2
   Scenarios       : 4.00000e+00
+  Existing cuts   : false
+  Subproblem structure                      : (min, max)
+    Variables                               : (7, 11)
+    VariableRef in MOI.LessThan{Float64}    : (4, 7)
+    VariableRef in MOI.ZeroOne              : (4, 4)
+    AffExpr in MOI.LessThan{Float64}        : (2, 2)
+    VariableRef in MOI.GreaterThan{Float64} : (5, 7)
+    AffExpr in MOI.EqualTo{Float64}         : (2, 2)
+    VariableRef in MOI.Integer              : (2, 2)
+Options
   Solver          : serial mode
+  Risk measure    : SDDP.Expectation()
+  Sampling scheme : SDDP.InSampleMonteCarlo
 
 Numerical stability report
   Non-zero Matrix range     [1e+00, 6e+00]
@@ -64,18 +76,23 @@ Numerical stability report
 No problems detected
 
  Iteration    Simulation       Bound         Time (s)    Proc. ID   # Solves
-       10   -4.500000e+01  -5.809615e+01   3.380060e-03          1         70
-       20   -9.800000e+01  -5.809615e+01   6.687164e-03          1        140
-       30   -4.500000e+01  -5.809615e+01   9.701014e-03          1        210
-       40   -4.500000e+01  -5.809615e+01   1.285315e-02          1        280
-       50   -4.500000e+01  -5.809615e+01   1.618409e-02          1        350
-       60   -4.700000e+01  -5.809615e+01   2.014709e-02          1        420
-       70   -4.700000e+01  -5.809615e+01   2.352214e-02          1        490
-       80   -4.700000e+01  -5.809615e+01   2.789617e-02          1        560
-       90   -9.800000e+01  -5.809615e+01   3.260207e-02          1        630
-      100   -4.700000e+01  -5.809615e+01   3.795600e-02          1        700
+       10   -4.500000e+01  -5.809615e+01   3.007889e-03          1         70
+       20   -9.800000e+01  -5.809615e+01   5.773783e-03          1        140
+       30   -4.500000e+01  -5.809615e+01   8.520842e-03          1        210
+       40   -4.500000e+01  -5.809615e+01   1.133895e-02          1        280
+       50   -4.500000e+01  -5.809615e+01   1.424479e-02          1        350
+       60   -4.700000e+01  -5.809615e+01   1.784587e-02          1        420
+       70   -4.700000e+01  -5.809615e+01   2.083182e-02          1        490
+       80   -4.700000e+01  -5.809615e+01   2.461386e-02          1        560
+       90   -9.800000e+01  -5.809615e+01   2.883697e-02          1        630
+      100   -4.700000e+01  -5.809615e+01   3.346086e-02          1        700
 
-Terminating training with status: iteration_limit
+Terminating training
+  Status         : iteration_limit
+  Total time (s) : 3.346086e-02
+  Total solves   : 700
+  Best bound     : -5.809615e+01
+  Simulation CI  : -5.983498e+01 ± 4.845870e+00
 ------------------------------------------------------------------------------
 ------------------------------------------------------------------------------
                       SDDP.jl (c) Oscar Dowson, 2017-21
@@ -84,7 +101,19 @@ Problem
   Nodes           : 2
   State variables : 2
   Scenarios       : 9.00000e+00
+  Existing cuts   : false
+  Subproblem structure                      : (min, max)
+    Variables                               : (7, 11)
+    VariableRef in MOI.LessThan{Float64}    : (4, 7)
+    VariableRef in MOI.ZeroOne              : (4, 4)
+    AffExpr in MOI.LessThan{Float64}        : (2, 2)
+    VariableRef in MOI.GreaterThan{Float64} : (5, 7)
+    AffExpr in MOI.EqualTo{Float64}         : (2, 2)
+    VariableRef in MOI.Integer              : (2, 2)
+Options
   Solver          : serial mode
+  Risk measure    : SDDP.Expectation()
+  Sampling scheme : SDDP.InSampleMonteCarlo
 
 Numerical stability report
   Non-zero Matrix range     [1e+00, 6e+00]
@@ -94,18 +123,23 @@ Numerical stability report
 No problems detected
 
  Iteration    Simulation       Bound         Time (s)    Proc. ID   # Solves
-       10   -4.700000e+01  -6.196125e+01   4.619837e-03          1        120
-       20   -4.238462e+01  -6.196125e+01   9.186983e-03          1        240
-       30   -4.238462e+01  -6.196125e+01   1.357985e-02          1        360
-       40   -4.500000e+01  -6.196125e+01   1.919389e-02          1        480
-       50   -7.560000e+01  -6.196125e+01   2.377295e-02          1        600
-       60   -9.800000e+01  -6.196125e+01   2.865601e-02          1        720
-       70   -9.800000e+01  -6.196125e+01   3.331590e-02          1        840
-       80   -4.500000e+01  -6.196125e+01   3.861594e-02          1        960
-       90   -4.700000e+01  -6.196125e+01   4.358983e-02          1       1080
-      100   -4.700000e+01  -6.196125e+01   4.895592e-02          1       1200
+       10   -4.700000e+01  -6.196125e+01   4.128933e-03          1        120
+       20   -4.238462e+01  -6.196125e+01   7.915974e-03          1        240
+       30   -4.238462e+01  -6.196125e+01   1.187015e-02          1        360
+       40   -4.500000e+01  -6.196125e+01   1.613808e-02          1        480
+       50   -7.560000e+01  -6.196125e+01   2.025008e-02          1        600
+       60   -9.800000e+01  -6.196125e+01   2.444315e-02          1        720
+       70   -9.800000e+01  -6.196125e+01   2.871394e-02          1        840
+       80   -4.500000e+01  -6.196125e+01   3.338909e-02          1        960
+       90   -4.700000e+01  -6.196125e+01   3.792310e-02          1       1080
+      100   -4.700000e+01  -6.196125e+01   6.573415e-02          1       1200
 
-Terminating training with status: iteration_limit
+Terminating training
+  Status         : iteration_limit
+  Total time (s) : 6.573415e-02
+  Total solves   : 1200
+  Best bound     : -6.196125e+01
+  Simulation CI  : -5.990977e+01 ± 3.808965e+00
 ------------------------------------------------------------------------------
 ------------------------------------------------------------------------------
                       SDDP.jl (c) Oscar Dowson, 2017-21
@@ -114,7 +148,19 @@ Problem
   Nodes           : 2
   State variables : 2
   Scenarios       : 3.60000e+01
+  Existing cuts   : false
+  Subproblem structure                      : (min, max)
+    Variables                               : (7, 11)
+    VariableRef in MOI.LessThan{Float64}    : (4, 7)
+    VariableRef in MOI.ZeroOne              : (4, 4)
+    AffExpr in MOI.LessThan{Float64}        : (2, 2)
+    VariableRef in MOI.GreaterThan{Float64} : (5, 7)
+    AffExpr in MOI.EqualTo{Float64}         : (2, 2)
+    VariableRef in MOI.Integer              : (2, 2)
+Options
   Solver          : serial mode
+  Risk measure    : SDDP.Expectation()
+  Sampling scheme : SDDP.InSampleMonteCarlo
 
 Numerical stability report
   Non-zero Matrix range     [1e+00, 6e+00]
@@ -124,17 +170,22 @@ Numerical stability report
 No problems detected
 
  Iteration    Simulation       Bound         Time (s)    Proc. ID   # Solves
-       10   -6.946154e+01  -6.554113e+01   1.081991e-02          1        390
-       20   -7.760000e+01  -6.554113e+01   2.186489e-02          1        780
-       30   -5.530769e+01  -6.554113e+01   3.344798e-02          1       1170
-       40   -7.071429e+01  -6.554113e+01   4.537106e-02          1       1560
-       50   -8.760000e+01  -6.554113e+01   5.675697e-02          1       1950
-       60   -4.300000e+01  -6.554113e+01   6.896091e-02          1       2340
-       70   -6.946154e+01  -6.554113e+01   8.121204e-02          1       2730
-       80   -4.780000e+01  -6.554113e+01   9.311295e-02          1       3120
-       90   -4.484615e+01  -6.554113e+01   1.049769e-01          1       3510
-      100   -4.300000e+01  -6.554113e+01   1.173210e-01          1       3900
+       10   -6.946154e+01  -6.554113e+01   9.682178e-03          1        390
+       20   -7.760000e+01  -6.554113e+01   1.937604e-02          1        780
+       30   -5.530769e+01  -6.554113e+01   2.955413e-02          1       1170
+       40   -7.071429e+01  -6.554113e+01   3.989100e-02          1       1560
+       50   -8.760000e+01  -6.554113e+01   4.980016e-02          1       1950
+       60   -4.300000e+01  -6.554113e+01   6.051207e-02          1       2340
+       70   -6.946154e+01  -6.554113e+01   7.055616e-02          1       2730
+       80   -4.780000e+01  -6.554113e+01   8.077908e-02          1       3120
+       90   -4.484615e+01  -6.554113e+01   9.102106e-02          1       3510
+      100   -4.300000e+01  -6.554113e+01   1.016221e-01          1       3900
 
-Terminating training with status: iteration_limit
+Terminating training
+  Status         : iteration_limit
+  Total time (s) : 1.016221e-01
+  Total solves   : 3900
+  Best bound     : -6.554113e+01
+  Simulation CI  : -6.468858e+01 ± 3.605895e+00
 ------------------------------------------------------------------------------
-</code></pre><hr/><p><em>This page was generated using <a href="https://github.com/fredrikekre/Literate.jl">Literate.jl</a>.</em></p></article><nav class="docs-footer"><a class="docs-footer-prevpage" href="../sldp_example_one/">« SLDP: example 1</a><a class="docs-footer-nextpage" href="../stochastic_all_blacks/">Stochastic All Blacks »</a><div class="flexbox-break"></div><p class="footer-message">Powered by <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> and the <a href="https://julialang.org/">Julia Programming Language</a>.</p></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> version 0.27.3 on <span class="colophon-date" title="Saturday 3 July 2021 00:31">Saturday 3 July 2021</span>. Using Julia version 1.6.1.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>
+</code></pre><hr/><p><em>This page was generated using <a href="https://github.com/fredrikekre/Literate.jl">Literate.jl</a>.</em></p></article><nav class="docs-footer"><a class="docs-footer-prevpage" href="../sldp_example_one/">« SLDP: example 1</a><a class="docs-footer-nextpage" href="../stochastic_all_blacks/">Stochastic All Blacks »</a><div class="flexbox-break"></div><p class="footer-message">Powered by <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> and the <a href="https://julialang.org/">Julia Programming Language</a>.</p></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> version 0.27.3 on <span class="colophon-date" title="Saturday 3 July 2021 03:31">Saturday 3 July 2021</span>. Using Julia version 1.6.1.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>
