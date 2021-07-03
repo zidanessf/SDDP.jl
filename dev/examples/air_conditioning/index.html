@@ -44,7 +44,18 @@ Problem
   Nodes           : 3
   State variables : 7
   Scenarios       : 4.00000e+00
+  Existing cuts   : false
+  Subproblem structure                      : (min, max)
+    Variables                               : (20, 20)
+    VariableRef in MOI.LessThan{Float64}    : (2, 3)
+    VariableRef in MOI.ZeroOne              : (7, 7)
+    VariableRef in MOI.GreaterThan{Float64} : (4, 4)
+    AffExpr in MOI.EqualTo{Float64}         : (3, 3)
+    VariableRef in MOI.Integer              : (3, 3)
+Options
   Solver          : serial mode
+  Risk measure    : SDDP.Expectation()
+  Sampling scheme : SDDP.InSampleMonteCarlo
 
 Numerical stability report
   Non-zero Matrix range     [1e+00, 6e+01]
@@ -54,10 +65,15 @@ Numerical stability report
 No problems detected
 
  Iteration    Simulation       Bound         Time (s)    Proc. ID   # Solves
-       10    6.000000e+04   6.250000e+04   1.728052e+00          1         80
-       20    6.000000e+04   6.250000e+04   1.779917e+00          1        160
+       10    6.000000e+04   6.250000e+04   2.097507e+00          1         80
+       20    6.000000e+04   6.250000e+04   2.158143e+00          1        160
 
-Terminating training with status: iteration_limit
+Terminating training
+  Status         : iteration_limit
+  Total time (s) : 2.158143e+00
+  Total solves   : 160
+  Best bound     :  6.250000e+04
+  Simulation CI  :  6.300000e+04 ± 9.088146e+03
 ------------------------------------------------------------------------------
 ------------------------------------------------------------------------------
                       SDDP.jl (c) Oscar Dowson, 2017-21
@@ -66,7 +82,17 @@ Problem
   Nodes           : 3
   State variables : 1
   Scenarios       : 4.00000e+00
+  Existing cuts   : false
+  Subproblem structure                      : (min, max)
+    Variables                               : (6, 6)
+    VariableRef in MOI.LessThan{Float64}    : (2, 3)
+    VariableRef in MOI.GreaterThan{Float64} : (4, 4)
+    AffExpr in MOI.EqualTo{Float64}         : (1, 1)
+    VariableRef in MOI.Integer              : (3, 3)
+Options
   Solver          : serial mode
+  Risk measure    : SDDP.Expectation()
+  Sampling scheme : SDDP.InSampleMonteCarlo
 
 Numerical stability report
   Non-zero Matrix range     [1e+00, 1e+00]
@@ -76,9 +102,14 @@ Numerical stability report
 No problems detected
 
  Iteration    Simulation       Bound         Time (s)    Proc. ID   # Solves
-       10    4.000000e+04   6.250000e+04   3.057957e-03          1         80
-       20    6.000000e+04   6.250000e+04   6.235123e-03          1        160
+       10    4.000000e+04   6.250000e+04   3.687143e-03          1         80
+       20    6.000000e+04   6.250000e+04   7.441044e-03          1        160
 
-Terminating training with status: iteration_limit
+Terminating training
+  Status         : iteration_limit
+  Total time (s) : 7.441044e-03
+  Total solves   : 160
+  Best bound     :  6.250000e+04
+  Simulation CI  :  5.568750e+04 ± 5.909677e+03
 ------------------------------------------------------------------------------
-</code></pre><hr/><p><em>This page was generated using <a href="https://github.com/fredrikekre/Literate.jl">Literate.jl</a>.</em></p></article><nav class="docs-footer"><a class="docs-footer-prevpage" href="../agriculture_mccardle_farm/">« The farm planning problem</a><a class="docs-footer-nextpage" href="../all_blacks/">Deterministic All Blacks »</a><div class="flexbox-break"></div><p class="footer-message">Powered by <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> and the <a href="https://julialang.org/">Julia Programming Language</a>.</p></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> version 0.27.3 on <span class="colophon-date" title="Friday 2 July 2021 09:12">Friday 2 July 2021</span>. Using Julia version 1.6.1.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>
+</code></pre><hr/><p><em>This page was generated using <a href="https://github.com/fredrikekre/Literate.jl">Literate.jl</a>.</em></p></article><nav class="docs-footer"><a class="docs-footer-prevpage" href="../agriculture_mccardle_farm/">« The farm planning problem</a><a class="docs-footer-nextpage" href="../all_blacks/">Deterministic All Blacks »</a><div class="flexbox-break"></div><p class="footer-message">Powered by <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> and the <a href="https://julialang.org/">Julia Programming Language</a>.</p></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> version 0.27.3 on <span class="colophon-date" title="Saturday 3 July 2021 00:32">Saturday 3 July 2021</span>. Using Julia version 1.6.1.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>

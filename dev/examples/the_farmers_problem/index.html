@@ -102,7 +102,18 @@ Problem
   Nodes           : 2
   State variables : 3
   Scenarios       : 3.00000e+00
+  Existing cuts   : false
+  Subproblem structure                      : (min, max)
+    Variables                               : (7, 19)
+    VariableRef in MOI.LessThan{Float64}    : (1, 4)
+    AffExpr in MOI.LessThan{Float64}        : (1, 1)
+    AffExpr in MOI.GreaterThan{Float64}     : (3, 3)
+    AffExpr in MOI.EqualTo{Float64}         : (3, 3)
+    VariableRef in MOI.GreaterThan{Float64} : (3, 16)
+Options
   Solver          : serial mode
+  Risk measure    : SDDP.Expectation()
+  Sampling scheme : SDDP.InSampleMonteCarlo
 
 Numerical stability report
   Non-zero Matrix range     [1e+00, 2e+01]
@@ -116,27 +127,32 @@ can cause numerical stability issues. Consider
 reformulating the model.
 
  Iteration    Simulation       Bound         Time (s)    Proc. ID   # Solves
-        1   -9.800000e+04   1.320000e+05   1.012802e-03          1          6
-        2    4.800000e+04   1.290000e+05   1.377821e-03          1         12
-        3    1.086000e+05   1.268139e+05   1.705885e-03          1         18
-        4    8.163785e+04   1.219636e+05   2.013922e-03          1         24
-        5    1.550000e+05   1.121210e+05   2.332926e-03          1         30
-        6    1.121210e+05   1.104195e+05   2.671003e-03          1         36
-        7    1.047405e+05   1.095042e+05   2.991915e-03          1         42
-        8    5.125161e+04   1.088611e+05   3.304958e-03          1         48
-        9    1.088611e+05   1.088021e+05   3.609896e-03          1         54
-       10    1.093355e+05   1.084962e+05   3.974915e-03          1         60
-       11    4.823846e+04   1.083900e+05   4.381895e-03          1         66
-       12    1.093500e+05   1.083900e+05   4.762888e-03          1         72
-       13    1.093500e+05   1.083900e+05   5.135775e-03          1         78
-       14    1.670000e+05   1.083900e+05   5.507946e-03          1         84
-       15    1.093500e+05   1.083900e+05   5.883932e-03          1         90
-       16    4.882000e+04   1.083900e+05   6.263971e-03          1         96
-       17    4.882000e+04   1.083900e+05   6.653786e-03          1        102
-       18    1.093500e+05   1.083900e+05   7.053852e-03          1        108
-       19    1.093500e+05   1.083900e+05   7.457972e-03          1        114
-       20    4.882000e+04   1.083900e+05   7.870913e-03          1        120
+        1   -9.800000e+04   1.320000e+05   1.207829e-03          1          6
+        2    4.800000e+04   1.290000e+05   1.632929e-03          1         12
+        3    1.086000e+05   1.268139e+05   2.012968e-03          1         18
+        4    8.163785e+04   1.219636e+05   2.374887e-03          1         24
+        5    1.550000e+05   1.121210e+05   2.755880e-03          1         30
+        6    1.121210e+05   1.104195e+05   3.192902e-03          1         36
+        7    1.047405e+05   1.095042e+05   3.580809e-03          1         42
+        8    5.125161e+04   1.088611e+05   3.956795e-03          1         48
+        9    1.088611e+05   1.088021e+05   4.320860e-03          1         54
+       10    1.093355e+05   1.084962e+05   4.755974e-03          1         60
+       11    4.823846e+04   1.083900e+05   5.198002e-03          1         66
+       12    1.093500e+05   1.083900e+05   5.646944e-03          1         72
+       13    1.093500e+05   1.083900e+05   6.082773e-03          1         78
+       14    1.670000e+05   1.083900e+05   6.518841e-03          1         84
+       15    1.093500e+05   1.083900e+05   6.990910e-03          1         90
+       16    4.882000e+04   1.083900e+05   7.452965e-03          1         96
+       17    4.882000e+04   1.083900e+05   7.912874e-03          1        102
+       18    1.093500e+05   1.083900e+05   8.390903e-03          1        108
+       19    1.093500e+05   1.083900e+05   8.863926e-03          1        114
+       20    4.882000e+04   1.083900e+05   9.352922e-03          1        120
 
-Terminating training with status: iteration_limit
+Terminating training
+  Status         : iteration_limit
+  Total time (s) : 9.352922e-03
+  Total solves   : 120
+  Best bound     :  1.083900e+05
+  Simulation CI  :  8.449980e+04 ± 2.436325e+04
 ------------------------------------------------------------------------------
-</code></pre><h2 id="Checking-the-policy"><a class="docs-heading-anchor" href="#Checking-the-policy">Checking the policy</a><a id="Checking-the-policy-1"></a><a class="docs-heading-anchor-permalink" href="#Checking-the-policy" title="Permalink"></a></h2><p>Birge and Louveaux report that the optimal objective value is \$108,390. Check that we got the correct solution using <a href="../../apireference/#SDDP.calculate_bound"><code>SDDP.calculate_bound</code></a>:</p><pre><code class="language-julia">@assert isapprox(SDDP.calculate_bound(model), 108_390.0, atol = 0.1)</code></pre><hr/><p><em>This page was generated using <a href="https://github.com/fredrikekre/Literate.jl">Literate.jl</a>.</em></p></article><nav class="docs-footer"><a class="docs-footer-prevpage" href="../stochastic_all_blacks/">« Stochastic All Blacks</a><a class="docs-footer-nextpage" href="../vehicle_location/">Vehicle location »</a><div class="flexbox-break"></div><p class="footer-message">Powered by <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> and the <a href="https://julialang.org/">Julia Programming Language</a>.</p></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> version 0.27.3 on <span class="colophon-date" title="Friday 2 July 2021 09:12">Friday 2 July 2021</span>. Using Julia version 1.6.1.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>
+</code></pre><h2 id="Checking-the-policy"><a class="docs-heading-anchor" href="#Checking-the-policy">Checking the policy</a><a id="Checking-the-policy-1"></a><a class="docs-heading-anchor-permalink" href="#Checking-the-policy" title="Permalink"></a></h2><p>Birge and Louveaux report that the optimal objective value is \$108,390. Check that we got the correct solution using <a href="../../apireference/#SDDP.calculate_bound"><code>SDDP.calculate_bound</code></a>:</p><pre><code class="language-julia">@assert isapprox(SDDP.calculate_bound(model), 108_390.0, atol = 0.1)</code></pre><hr/><p><em>This page was generated using <a href="https://github.com/fredrikekre/Literate.jl">Literate.jl</a>.</em></p></article><nav class="docs-footer"><a class="docs-footer-prevpage" href="../stochastic_all_blacks/">« Stochastic All Blacks</a><a class="docs-footer-nextpage" href="../vehicle_location/">Vehicle location »</a><div class="flexbox-break"></div><p class="footer-message">Powered by <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> and the <a href="https://julialang.org/">Julia Programming Language</a>.</p></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> version 0.27.3 on <span class="colophon-date" title="Saturday 3 July 2021 00:32">Saturday 3 July 2021</span>. Using Julia version 1.6.1.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>
