@@ -21,7 +21,7 @@ function stochastic_all_blacks()
         sense = :Max,
         upper_bound = 100.0,
         optimizer = GLPK.Optimizer,
-        integrality_handler = SDDP.LagrangianDuality(),
+        duality_handler = SDDP.LagrangianDuality(),
     ) do sp, stage
         # Seat remaining?
         @variable(sp, 0 &lt;= x[1:N] &lt;= 1, SDDP.State, Bin, initial_value = 1)
@@ -75,22 +75,22 @@ Numerical stability report
 No problems detected
 
  Iteration    Simulation       Bound         Time (s)    Proc. ID   # Solves
-        1    6.000000e+00   8.000000e+00   2.146900e-01          1         11
-        2    6.000000e+00   8.000000e+00   2.176201e-01          1         22
-        3    6.000000e+00   8.000000e+00   2.205520e-01          1         33
-        4    1.200000e+01   8.000000e+00   2.235072e-01          1         44
-        5    1.200000e+01   8.000000e+00   2.264671e-01          1         55
-        6    1.200000e+01   8.000000e+00   2.293880e-01          1         66
-        7    6.000000e+00   8.000000e+00   2.322741e-01          1         77
-        8    6.000000e+00   8.000000e+00   2.351401e-01          1         88
-        9    6.000000e+00   8.000000e+00   2.379761e-01          1         99
-       10    1.200000e+01   8.000000e+00   2.409861e-01          1        110
+        1    6.000000e+00   8.000000e+00   1.889360e-01          1         11
+        2    6.000000e+00   8.000000e+00   1.915622e-01          1         22
+        3    6.000000e+00   8.000000e+00   1.940870e-01          1         33
+        4    1.200000e+01   8.000000e+00   1.964960e-01          1         44
+        5    1.200000e+01   8.000000e+00   1.990712e-01          1         55
+        6    1.200000e+01   8.000000e+00   2.022071e-01          1         66
+        7    6.000000e+00   8.000000e+00   2.051101e-01          1         77
+        8    6.000000e+00   8.000000e+00   2.077410e-01          1         88
+        9    6.000000e+00   8.000000e+00   2.105651e-01          1         99
+       10    1.200000e+01   8.000000e+00   2.130332e-01          1        110
 
 Terminating training
   Status         : iteration_limit
-  Total time (s) : 2.409861e-01
+  Total time (s) : 2.130332e-01
   Total solves   : 110
   Best bound     :  8.000000e+00
   Simulation CI  :  8.400000e+00 ± 1.920400e+00
 ------------------------------------------------------------------------------
-</code></pre><hr/><p><em>This page was generated using <a href="https://github.com/fredrikekre/Literate.jl">Literate.jl</a>.</em></p></article><nav class="docs-footer"><a class="docs-footer-prevpage" href="../sldp_example_two/">« SLDP: example 2</a><a class="docs-footer-nextpage" href="../the_farmers_problem/">The farmer&#39;s problem »</a><div class="flexbox-break"></div><p class="footer-message">Powered by <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> and the <a href="https://julialang.org/">Julia Programming Language</a>.</p></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> version 0.27.5 on <span class="colophon-date" title="Monday 16 August 2021 02:39">Monday 16 August 2021</span>. Using Julia version 1.6.2.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>
+</code></pre><hr/><p><em>This page was generated using <a href="https://github.com/fredrikekre/Literate.jl">Literate.jl</a>.</em></p></article><nav class="docs-footer"><a class="docs-footer-prevpage" href="../sldp_example_two/">« SLDP: example 2</a><a class="docs-footer-nextpage" href="../the_farmers_problem/">The farmer&#39;s problem »</a><div class="flexbox-break"></div><p class="footer-message">Powered by <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> and the <a href="https://julialang.org/">Julia Programming Language</a>.</p></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> version 0.27.5 on <span class="colophon-date" title="Monday 16 August 2021 03:02">Monday 16 August 2021</span>. Using Julia version 1.6.2.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>
