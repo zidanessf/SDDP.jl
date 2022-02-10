@@ -10,7 +10,7 @@ _norm(x) = sqrt(sum(xi^2 for xi in x))
 abstract type AbstractSearchMethod end
 
 function minimize(f::Function, x₀::Vector{Float64})
-    return minimize(f, BFGS(100), x₀)
+    return minimize(f, BFGS(100, 1e-6), x₀)
 end
 
 ###
@@ -18,6 +18,7 @@ end
 ###
 struct BFGS <: AbstractSearchMethod
     evaluation_limit::Int
+    atol::Float64
 end
 
 """
@@ -65,8 +66,8 @@ function minimize(f::F, bfgs::BFGS, x₀::Vector{Float64}) where {F<:Function}
         # more of a bottleneck.)
         pₖ = B \ -∇fₖ
         # Run line search in direction `pₖ`
-        αₖ, fₖ₊₁, ∇fₖ₊₁ = _line_search(f, fₖ, ∇fₖ, xₖ, pₖ, αₖ, evals)
-        if _norm(αₖ * pₖ) / max(1.0, _norm(xₖ)) < 1e-3
+        αₖ, fₖ₊₁, ∇fₖ₊₁ = _line_search(f, fₖ, ∇fₖ, xₖ, pₖ, αₖ, evals, bfgs.atol)
+        if _norm(αₖ * pₖ) / max(1.0, _norm(xₖ)) < bfgs.atol
             # Small steps! Probably at the edge of the feasible region.
             # Return the current iterate.
             #
@@ -78,7 +79,7 @@ function minimize(f::F, bfgs::BFGS, x₀::Vector{Float64}) where {F<:Function}
             # returning a solution that is on the edge of numerical dual
             # feasibility.
             return fₖ, xₖ
-        elseif _norm(∇fₖ₊₁) < 1e-6
+        elseif _norm(∇fₖ₊₁) < bfgs.atol
             # Zero(ish) gradient. Return what must be a local maxima.
             return fₖ₊₁, xₖ + αₖ * pₖ
         elseif evals[] > bfgs.evaluation_limit
@@ -109,8 +110,10 @@ function _line_search(
     p::Vector{Float64},
     α::Float64,
     evals::Ref{Int},
+    atol::Float64,
 ) where {F<:Function}
-    while _norm(α * p) / max(1.0, _norm(x)) > 1e-3
+    while _norm(α * p) / max(1.0, _norm(x)) >= atol
+        @show α
         xₖ = x + α * p
         ret = f(xₖ)
         evals[] += 1
@@ -119,7 +122,7 @@ function _line_search(
             continue
         end
         fₖ₊₁, ∇fₖ₊₁ = ret
-        if p' * ∇fₖ₊₁ < 1e-6
+        if p' * ∇fₖ₊₁ < atol
             # Still a descent direction, so take a step.
             return α, fₖ₊₁, ∇fₖ₊₁
         end

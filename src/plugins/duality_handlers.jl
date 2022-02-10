@@ -145,7 +145,7 @@ duality_log_key(::ContinuousConicDuality) = " "
 """
     LagrangianDuality(;
         method::LocalImprovementSearch.AbstractSearchMethod =
-            LocalImprovementSearch.BFGS(100),
+            LocalImprovementSearch.BFGS(100, 1e-6),
     )
 
 Obtain dual variables in the backward pass using Lagrangian duality.
@@ -174,7 +174,7 @@ mutable struct LagrangianDuality <: AbstractDualityHandler
     method::LocalImprovementSearch.AbstractSearchMethod
 
     function LagrangianDuality(;
-        method = LocalImprovementSearch.BFGS(100),
+        method = LocalImprovementSearch.BFGS(100, 1e-6),
         kwargs...,
     )
         if length(kwargs) > 0
