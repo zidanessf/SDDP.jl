@@ -123,32 +123,32 @@ Numerical stability report
 No problems detected
 
  Iteration    Simulation       Bound         Time (s)    Proc. ID   # Solves
-        1   -9.800000e+04   1.320000e+05   7.619858e-04          1          6
-        2    2.800000e+04   1.290000e+05   1.075029e-03          1         12
-        3    4.840000e+04   1.268139e+05   1.369953e-03          1         18
-        4    3.003659e+04   1.219636e+05   1.636028e-03          1         24
-        5    1.550000e+05   1.121210e+05   1.899004e-03          1         30
-        6    1.589371e+05   1.104195e+05   2.162933e-03          1         36
-        7    1.047405e+05   1.095042e+05   2.552986e-03          1         42
-        8    5.125161e+04   1.088611e+05   2.903938e-03          1         48
-        9    1.665556e+05   1.088021e+05   3.250837e-03          1         54
-       10    1.093355e+05   1.084962e+05   3.669024e-03          1         60
-       11    1.084962e+05   1.083900e+05   4.089832e-03          1         66
-       12    1.093500e+05   1.083900e+05   4.505873e-03          1         72
-       13    1.093500e+05   1.083900e+05   4.849911e-03          1         78
-       14    1.093500e+05   1.083900e+05   5.204916e-03          1         84
-       15    1.093500e+05   1.083900e+05   5.571842e-03          1         90
-       16    1.670000e+05   1.083900e+05   5.909920e-03          1         96
-       17    1.093500e+05   1.083900e+05   6.243944e-03          1        102
-       18    1.670000e+05   1.083900e+05   6.580830e-03          1        108
-       19    4.882000e+04   1.083900e+05   6.930828e-03          1        114
-       20    4.882000e+04   1.083900e+05   7.306814e-03          1        120
+        1   -9.800000e+04   1.320000e+05   9.810925e-04          1          6
+        2    2.800000e+04   1.290000e+05   1.426935e-03          1         12
+        3    4.840000e+04   1.268139e+05   1.816988e-03          1         18
+        4    3.003659e+04   1.219636e+05   2.173901e-03          1         24
+        5    1.550000e+05   1.121210e+05   2.535105e-03          1         30
+        6    1.589371e+05   1.104195e+05   2.935886e-03          1         36
+        7    1.047405e+05   1.095042e+05   3.272057e-03          1         42
+        8    5.125161e+04   1.088611e+05   3.607035e-03          1         48
+        9    1.665556e+05   1.088021e+05   3.949881e-03          1         54
+       10    1.093355e+05   1.084962e+05   4.378080e-03          1         60
+       11    1.084962e+05   1.083900e+05   4.802942e-03          1         66
+       12    1.093500e+05   1.083900e+05   5.233049e-03          1         72
+       13    1.093500e+05   1.083900e+05   5.657911e-03          1         78
+       14    1.093500e+05   1.083900e+05   6.095886e-03          1         84
+       15    1.093500e+05   1.083900e+05   6.530046e-03          1         90
+       16    1.670000e+05   1.083900e+05   7.023096e-03          1         96
+       17    1.093500e+05   1.083900e+05   7.452011e-03          1        102
+       18    1.670000e+05   1.083900e+05   7.900000e-03          1        108
+       19    4.882000e+04   1.083900e+05   8.356094e-03          1        114
+       20    4.882000e+04   1.083900e+05   8.815050e-03          1        120
 
 Terminating training
   Status         : iteration_limit
-  Total time (s) : 7.306814e-03
+  Total time (s) : 8.815050e-03
   Total solves   : 120
   Best bound     :  1.083900e+05
   Simulation CI  :  9.205715e+04 ± 2.822887e+04
 ------------------------------------------------------------------------------
-</code></pre><h2 id="Checking-the-policy"><a class="docs-heading-anchor" href="#Checking-the-policy">Checking the policy</a><a id="Checking-the-policy-1"></a><a class="docs-heading-anchor-permalink" href="#Checking-the-policy" title="Permalink"></a></h2><p>Birge and Louveaux report that the optimal objective value is <span>$</span>108,390. Check that we got the correct solution using <a href="../../apireference/#SDDP.calculate_bound"><code>SDDP.calculate_bound</code></a>:</p><pre><code class="language-julia hljs">@assert isapprox(SDDP.calculate_bound(model), 108_390.0, atol = 0.1)</code></pre><hr/><p><em>This page was generated using <a href="https://github.com/fredrikekre/Literate.jl">Literate.jl</a>.</em></p></article><nav class="docs-footer"><a class="docs-footer-prevpage" href="../stochastic_all_blacks/">« Stochastic All Blacks</a><a class="docs-footer-nextpage" href="../vehicle_location/">Vehicle location »</a><div class="flexbox-break"></div><p class="footer-message">Powered by <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> and the <a href="https://julialang.org/">Julia Programming Language</a>.</p></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> version 0.27.12 on <span class="colophon-date" title="Friday 11 February 2022 01:42">Friday 11 February 2022</span>. Using Julia version 1.7.2.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>
+</code></pre><h2 id="Checking-the-policy"><a class="docs-heading-anchor" href="#Checking-the-policy">Checking the policy</a><a id="Checking-the-policy-1"></a><a class="docs-heading-anchor-permalink" href="#Checking-the-policy" title="Permalink"></a></h2><p>Birge and Louveaux report that the optimal objective value is <span>$</span>108,390. Check that we got the correct solution using <a href="../../apireference/#SDDP.calculate_bound"><code>SDDP.calculate_bound</code></a>:</p><pre><code class="language-julia hljs">@assert isapprox(SDDP.calculate_bound(model), 108_390.0, atol = 0.1)</code></pre><hr/><p><em>This page was generated using <a href="https://github.com/fredrikekre/Literate.jl">Literate.jl</a>.</em></p></article><nav class="docs-footer"><a class="docs-footer-prevpage" href="../stochastic_all_blacks/">« Stochastic All Blacks</a><a class="docs-footer-nextpage" href="../vehicle_location/">Vehicle location »</a><div class="flexbox-break"></div><p class="footer-message">Powered by <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> and the <a href="https://julialang.org/">Julia Programming Language</a>.</p></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> version 0.27.12 on <span class="colophon-date" title="Friday 11 February 2022 02:13">Friday 11 February 2022</span>. Using Julia version 1.7.2.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>
