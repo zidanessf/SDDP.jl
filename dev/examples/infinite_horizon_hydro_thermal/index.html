@@ -67,7 +67,7 @@ end
 
 infinite_hydro_thermal(cut_type = SDDP.SINGLE_CUT)
 infinite_hydro_thermal(cut_type = SDDP.MULTI_CUT)</code></pre><pre><code class="nohighlight hljs">------------------------------------------------------------------------------
-                      SDDP.jl (c) Oscar Dowson, 2017-21
+          SDDP.jl (c) Oscar Dowson and SDDP.jl contributors, 2017-22
 
 Problem
   Nodes           : 1
@@ -92,28 +92,30 @@ Numerical stability report
 No problems detected
 
  Iteration    Simulation       Bound         Time (s)    Proc. ID   # Solves
-      100    2.500000e+00   1.188993e+02   6.466351e-01          1       1040
-      200   -2.213529e-14   1.191654e+02   6.943979e-01          1       2088
-      300    0.000000e+00   1.191667e+02   7.859311e-01          1       3148
-      400    0.000000e+00   1.191667e+02   8.530409e-01          1       4188
-      500    2.500000e+01   1.191667e+02   9.303269e-01          1       5244
-      600    7.500000e+01   1.191667e+02   1.017007e+00          1       6304
-      700    0.000000e+00   1.191667e+02   1.120145e+00          1       7360
-      800    7.500000e+00   1.191667e+02   1.288616e+00          1       8420
-      900    2.500000e+00   1.191667e+02   1.449194e+00          1       9468
-     1000    0.000000e+00   1.191667e+02   1.656322e+00          1      10528
-     1100    7.500000e+01   1.191667e+02   1.819467e+00          1      11596
+      100    2.500000e+00   1.188993e+02   6.721630e-01          1       1040
+      200   -2.213529e-14   1.191654e+02   7.042670e-01          1       2088
+      300    0.000000e+00   1.191667e+02   7.446420e-01          1       3148
+      400    0.000000e+00   1.191667e+02   7.897382e-01          1       4188
+      500    2.500000e+01   1.191667e+02   8.635652e-01          1       5244
+      600    7.500000e+01   1.191667e+02   9.236450e-01          1       6304
+      700    0.000000e+00   1.191667e+02   9.948580e-01          1       7360
+      800    7.500000e+00   1.191667e+02   1.096974e+00          1       8420
+      900    2.500000e+00   1.191667e+02   1.237254e+00          1       9468
+     1000    0.000000e+00   1.191667e+02   1.371866e+00          1      10528
+     1100    7.500000e+01   1.191667e+02   1.506108e+00          1      11596
+     1200    7.500000e+00   1.191667e+02   1.672030e+00          1      12664
+     1300    7.500000e+01   1.191667e+02   1.924697e+00          1      13736
 
 Terminating training
   Status         : time_limit
-  Total time (s) : 2.002714e+00
-  Total solves   : 12470
+  Total time (s) : 2.000882e+00
+  Total solves   : 14003
   Best bound     :  1.191667e+02
-  Simulation CI  :  2.012479e+01 ± 1.661188e+00
+  Simulation CI  :  2.056604e+01 ± 1.587982e+00
 ------------------------------------------------------------------------------
-Confidence_interval = 111.31 ± 11.74
+Confidence_interval = 125.19 ± 13.64
 ------------------------------------------------------------------------------
-                      SDDP.jl (c) Oscar Dowson, 2017-21
+          SDDP.jl (c) Oscar Dowson and SDDP.jl contributors, 2017-22
 
 Problem
   Nodes           : 1
@@ -138,27 +140,30 @@ Numerical stability report
 No problems detected
 
  Iteration    Simulation       Bound         Time (s)    Proc. ID   # Solves
-      100    0.000000e+00   1.188439e+02   3.721499e-02          1       1060
-      200    7.500000e+01   1.191642e+02   8.625913e-02          1       2128
-      300    5.000000e+01   1.191667e+02   1.472361e-01          1       3200
-      400    0.000000e+00   1.191667e+02   2.174821e-01          1       4256
-      500   -1.076580e-14   1.191667e+02   2.943580e-01          1       5284
-      600    7.500000e+01   1.191667e+02   3.832240e-01          1       6324
-      700    7.500000e+00   1.191667e+02   4.858141e-01          1       7384
-      800    0.000000e+00   1.191667e+02   6.380112e-01          1       8448
-      900    2.500000e+00   1.191667e+02   7.794580e-01          1       9492
-     1000    1.000000e+01   1.191667e+02   9.381981e-01          1      10552
-     1100    0.000000e+00   1.191667e+02   1.139585e+00          1      11604
-     1200    0.000000e+00   1.191667e+02   1.371195e+00          1      12672
-     1300    7.105427e-15   1.191667e+02   1.632097e+00          1      13724
-     1400    8.881784e-15   1.191667e+02   1.905515e+00          1      14788
+      100    1.000000e+01   1.187640e+02   4.146719e-02          1       1036
+      200    8.237630e-14   1.191611e+02   7.258916e-02          1       2068
+      300    7.500000e+01   1.191667e+02   1.101930e-01          1       3112
+      400    5.250000e+01   1.191667e+02   1.553452e-01          1       4172
+      500    7.500000e+00   1.191667e+02   2.084510e-01          1       5236
+      600   -1.076580e-14   1.191667e+02   2.666471e-01          1       6276
+      700   -1.076580e-14   1.191667e+02   3.361990e-01          1       7340
+      800    2.500000e+00   1.191667e+02   4.399281e-01          1       8392
+      900    1.000000e+01   1.191667e+02   5.430102e-01          1       9444
+     1000    1.065814e-14   1.191667e+02   6.489022e-01          1      10512
+     1100    2.153160e-14   1.191667e+02   7.913132e-01          1      11576
+     1200    2.500000e+01   1.191667e+02   9.557071e-01          1      12636
+     1300    2.500000e+00   1.191667e+02   1.086939e+00          1      13692
+     1400    7.500000e+01   1.191667e+02   1.246059e+00          1      14760
+     1500    5.000000e+01   1.191667e+02   1.398086e+00          1      15820
+     1600    7.500000e+01   1.191667e+02   1.598772e+00          1      16884
+     1700    7.500000e+00   1.191667e+02   1.812525e+00          1      17944
 
 Terminating training
   Status         : time_limit
-  Total time (s) : 2.000116e+00
-  Total solves   : 15150
+  Total time (s) : 2.001129e+00
+  Total solves   : 18709
   Best bound     :  1.191667e+02
-  Simulation CI  :  1.971234e+01 ± 1.573690e+00
+  Simulation CI  :  1.981931e+01 ± 1.425002e+00
 ------------------------------------------------------------------------------
-Confidence_interval = 119.03 ± 12.69
-</code></pre><hr/><p><em>This page was generated using <a href="https://github.com/fredrikekre/Literate.jl">Literate.jl</a>.</em></p></article><nav class="docs-footer"><a class="docs-footer-prevpage" href="../hydro_valley/">« Hydro valleys</a><a class="docs-footer-nextpage" href="../infinite_horizon_trivial/">Infinite horizon trivial »</a><div class="flexbox-break"></div><p class="footer-message">Powered by <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> and the <a href="https://julialang.org/">Julia Programming Language</a>.</p></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> version 0.27.16 on <span class="colophon-date" title="Friday 6 May 2022 23:10">Friday 6 May 2022</span>. Using Julia version 1.7.2.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>
+Confidence_interval = 121.26 ± 13.3
+</code></pre><hr/><p><em>This page was generated using <a href="https://github.com/fredrikekre/Literate.jl">Literate.jl</a>.</em></p></article><nav class="docs-footer"><a class="docs-footer-prevpage" href="../hydro_valley/">« Hydro valleys</a><a class="docs-footer-nextpage" href="../infinite_horizon_trivial/">Infinite horizon trivial »</a><div class="flexbox-break"></div><p class="footer-message">Powered by <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> and the <a href="https://julialang.org/">Julia Programming Language</a>.</p></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> version 0.27.16 on <span class="colophon-date" title="Friday 6 May 2022 23:11">Friday 6 May 2022</span>. Using Julia version 1.7.2.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>
