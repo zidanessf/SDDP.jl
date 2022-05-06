@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en"><head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/><title>Biobjective hydro-thermal · SDDP.jl</title><script data-outdated-warner src="../../assets/warner.js"></script><link href="https://cdnjs.cloudflare.com/ajax/libs/lato-font/3.0.0/css/lato-font.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/juliamono/0.039/juliamono-regular.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/fontawesome.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/solid.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/brands.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.13.11/katex.min.css" rel="stylesheet" type="text/css"/><script>documenterBaseURL="../.."</script><script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js" data-main="../../assets/documenter.js"></script><script src="../../siteinfo.js"></script><script src="../../../versions.js"></script><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../../assets/themes/documenter-dark.css" data-theme-name="documenter-dark" data-theme-primary-dark/><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../../assets/themes/documenter-light.css" data-theme-name="documenter-light" data-theme-primary/><script src="../../assets/themeswap.js"></script></head><body><div id="documenter"><nav class="docs-sidebar"><a class="docs-logo" href="../../"><img src="../../assets/logo.png" alt="SDDP.jl logo"/></a><div class="docs-package-name"><span class="docs-autofit"><a href="../../">SDDP.jl</a></span></div><form class="docs-search" action="../../search/"><input class="docs-search-query" id="documenter-search-query" name="q" type="text" placeholder="Search docs"/></form><ul class="docs-menu"><li><a class="tocitem" href="../../">Home</a></li><li><input class="collapse-toggle" id="menuitem-2" type="checkbox"/><label class="tocitem" for="menuitem-2"><span class="docs-label">Tutorials</span><i class="docs-chevron"></i></label><ul class="collapsed"><li><input class="collapse-toggle" id="menuitem-2-1" type="checkbox"/><label class="tocitem" for="menuitem-2-1"><span class="docs-label">Basic</span><i class="docs-chevron"></i></label><ul class="collapsed"><li><a class="tocitem" href="../../tutorial/basic/01_first_steps/">An introduction to SDDP.jl</a></li><li><a class="tocitem" href="../../tutorial/basic/03_objective_uncertainty/">Uncertainty in the objective function</a></li><li><a class="tocitem" href="../../tutorial/basic/04_markov_uncertainty/">Markovian policy graphs</a></li><li><a class="tocitem" href="../../tutorial/basic/05_plotting/">Plotting tools</a></li><li><a class="tocitem" href="../../tutorial/basic/06_warnings/">Words of warning</a></li><li><a class="tocitem" href="../../tutorial/basic/07_arma/">Auto-regressive stochastic processes</a></li></ul></li><li><input class="collapse-toggle" id="menuitem-2-2" type="checkbox"/><label class="tocitem" for="menuitem-2-2"><span class="docs-label">Advanced</span><i class="docs-chevron"></i></label><ul class="collapsed"><li><a class="tocitem" href="../../tutorial/advanced/11_objective_states/">Objective states</a></li><li><a class="tocitem" href="../../tutorial/advanced/12_belief_states/">Belief states</a></li></ul></li><li><input class="collapse-toggle" id="menuitem-2-3" type="checkbox"/><label class="tocitem" for="menuitem-2-3"><span class="docs-label">Theory</span><i class="docs-chevron"></i></label><ul class="collapsed"><li><a class="tocitem" href="../../tutorial/theory/21_theory_intro/">Introductory theory</a></li><li><a class="tocitem" href="../../tutorial/theory/22_risk/">Risk aversion</a></li></ul></li></ul></li><li><input class="collapse-toggle" id="menuitem-3" type="checkbox"/><label class="tocitem" for="menuitem-3"><span class="docs-label">How-to guides</span><i class="docs-chevron"></i></label><ul class="collapsed"><li><a class="tocitem" href="../../guides/acess_previous_variables/">Access variables from a previous stage</a></li><li><a class="tocitem" href="../../guides/add_a_multidimensional_state_variable/">Add a multi-dimensional state variable</a></li><li><a class="tocitem" href="../../guides/add_a_risk_measure/">Add a risk measure</a></li><li><a class="tocitem" href="../../guides/add_integrality/">Integrality</a></li><li><a class="tocitem" href="../../guides/add_multidimensional_noise_Terms/">Add multi-dimensional noise terms</a></li><li><a class="tocitem" href="../../guides/add_noise_in_the_constraint_matrix/">Add noise in the constraint matrix</a></li><li><a class="tocitem" href="../../guides/choose_a_stopping_rule/">Choose a stopping rule</a></li><li><a class="tocitem" href="../../guides/create_a_general_policy_graph/">Create a general policy graph</a></li><li><a class="tocitem" href="../../guides/debug_a_model/">Debug a model</a></li><li><a class="tocitem" href="../../guides/improve_computational_performance/">Improve computational performance</a></li><li><a class="tocitem" href="../../guides/simulate_using_a_different_sampling_scheme/">Simulate using a different sampling scheme</a></li></ul></li><li><input class="collapse-toggle" id="menuitem-4" type="checkbox" checked/><label class="tocitem" for="menuitem-4"><span class="docs-label">Examples</span><i class="docs-chevron"></i></label><ul class="collapsed"><li><a class="tocitem" href="../FAST_hydro_thermal/">FAST: the hydro-thermal problem</a></li><li><a class="tocitem" href="../FAST_production_management/">FAST: the production management problem</a></li><li><a class="tocitem" href="../FAST_quickstart/">FAST: the quickstart problem</a></li><li><a class="tocitem" href="../Hydro_thermal/">Hydro-thermal scheduling</a></li><li><a class="tocitem" href="../StochDynamicProgramming.jl_multistock/">StochDynamicProgramming: the multistock problem</a></li><li><a class="tocitem" href="../StochDynamicProgramming.jl_stock/">StochDynamicProgramming: the stock problem</a></li><li><a class="tocitem" href="../StructDualDynProg.jl_prob5.2_2stages/">StructDualDynProg: Problem 5.2, 2 stages</a></li><li><a class="tocitem" href="../StructDualDynProg.jl_prob5.2_3stages/">StructDualDynProg: Problem 5.2, 3 stages</a></li><li><a class="tocitem" href="../agriculture_mccardle_farm/">The farm planning problem</a></li><li><a class="tocitem" href="../air_conditioning/">Air conditioning</a></li><li><a class="tocitem" href="../all_blacks/">Deterministic All Blacks</a></li><li><a class="tocitem" href="../asset_management_simple/">Asset management</a></li><li><a class="tocitem" href="../asset_management_stagewise/">Asset management with modifications</a></li><li><a class="tocitem" href="../belief/">Partially observable inventory management</a></li><li class="is-active"><a class="tocitem" href>Biobjective hydro-thermal</a></li><li><a class="tocitem" href="../booking_management/">Booking management</a></li><li><a class="tocitem" href="../generation_expansion/">Generation expansion</a></li><li><a class="tocitem" href="../hydro_valley/">Hydro valleys</a></li><li><a class="tocitem" href="../infinite_horizon_hydro_thermal/">Infinite horizon hydro-thermal</a></li><li><a class="tocitem" href="../infinite_horizon_trivial/">Infinite horizon trivial</a></li><li><a class="tocitem" href="../no_strong_duality/">No strong duality</a></li><li><a class="tocitem" href="../objective_state_newsvendor/">Newsvendor</a></li><li><a class="tocitem" href="../sldp_example_one/">SLDP: example 1</a></li><li><a class="tocitem" href="../sldp_example_two/">SLDP: example 2</a></li><li><a class="tocitem" href="../stochastic_all_blacks/">Stochastic All Blacks</a></li><li><a class="tocitem" href="../the_farmers_problem/">The farmer&#39;s problem</a></li><li><a class="tocitem" href="../vehicle_location/">Vehicle location</a></li></ul></li><li><a class="tocitem" href="../../apireference/">API Reference</a></li></ul><div class="docs-version-selector field has-addons"><div class="control"><span class="docs-label button is-static is-size-7">Version</span></div><div class="docs-selector control is-expanded"><div class="select is-fullwidth is-size-7"><select id="documenter-version-selector"></select></div></div></div></nav><div class="docs-main"><header class="docs-navbar"><nav class="breadcrumb"><ul class="is-hidden-mobile"><li><a class="is-disabled">Examples</a></li><li class="is-active"><a href>Biobjective hydro-thermal</a></li></ul><ul class="is-hidden-tablet"><li class="is-active"><a href>Biobjective hydro-thermal</a></li></ul></nav><div class="docs-right"><a class="docs-edit-link" href="https://github.com/odow/SDDP.jl/blob/master/docs/src/examples/biobjective_hydro.jl" title="Edit on GitHub"><span class="docs-icon fab"></span><span class="docs-label is-hidden-touch">Edit on GitHub</span></a><a class="docs-settings-button fas fa-cog" id="documenter-settings-button" href="#" title="Settings"></a><a class="docs-sidebar-button fa fa-bars is-hidden-desktop" id="documenter-sidebar-button" href="#"></a></div></header><article class="content" id="documenter-page"><h1 id="Biobjective-hydro-thermal"><a class="docs-heading-anchor" href="#Biobjective-hydro-thermal">Biobjective hydro-thermal</a><a id="Biobjective-hydro-thermal-1"></a><a class="docs-heading-anchor-permalink" href="#Biobjective-hydro-thermal" title="Permalink"></a></h1><pre><code class="language-julia hljs">using SDDP, GLPK, Statistics, Test
+<html lang="en"><head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/><title>Biobjective hydro-thermal · SDDP.jl</title><script data-outdated-warner src="../../assets/warner.js"></script><link href="https://cdnjs.cloudflare.com/ajax/libs/lato-font/3.0.0/css/lato-font.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/juliamono/0.044/juliamono.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/fontawesome.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/solid.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/brands.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.13.11/katex.min.css" rel="stylesheet" type="text/css"/><script>documenterBaseURL="../.."</script><script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js" data-main="../../assets/documenter.js"></script><script src="../../siteinfo.js"></script><script src="../../../versions.js"></script><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../../assets/themes/documenter-dark.css" data-theme-name="documenter-dark" data-theme-primary-dark/><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../../assets/themes/documenter-light.css" data-theme-name="documenter-light" data-theme-primary/><script src="../../assets/themeswap.js"></script></head><body><div id="documenter"><nav class="docs-sidebar"><a class="docs-logo" href="../../"><img src="../../assets/logo.png" alt="SDDP.jl logo"/></a><div class="docs-package-name"><span class="docs-autofit"><a href="../../">SDDP.jl</a></span></div><form class="docs-search" action="../../search/"><input class="docs-search-query" id="documenter-search-query" name="q" type="text" placeholder="Search docs"/></form><ul class="docs-menu"><li><a class="tocitem" href="../../">Home</a></li><li><input class="collapse-toggle" id="menuitem-2" type="checkbox"/><label class="tocitem" for="menuitem-2"><span class="docs-label">Tutorials</span><i class="docs-chevron"></i></label><ul class="collapsed"><li><input class="collapse-toggle" id="menuitem-2-1" type="checkbox"/><label class="tocitem" for="menuitem-2-1"><span class="docs-label">Basic</span><i class="docs-chevron"></i></label><ul class="collapsed"><li><a class="tocitem" href="../../tutorial/basic/01_first_steps/">An introduction to SDDP.jl</a></li><li><a class="tocitem" href="../../tutorial/basic/03_objective_uncertainty/">Uncertainty in the objective function</a></li><li><a class="tocitem" href="../../tutorial/basic/04_markov_uncertainty/">Markovian policy graphs</a></li><li><a class="tocitem" href="../../tutorial/basic/05_plotting/">Plotting tools</a></li><li><a class="tocitem" href="../../tutorial/basic/06_warnings/">Words of warning</a></li><li><a class="tocitem" href="../../tutorial/basic/07_arma/">Auto-regressive stochastic processes</a></li></ul></li><li><input class="collapse-toggle" id="menuitem-2-2" type="checkbox"/><label class="tocitem" for="menuitem-2-2"><span class="docs-label">Advanced</span><i class="docs-chevron"></i></label><ul class="collapsed"><li><a class="tocitem" href="../../tutorial/advanced/11_objective_states/">Objective states</a></li><li><a class="tocitem" href="../../tutorial/advanced/12_belief_states/">Belief states</a></li></ul></li><li><input class="collapse-toggle" id="menuitem-2-3" type="checkbox"/><label class="tocitem" for="menuitem-2-3"><span class="docs-label">Theory</span><i class="docs-chevron"></i></label><ul class="collapsed"><li><a class="tocitem" href="../../tutorial/theory/21_theory_intro/">Introductory theory</a></li><li><a class="tocitem" href="../../tutorial/theory/22_risk/">Risk aversion</a></li></ul></li></ul></li><li><input class="collapse-toggle" id="menuitem-3" type="checkbox"/><label class="tocitem" for="menuitem-3"><span class="docs-label">How-to guides</span><i class="docs-chevron"></i></label><ul class="collapsed"><li><a class="tocitem" href="../../guides/acess_previous_variables/">Access variables from a previous stage</a></li><li><a class="tocitem" href="../../guides/add_a_multidimensional_state_variable/">Add a multi-dimensional state variable</a></li><li><a class="tocitem" href="../../guides/add_a_risk_measure/">Add a risk measure</a></li><li><a class="tocitem" href="../../guides/add_integrality/">Integrality</a></li><li><a class="tocitem" href="../../guides/add_multidimensional_noise_Terms/">Add multi-dimensional noise terms</a></li><li><a class="tocitem" href="../../guides/add_noise_in_the_constraint_matrix/">Add noise in the constraint matrix</a></li><li><a class="tocitem" href="../../guides/choose_a_stopping_rule/">Choose a stopping rule</a></li><li><a class="tocitem" href="../../guides/create_a_general_policy_graph/">Create a general policy graph</a></li><li><a class="tocitem" href="../../guides/debug_a_model/">Debug a model</a></li><li><a class="tocitem" href="../../guides/improve_computational_performance/">Improve computational performance</a></li><li><a class="tocitem" href="../../guides/simulate_using_a_different_sampling_scheme/">Simulate using a different sampling scheme</a></li></ul></li><li><input class="collapse-toggle" id="menuitem-4" type="checkbox" checked/><label class="tocitem" for="menuitem-4"><span class="docs-label">Examples</span><i class="docs-chevron"></i></label><ul class="collapsed"><li><a class="tocitem" href="../FAST_hydro_thermal/">FAST: the hydro-thermal problem</a></li><li><a class="tocitem" href="../FAST_production_management/">FAST: the production management problem</a></li><li><a class="tocitem" href="../FAST_quickstart/">FAST: the quickstart problem</a></li><li><a class="tocitem" href="../Hydro_thermal/">Hydro-thermal scheduling</a></li><li><a class="tocitem" href="../StochDynamicProgramming.jl_multistock/">StochDynamicProgramming: the multistock problem</a></li><li><a class="tocitem" href="../StochDynamicProgramming.jl_stock/">StochDynamicProgramming: the stock problem</a></li><li><a class="tocitem" href="../StructDualDynProg.jl_prob5.2_2stages/">StructDualDynProg: Problem 5.2, 2 stages</a></li><li><a class="tocitem" href="../StructDualDynProg.jl_prob5.2_3stages/">StructDualDynProg: Problem 5.2, 3 stages</a></li><li><a class="tocitem" href="../agriculture_mccardle_farm/">The farm planning problem</a></li><li><a class="tocitem" href="../air_conditioning/">Air conditioning</a></li><li><a class="tocitem" href="../all_blacks/">Deterministic All Blacks</a></li><li><a class="tocitem" href="../asset_management_simple/">Asset management</a></li><li><a class="tocitem" href="../asset_management_stagewise/">Asset management with modifications</a></li><li><a class="tocitem" href="../belief/">Partially observable inventory management</a></li><li class="is-active"><a class="tocitem" href>Biobjective hydro-thermal</a></li><li><a class="tocitem" href="../booking_management/">Booking management</a></li><li><a class="tocitem" href="../generation_expansion/">Generation expansion</a></li><li><a class="tocitem" href="../hydro_valley/">Hydro valleys</a></li><li><a class="tocitem" href="../infinite_horizon_hydro_thermal/">Infinite horizon hydro-thermal</a></li><li><a class="tocitem" href="../infinite_horizon_trivial/">Infinite horizon trivial</a></li><li><a class="tocitem" href="../no_strong_duality/">No strong duality</a></li><li><a class="tocitem" href="../objective_state_newsvendor/">Newsvendor</a></li><li><a class="tocitem" href="../sldp_example_one/">SLDP: example 1</a></li><li><a class="tocitem" href="../sldp_example_two/">SLDP: example 2</a></li><li><a class="tocitem" href="../stochastic_all_blacks/">Stochastic All Blacks</a></li><li><a class="tocitem" href="../the_farmers_problem/">The farmer&#39;s problem</a></li><li><a class="tocitem" href="../vehicle_location/">Vehicle location</a></li></ul></li><li><a class="tocitem" href="../../apireference/">API Reference</a></li></ul><div class="docs-version-selector field has-addons"><div class="control"><span class="docs-label button is-static is-size-7">Version</span></div><div class="docs-selector control is-expanded"><div class="select is-fullwidth is-size-7"><select id="documenter-version-selector"></select></div></div></div></nav><div class="docs-main"><header class="docs-navbar"><nav class="breadcrumb"><ul class="is-hidden-mobile"><li><a class="is-disabled">Examples</a></li><li class="is-active"><a href>Biobjective hydro-thermal</a></li></ul><ul class="is-hidden-tablet"><li class="is-active"><a href>Biobjective hydro-thermal</a></li></ul></nav><div class="docs-right"><a class="docs-edit-link" href="https://github.com/odow/SDDP.jl/blob/master/docs/src/examples/biobjective_hydro.jl" title="Edit on GitHub"><span class="docs-icon fab"></span><span class="docs-label is-hidden-touch">Edit on GitHub</span></a><a class="docs-settings-button fas fa-cog" id="documenter-settings-button" href="#" title="Settings"></a><a class="docs-sidebar-button fa fa-bars is-hidden-desktop" id="documenter-sidebar-button" href="#"></a></div></header><article class="content" id="documenter-page"><h1 id="Biobjective-hydro-thermal"><a class="docs-heading-anchor" href="#Biobjective-hydro-thermal">Biobjective hydro-thermal</a><a id="Biobjective-hydro-thermal-1"></a><a class="docs-heading-anchor-permalink" href="#Biobjective-hydro-thermal" title="Permalink"></a></h1><pre><code class="language-julia hljs">using SDDP, GLPK, Statistics, Test
 
 function biobjective_example()
     model = SDDP.LinearPolicyGraph(
@@ -75,20 +75,20 @@ Options
   Sampling scheme : SDDP.InSampleMonteCarlo
 
  Iteration    Simulation       Bound         Time (s)    Proc. ID   # Solves
-        1    0.000000e+00   0.000000e+00   6.943319e-01          1         36
-        2    0.000000e+00   0.000000e+00   7.008369e-01          1         72
-        3    0.000000e+00   0.000000e+00   7.018120e-01          1        108
-        4    0.000000e+00   0.000000e+00   7.026830e-01          1        144
-        5    0.000000e+00   0.000000e+00   7.035458e-01          1        180
-        6    0.000000e+00   0.000000e+00   7.044690e-01          1        216
-        7    0.000000e+00   0.000000e+00   7.053809e-01          1        252
-        8    0.000000e+00   0.000000e+00   7.062929e-01          1        288
-        9    0.000000e+00   0.000000e+00   7.072089e-01          1        324
-       10    0.000000e+00   0.000000e+00   7.081969e-01          1        360
+        1    0.000000e+00   0.000000e+00   6.513090e-01          1         36
+        2    0.000000e+00   0.000000e+00   6.575520e-01          1         72
+        3    0.000000e+00   0.000000e+00   6.585429e-01          1        108
+        4    0.000000e+00   0.000000e+00   6.594710e-01          1        144
+        5    0.000000e+00   0.000000e+00   6.603820e-01          1        180
+        6    0.000000e+00   0.000000e+00   6.613879e-01          1        216
+        7    0.000000e+00   0.000000e+00   6.623359e-01          1        252
+        8    0.000000e+00   0.000000e+00   6.633160e-01          1        288
+        9    0.000000e+00   0.000000e+00   6.643000e-01          1        324
+       10    0.000000e+00   0.000000e+00   6.653419e-01          1        360
 
 Terminating training
   Status         : iteration_limit
-  Total time (s) : 7.081969e-01
+  Total time (s) : 6.653419e-01
   Total solves   : 360
   Best bound     :  0.000000e+00
   Simulation CI  :  0.000000e+00 ± 0.000000e+00
@@ -114,20 +114,20 @@ Options
   Sampling scheme : SDDP.InSampleMonteCarlo
 
  Iteration    Simulation       Bound         Time (s)    Proc. ID   # Solves
-        1    9.500000e+02   5.500000e+02   1.199007e-03          1        407
-        2    8.850000e+02   5.665665e+02   2.189159e-03          1        443
-        3    5.000000e+02   5.699812e+02   3.175020e-03          1        479
-        4    6.500000e+02   5.699812e+02   4.218102e-03          1        515
-        5    7.500000e+02   5.714350e+02   5.285025e-03          1        551
-        6    4.500000e+02   5.718069e+02   6.321192e-03          1        587
-        7    8.500000e+02   5.720098e+02   7.396221e-03          1        623
-        8    8.500000e+02   5.725507e+02   8.409023e-03          1        659
-        9    4.000000e+02   5.725507e+02   9.502172e-03          1        695
-       10    2.850000e+02   5.728212e+02   1.061106e-02          1        731
+        1    9.500000e+02   5.500000e+02   1.089096e-03          1        407
+        2    8.850000e+02   5.665665e+02   2.073050e-03          1        443
+        3    5.000000e+02   5.699812e+02   3.072977e-03          1        479
+        4    6.500000e+02   5.699812e+02   4.129887e-03          1        515
+        5    7.500000e+02   5.714350e+02   5.209923e-03          1        551
+        6    4.500000e+02   5.718069e+02   6.268024e-03          1        587
+        7    8.500000e+02   5.720098e+02   7.364035e-03          1        623
+        8    8.500000e+02   5.725507e+02   8.406878e-03          1        659
+        9    4.000000e+02   5.725507e+02   9.514093e-03          1        695
+       10    2.850000e+02   5.728212e+02   1.064301e-02          1        731
 
 Terminating training
   Status         : iteration_limit
-  Total time (s) : 1.061106e-02
+  Total time (s) : 1.064301e-02
   Total solves   : 731
   Best bound     :  5.728212e+02
   Simulation CI  :  6.570000e+02 ± 1.450577e+02
@@ -153,20 +153,20 @@ Options
   Sampling scheme : SDDP.InSampleMonteCarlo
 
  Iteration    Simulation       Bound         Time (s)    Proc. ID   # Solves
-        1    4.150000e+02   3.347014e+02   9.930134e-04          1        778
-        2    3.125000e+02   3.422223e+02   2.022028e-03          1        814
-        3    1.883824e+02   3.425413e+02   3.082037e-03          1        850
-        4    2.475000e+02   3.455372e+02   4.115105e-03          1        886
-        5    3.900000e+02   3.459853e+02   5.186081e-03          1        922
-        6    4.106071e+02   3.463026e+02   6.320000e-03          1        958
-        7    3.881071e+02   3.464790e+02   7.506132e-03          1        994
-        8    5.318571e+02   3.465177e+02   8.651972e-03          1       1030
-        9    4.325000e+02   3.465177e+02   9.863138e-03          1       1066
-       10    2.825000e+02   3.465177e+02   1.109505e-02          1       1102
+        1    4.150000e+02   3.347014e+02   1.016140e-03          1        778
+        2    3.125000e+02   3.422223e+02   2.072096e-03          1        814
+        3    1.883824e+02   3.425413e+02   3.147125e-03          1        850
+        4    2.475000e+02   3.455372e+02   4.200935e-03          1        886
+        5    3.900000e+02   3.459853e+02   5.299091e-03          1        922
+        6    4.106071e+02   3.463026e+02   6.434917e-03          1        958
+        7    3.881071e+02   3.464790e+02   7.625103e-03          1        994
+        8    5.318571e+02   3.465177e+02   8.795977e-03          1       1030
+        9    4.325000e+02   3.465177e+02   1.002908e-02          1       1066
+       10    2.825000e+02   3.465177e+02   1.129413e-02          1       1102
 
 Terminating training
   Status         : iteration_limit
-  Total time (s) : 1.109505e-02
+  Total time (s) : 1.129413e-02
   Total solves   : 1102
   Best bound     :  3.465177e+02
   Simulation CI  :  3.598954e+02 ± 6.281469e+01
@@ -192,20 +192,20 @@ Options
   Sampling scheme : SDDP.InSampleMonteCarlo
 
  Iteration    Simulation       Bound         Time (s)    Proc. ID   # Solves
-        1    2.387500e+02   1.994007e+02   1.121044e-03          1       1149
-        2    2.037500e+02   2.004250e+02   2.135038e-03          1       1185
-        3    1.706731e+02   2.044431e+02   3.221035e-03          1       1221
-        4    2.500000e+02   2.051658e+02   4.362106e-03          1       1257
-        5    1.550000e+02   2.052799e+02   5.469084e-03          1       1293
-        6    2.575000e+02   2.052799e+02   6.668091e-03          1       1329
-        7    1.675000e+02   2.052799e+02   7.791996e-03          1       1365
-        8    2.837500e+02   2.052799e+02   8.945942e-03          1       1401
-        9    2.212500e+02   2.052799e+02   1.015711e-02          1       1437
-       10    2.587500e+02   2.052799e+02   1.138592e-02          1       1473
+        1    2.387500e+02   1.994007e+02   1.168013e-03          1       1149
+        2    2.037500e+02   2.004250e+02   2.224922e-03          1       1185
+        3    1.706731e+02   2.044431e+02   3.359079e-03          1       1221
+        4    2.500000e+02   2.051658e+02   4.501104e-03          1       1257
+        5    1.550000e+02   2.052799e+02   5.660057e-03          1       1293
+        6    2.575000e+02   2.052799e+02   6.906986e-03          1       1329
+        7    1.675000e+02   2.052799e+02   8.081913e-03          1       1365
+        8    2.837500e+02   2.052799e+02   9.279013e-03          1       1401
+        9    2.212500e+02   2.052799e+02   1.052999e-02          1       1437
+       10    2.587500e+02   2.052799e+02   1.177907e-02          1       1473
 
 Terminating training
   Status         : iteration_limit
-  Total time (s) : 1.138592e-02
+  Total time (s) : 1.177907e-02
   Total solves   : 1473
   Best bound     :  2.052799e+02
   Simulation CI  :  2.206923e+02 ± 2.764045e+01
@@ -231,20 +231,20 @@ Options
   Sampling scheme : SDDP.InSampleMonteCarlo
 
  Iteration    Simulation       Bound         Time (s)    Proc. ID   # Solves
-        1    9.375000e+02   4.639992e+02   1.188040e-03          1       1520
-        2    5.225000e+02   4.645195e+02   2.439976e-03          1       1556
-        3    4.850000e+02   4.645840e+02   3.836155e-03          1       1592
-        4    5.925000e+02   4.648526e+02   5.195141e-03          1       1628
-        5    6.012500e+02   4.650282e+02   6.563187e-03          1       1664
-        6    2.287500e+02   4.656771e+02   7.891178e-03          1       1700
-        7    3.725000e+02   4.656771e+02   9.330988e-03          1       1736
-        8    2.212500e+02   4.661223e+02   1.077318e-02          1       1772
-        9    8.262500e+02   4.661223e+02   1.233602e-02          1       1808
-       10    2.875000e+02   4.662669e+02   1.366615e-02          1       1844
+        1    9.375000e+02   4.639992e+02   1.193047e-03          1       1520
+        2    5.225000e+02   4.645195e+02   2.450943e-03          1       1556
+        3    4.850000e+02   4.645840e+02   3.861904e-03          1       1592
+        4    5.925000e+02   4.648526e+02   5.246878e-03          1       1628
+        5    6.012500e+02   4.650282e+02   6.631851e-03          1       1664
+        6    2.287500e+02   4.656771e+02   7.989883e-03          1       1700
+        7    3.725000e+02   4.656771e+02   9.438038e-03          1       1736
+        8    2.212500e+02   4.661223e+02   1.087403e-02          1       1772
+        9    8.262500e+02   4.661223e+02   1.243091e-02          1       1808
+       10    2.875000e+02   4.662669e+02   1.379299e-02          1       1844
 
 Terminating training
   Status         : iteration_limit
-  Total time (s) : 1.366615e-02
+  Total time (s) : 1.379299e-02
   Total solves   : 1844
   Best bound     :  4.662669e+02
   Simulation CI  :  5.075000e+02 ± 1.503394e+02
@@ -270,20 +270,20 @@ Options
   Sampling scheme : SDDP.InSampleMonteCarlo
 
  Iteration    Simulation       Bound         Time (s)    Proc. ID   # Solves
-        1    1.112500e+02   1.129545e+02   1.181126e-03          1       1891
-        2    1.675000e+02   1.129545e+02   2.268076e-03          1       1927
-        3    1.362500e+02   1.129715e+02   3.378153e-03          1       1963
-        4    8.000000e+01   1.129771e+02   4.545212e-03          1       1999
-        5    7.312500e+01   1.129771e+02   5.956173e-03          1       2035
-        6    9.812500e+01   1.129771e+02   7.338047e-03          1       2071
-        7    1.418750e+02   1.129771e+02   8.685112e-03          1       2107
-        8    1.106250e+02   1.129771e+02   1.002908e-02          1       2143
-        9    5.000000e+01   1.129771e+02   1.133704e-02          1       2179
-       10    1.000000e+02   1.129771e+02   1.275802e-02          1       2215
+        1    1.112500e+02   1.129545e+02   1.175880e-03          1       1891
+        2    1.675000e+02   1.129545e+02   2.280951e-03          1       1927
+        3    1.362500e+02   1.129715e+02   3.397942e-03          1       1963
+        4    8.000000e+01   1.129771e+02   4.549980e-03          1       1999
+        5    7.312500e+01   1.129771e+02   5.944967e-03          1       2035
+        6    9.812500e+01   1.129771e+02   7.302046e-03          1       2071
+        7    1.418750e+02   1.129771e+02   8.620024e-03          1       2107
+        8    1.106250e+02   1.129771e+02   9.940863e-03          1       2143
+        9    5.000000e+01   1.129771e+02   1.123405e-02          1       2179
+       10    1.000000e+02   1.129771e+02   1.265383e-02          1       2215
 
 Terminating training
   Status         : iteration_limit
-  Total time (s) : 1.275802e-02
+  Total time (s) : 1.265383e-02
   Total solves   : 2215
   Best bound     :  1.129771e+02
   Simulation CI  :  1.068750e+02 ± 2.168477e+01
@@ -309,20 +309,20 @@ Options
   Sampling scheme : SDDP.InSampleMonteCarlo
 
  Iteration    Simulation       Bound         Time (s)    Proc. ID   # Solves
-        1    4.562500e+02   2.788481e+02   1.178980e-03          1       2262
-        2    3.187500e+02   2.788481e+02   2.593040e-03          1       2298
-        3    4.000000e+02   2.788481e+02   4.147053e-03          1       2334
-        4    2.062500e+02   2.791304e+02   5.499125e-03          1       2370
-        5    1.750000e+02   2.793022e+02   6.995916e-03          1       2406
-        6    1.593750e+02   2.793496e+02   8.456945e-03          1       2442
-        7    3.625000e+02   2.793496e+02   1.015401e-02          1       2478
-        8    1.906250e+02   2.793496e+02   1.147103e-02          1       2514
-        9    2.593750e+02   2.794553e+02   1.296902e-02          1       2550
-       10    1.625000e+02   2.794553e+02   1.429796e-02          1       2586
+        1    4.562500e+02   2.788481e+02   1.113892e-03          1       2262
+        2    3.187500e+02   2.788481e+02   2.578974e-03          1       2298
+        3    4.000000e+02   2.788481e+02   4.086018e-03          1       2334
+        4    2.062500e+02   2.791304e+02   5.460024e-03          1       2370
+        5    1.750000e+02   2.793022e+02   6.934881e-03          1       2406
+        6    1.593750e+02   2.793496e+02   8.390903e-03          1       2442
+        7    3.625000e+02   2.793496e+02   1.006699e-02          1       2478
+        8    1.906250e+02   2.793496e+02   1.137996e-02          1       2514
+        9    2.593750e+02   2.794553e+02   1.284099e-02          1       2550
+       10    1.625000e+02   2.794553e+02   1.419282e-02          1       2586
 
 Terminating training
   Status         : iteration_limit
-  Total time (s) : 1.429796e-02
+  Total time (s) : 1.419282e-02
   Total solves   : 2586
   Best bound     :  2.794553e+02
   Simulation CI  :  2.690625e+02 ± 6.720434e+01
@@ -348,20 +348,20 @@ Options
   Sampling scheme : SDDP.InSampleMonteCarlo
 
  Iteration    Simulation       Bound         Time (s)    Proc. ID   # Solves
-        1    4.810804e+02   4.074078e+02   1.470089e-03          1       2633
-        2    5.818750e+02   4.074078e+02   3.190994e-03          1       2669
-        3    6.150000e+02   4.074234e+02   4.858017e-03          1       2705
-        4    2.695248e+02   4.074405e+02   6.191969e-03          1       2741
-        5    2.637500e+02   4.075507e+02   7.853031e-03          1       2777
-        6    4.200000e+02   4.076751e+02   9.683132e-03          1       2813
-        7    2.390625e+02   4.076885e+02   1.170897e-02          1       2849
-        8    2.268750e+02   4.077332e+02   1.328611e-02          1       2885
-        9    2.175000e+02   4.077362e+02   1.502013e-02          1       2921
-       10    5.487500e+02   4.077362e+02   1.692700e-02          1       2957
+        1    4.810804e+02   4.074078e+02   1.476049e-03          1       2633
+        2    5.818750e+02   4.074078e+02   3.223896e-03          1       2669
+        3    6.150000e+02   4.074234e+02   4.889965e-03          1       2705
+        4    2.695248e+02   4.074405e+02   6.198883e-03          1       2741
+        5    2.637500e+02   4.075507e+02   7.802963e-03          1       2777
+        6    4.200000e+02   4.076751e+02   9.671926e-03          1       2813
+        7    2.390625e+02   4.076885e+02   1.169586e-02          1       2849
+        8    2.268750e+02   4.077332e+02   1.330996e-02          1       2885
+        9    2.175000e+02   4.077362e+02   1.502085e-02          1       2921
+       10    5.487500e+02   4.077362e+02   1.691604e-02          1       2957
 
 Terminating training
   Status         : iteration_limit
-  Total time (s) : 1.692700e-02
+  Total time (s) : 1.691604e-02
   Total solves   : 2957
   Best bound     :  4.077362e+02
   Simulation CI  :  3.863418e+02 ± 9.936379e+01
@@ -387,20 +387,20 @@ Options
   Sampling scheme : SDDP.InSampleMonteCarlo
 
  Iteration    Simulation       Bound         Time (s)    Proc. ID   # Solves
-        1    2.718750e+02   5.197604e+02   1.688004e-03          1       3004
-        2    8.123750e+02   5.204363e+02   3.272057e-03          1       3040
-        3    6.356704e+02   5.205770e+02   4.931927e-03          1       3076
-        4    8.115650e+02   5.205966e+02   6.785870e-03          1       3112
-        5    5.375000e+02   5.207854e+02   8.780956e-03          1       3148
-        6    3.175000e+02   5.208704e+02   1.070499e-02          1       3184
-        7    7.237500e+02   5.208722e+02   1.285100e-02          1       3220
-        8    7.218750e+02   5.209793e+02   1.474905e-02          1       3256
-        9    3.218750e+02   5.209793e+02   1.695490e-02          1       3292
-       10    6.771875e+02   5.209997e+02   1.936102e-02          1       3328
+        1    2.718750e+02   5.197604e+02   1.687050e-03          1       3004
+        2    8.123750e+02   5.204363e+02   3.246069e-03          1       3040
+        3    6.356704e+02   5.205770e+02   4.928112e-03          1       3076
+        4    8.115650e+02   5.205966e+02   6.771088e-03          1       3112
+        5    5.375000e+02   5.207854e+02   8.749008e-03          1       3148
+        6    3.175000e+02   5.208704e+02   1.067710e-02          1       3184
+        7    7.237500e+02   5.208722e+02   1.281905e-02          1       3220
+        8    7.218750e+02   5.209793e+02   1.473308e-02          1       3256
+        9    3.218750e+02   5.209793e+02   1.692820e-02          1       3292
+       10    6.771875e+02   5.209997e+02   1.933599e-02          1       3328
 
 Terminating training
   Status         : iteration_limit
-  Total time (s) : 1.936102e-02
+  Total time (s) : 1.933599e-02
   Total solves   : 3328
   Best bound     :  5.209997e+02
   Simulation CI  :  5.831173e+02 ± 1.295418e+02
@@ -426,22 +426,22 @@ Options
   Sampling scheme : SDDP.InSampleMonteCarlo
 
  Iteration    Simulation       Bound         Time (s)    Proc. ID   # Solves
-        1    7.812500e+01   5.727034e+01   1.402140e-03          1       3375
-        2    7.500000e+01   5.888988e+01   2.470016e-03          1       3411
-        3    2.187500e+01   5.932101e+01   3.865004e-03          1       3447
-        4    7.187500e+01   5.938345e+01   5.192041e-03          1       3483
-        5    8.437500e+01   5.938345e+01   6.528139e-03          1       3519
-        6    3.125000e+01   5.938557e+01   7.853985e-03          1       3555
-        7    7.812500e+01   5.938557e+01   9.155989e-03          1       3591
-        8    6.875000e+01   5.938557e+01   1.076913e-02          1       3627
-        9    5.625000e+01   5.938557e+01   1.240611e-02          1       3663
-       10    5.312500e+01   5.938557e+01   1.409006e-02          1       3699
+        1    7.812500e+01   5.727034e+01   1.397848e-03          1       3375
+        2    7.500000e+01   5.888988e+01   2.447844e-03          1       3411
+        3    2.187500e+01   5.932101e+01   3.797054e-03          1       3447
+        4    7.187500e+01   5.938345e+01   5.146027e-03          1       3483
+        5    8.437500e+01   5.938345e+01   6.494999e-03          1       3519
+        6    3.125000e+01   5.938557e+01   7.822990e-03          1       3555
+        7    7.812500e+01   5.938557e+01   9.166956e-03          1       3591
+        8    6.875000e+01   5.938557e+01   1.079297e-02          1       3627
+        9    5.625000e+01   5.938557e+01   1.242900e-02          1       3663
+       10    5.312500e+01   5.938557e+01   1.412892e-02          1       3699
 
 Terminating training
   Status         : iteration_limit
-  Total time (s) : 1.409006e-02
+  Total time (s) : 1.412892e-02
   Total solves   : 3699
   Best bound     :  5.938557e+01
   Simulation CI  :  6.187500e+01 ± 1.306667e+01
 ------------------------------------------------------------------------------
-</code></pre><hr/><p><em>This page was generated using <a href="https://github.com/fredrikekre/Literate.jl">Literate.jl</a>.</em></p></article><nav class="docs-footer"><a class="docs-footer-prevpage" href="../belief/">« Partially observable inventory management</a><a class="docs-footer-nextpage" href="../booking_management/">Booking management »</a><div class="flexbox-break"></div><p class="footer-message">Powered by <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> and the <a href="https://julialang.org/">Julia Programming Language</a>.</p></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> version 0.27.15 on <span class="colophon-date" title="Thursday 24 March 2022 21:09">Thursday 24 March 2022</span>. Using Julia version 1.7.2.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>
+</code></pre><hr/><p><em>This page was generated using <a href="https://github.com/fredrikekre/Literate.jl">Literate.jl</a>.</em></p></article><nav class="docs-footer"><a class="docs-footer-prevpage" href="../belief/">« Partially observable inventory management</a><a class="docs-footer-nextpage" href="../booking_management/">Booking management »</a><div class="flexbox-break"></div><p class="footer-message">Powered by <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> and the <a href="https://julialang.org/">Julia Programming Language</a>.</p></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> version 0.27.16 on <span class="colophon-date" title="Friday 6 May 2022 23:10">Friday 6 May 2022</span>. Using Julia version 1.7.2.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>
