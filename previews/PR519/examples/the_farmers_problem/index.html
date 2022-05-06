@@ -96,7 +96,7 @@ end</code></pre><pre><code class="nohighlight hljs">second_stage_uncertainty (ge
 end</code></pre><pre><code class="nohighlight hljs">A policy graph with 2 nodes.
  Node indices: 1, 2
 </code></pre><h2 id="Training-a-policy"><a class="docs-heading-anchor" href="#Training-a-policy">Training a policy</a><a id="Training-a-policy-1"></a><a class="docs-heading-anchor-permalink" href="#Training-a-policy" title="Permalink"></a></h2><p>Now that we&#39;ve built a model, we need to train it using <a href="../../apireference/#SDDP.train"><code>SDDP.train</code></a>. The keyword <code>iteration_limit</code> stops the training after 20 iterations. See <a href="../../guides/choose_a_stopping_rule/#Choose-a-stopping-rule">Choose a stopping rule</a> for other ways to stop the training.</p><pre><code class="language-julia hljs">SDDP.train(model; iteration_limit = 20)</code></pre><pre><code class="nohighlight hljs">------------------------------------------------------------------------------
-          SDDP.jl (c) Oscar Dowson and SDDP.jl contributors, 2017-21
+          SDDP.jl (c) Oscar Dowson and SDDP.jl contributors, 2017-22
 
 Problem
   Nodes           : 2
@@ -123,32 +123,32 @@ Numerical stability report
 No problems detected
 
  Iteration    Simulation       Bound         Time (s)    Proc. ID   # Solves
-        1   -9.800000e+04   1.320000e+05   8.370876e-04          1          6
-        2    2.800000e+04   1.290000e+05   1.168966e-03          1         12
-        3    4.840000e+04   1.268139e+05   1.471043e-03          1         18
-        4    3.003659e+04   1.219636e+05   1.732111e-03          1         24
-        5    1.550000e+05   1.121210e+05   2.007961e-03          1         30
-        6    1.589371e+05   1.104195e+05   2.281904e-03          1         36
-        7    1.047405e+05   1.095042e+05   2.604008e-03          1         42
-        8    5.125161e+04   1.088611e+05   2.892017e-03          1         48
-        9    1.665556e+05   1.088021e+05   3.163099e-03          1         54
-       10    1.093355e+05   1.084962e+05   3.500938e-03          1         60
-       11    1.084962e+05   1.083900e+05   3.835917e-03          1         66
-       12    1.093500e+05   1.083900e+05   4.173040e-03          1         72
-       13    1.093500e+05   1.083900e+05   4.507065e-03          1         78
-       14    1.093500e+05   1.083900e+05   4.844904e-03          1         84
-       15    1.093500e+05   1.083900e+05   5.187035e-03          1         90
-       16    1.670000e+05   1.083900e+05   5.538940e-03          1         96
-       17    1.093500e+05   1.083900e+05   5.903959e-03          1        102
-       18    1.670000e+05   1.083900e+05   6.277084e-03          1        108
-       19    4.882000e+04   1.083900e+05   6.704092e-03          1        114
-       20    4.882000e+04   1.083900e+05   7.111073e-03          1        120
+        1   -9.800000e+04   1.320000e+05   1.003027e-03          1          6
+        2    2.800000e+04   1.290000e+05   1.373053e-03          1         12
+        3    4.840000e+04   1.268139e+05   1.707077e-03          1         18
+        4    3.003659e+04   1.219636e+05   2.038956e-03          1         24
+        5    1.550000e+05   1.121210e+05   2.359152e-03          1         30
+        6    1.589371e+05   1.104195e+05   2.688169e-03          1         36
+        7    1.047405e+05   1.095042e+05   3.002167e-03          1         42
+        8    5.125161e+04   1.088611e+05   3.314972e-03          1         48
+        9    1.665556e+05   1.088021e+05   3.623962e-03          1         54
+       10    1.093355e+05   1.084962e+05   3.998995e-03          1         60
+       11    1.084962e+05   1.083900e+05   4.369020e-03          1         66
+       12    1.093500e+05   1.083900e+05   4.749060e-03          1         72
+       13    1.093500e+05   1.083900e+05   5.126953e-03          1         78
+       14    1.093500e+05   1.083900e+05   5.507946e-03          1         84
+       15    1.093500e+05   1.083900e+05   5.926132e-03          1         90
+       16    1.670000e+05   1.083900e+05   6.345987e-03          1         96
+       17    1.093500e+05   1.083900e+05   6.756067e-03          1        102
+       18    1.670000e+05   1.083900e+05   7.173061e-03          1        108
+       19    4.882000e+04   1.083900e+05   7.601976e-03          1        114
+       20    4.882000e+04   1.083900e+05   8.041143e-03          1        120
 
 Terminating training
   Status         : iteration_limit
-  Total time (s) : 7.111073e-03
+  Total time (s) : 8.041143e-03
   Total solves   : 120
   Best bound     :  1.083900e+05
   Simulation CI  :  9.205715e+04 ± 2.822887e+04
 ------------------------------------------------------------------------------
-</code></pre><h2 id="Checking-the-policy"><a class="docs-heading-anchor" href="#Checking-the-policy">Checking the policy</a><a id="Checking-the-policy-1"></a><a class="docs-heading-anchor-permalink" href="#Checking-the-policy" title="Permalink"></a></h2><p>Birge and Louveaux report that the optimal objective value is <span>$</span>108,390. Check that we got the correct solution using <a href="../../apireference/#SDDP.calculate_bound"><code>SDDP.calculate_bound</code></a>:</p><pre><code class="language-julia hljs">@assert isapprox(SDDP.calculate_bound(model), 108_390.0, atol = 0.1)</code></pre><hr/><p><em>This page was generated using <a href="https://github.com/fredrikekre/Literate.jl">Literate.jl</a>.</em></p></article><nav class="docs-footer"><a class="docs-footer-prevpage" href="../stochastic_all_blacks/">« Stochastic All Blacks</a><a class="docs-footer-nextpage" href="../vehicle_location/">Vehicle location »</a><div class="flexbox-break"></div><p class="footer-message">Powered by <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> and the <a href="https://julialang.org/">Julia Programming Language</a>.</p></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> version 0.27.16 on <span class="colophon-date" title="Monday 2 May 2022 21:51">Monday 2 May 2022</span>. Using Julia version 1.7.2.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>
+</code></pre><h2 id="Checking-the-policy"><a class="docs-heading-anchor" href="#Checking-the-policy">Checking the policy</a><a id="Checking-the-policy-1"></a><a class="docs-heading-anchor-permalink" href="#Checking-the-policy" title="Permalink"></a></h2><p>Birge and Louveaux report that the optimal objective value is <span>$</span>108,390. Check that we got the correct solution using <a href="../../apireference/#SDDP.calculate_bound"><code>SDDP.calculate_bound</code></a>:</p><pre><code class="language-julia hljs">@assert isapprox(SDDP.calculate_bound(model), 108_390.0, atol = 0.1)</code></pre><hr/><p><em>This page was generated using <a href="https://github.com/fredrikekre/Literate.jl">Literate.jl</a>.</em></p></article><nav class="docs-footer"><a class="docs-footer-prevpage" href="../stochastic_all_blacks/">« Stochastic All Blacks</a><a class="docs-footer-nextpage" href="../vehicle_location/">Vehicle location »</a><div class="flexbox-break"></div><p class="footer-message">Powered by <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> and the <a href="https://julialang.org/">Julia Programming Language</a>.</p></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> version 0.27.16 on <span class="colophon-date" title="Friday 6 May 2022 22:33">Friday 6 May 2022</span>. Using Julia version 1.7.2.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>
