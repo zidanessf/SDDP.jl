@@ -465,9 +465,8 @@ function _add_average_cut(
         p = risk_adjusted_probability[i]
         θᵏ += p * objective_realizations[i]
         for (key, dual) in dual_variables[i]
-            if abs(dual) >= 1e-6
+            if abs(dual) >= 1e-5:
                 πᵏ[key] += p * dual
-            end
         end
     end
     # Now add the average-cut to the subproblem. We include the objective-state

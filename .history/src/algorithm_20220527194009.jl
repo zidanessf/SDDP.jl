@@ -150,7 +150,7 @@ end
 # contained in state.
 function set_incoming_state(node::Node, state::Dict{Symbol,Float64})
     for (state_name, value) in state
-        JuMP.fix(node.states[state_name].in, round(value,digits=4))
+        JuMP.fix(node.states[state_name].in, round(value))
     end
     return
 end
